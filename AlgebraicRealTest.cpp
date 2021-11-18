@@ -8,7 +8,7 @@
 /*
   Test all module
 
-  Excute with g++ --std=c++1z AlgebraicRealTest.cpp UnivariatePolynomial.cpp && ./a.out
+  Excute with g++ --std=c++1z AlgebraicRealTest.cpp AlgebraicReal.cpp UnivariatePolynomial.cpp && ./a.out
 */
 int main()
 {
