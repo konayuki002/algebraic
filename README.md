@@ -1,13 +1,13 @@
-## algebraic
+# Algebraic
   Create algebraic number, operator and root finding method.
 
-# Reference
+## Reference
   https://miz-ar.info/math/algebraic-real/
 
-# What you need
+## What you need
   * C++17
   * boost
-    Ubuntu
+    * Ubuntu
     ```
       $ sudo apt install libboost-dev
     ```
