@@ -9,36 +9,31 @@
 
 class SturmSequence
 {
-public:
-  static std::vector<UnivariatePolynomial> negative_polynomial_reminder_sequence(const UnivariatePolynomial p1, const UnivariatePolynomial p2)
+private:
+  std::vector<UnivariatePolynomial> sequence_terms;
+
+  static std::vector<UnivariatePolynomial> negative_polynomial_reminder_sequence_with_to_monic(const UnivariatePolynomial p_old, const UnivariatePolynomial p_new)
   {
-    // DEPRECATED: use to_monic one
-    if (p2.is_zero())
-      return {p1};
+    if (p_new.is_zero())
+      return {p_old};
 
-    auto tail = negative_polynomial_reminder_sequence(p2, -(p1 % p2)); // Loop is better (fast & understandable)?
-
-    tail.insert(tail.begin(), p1); // push_front() of std::list is faster than std::vector ?
-
-    return tail;
-  }
-
-  static std::vector<UnivariatePolynomial> negative_polynomial_reminder_sequence_with_to_monic(const UnivariatePolynomial p1, const UnivariatePolynomial p2)
-  {
-    if (p2.is_zero())
-      return {p1};
-
-    auto reminder = p1 % p2;
+    auto reminder = p_old % p_new;
 
     int sign = reminder.leading_coefficient().sign();
 
     reminder.to_monic();
 
-    auto tail = negative_polynomial_reminder_sequence_with_to_monic(p2, -reminder * sign); // Loop is better (fast & understandable)?
+    auto tail = negative_polynomial_reminder_sequence_with_to_monic(p_new, -reminder * sign); // Loop is better (fast & understandable)?
 
-    tail.insert(tail.begin(), p1); // push_front() of std::list is faster than std::vector ?
+    tail.insert(tail.begin(), p_old); // push_front() of std::list is faster than std::vector ?
 
     return tail;
+  }
+
+public:
+  SturmSequence(UnivariatePolynomial first_term)
+  {
+    sequence_terms = negative_polynomial_reminder_sequence_with_to_monic(first_term, first_term.differential());
   }
 
   /*
@@ -62,7 +57,8 @@ public:
   // move to UnivariatePolynomial ?
   {
     std::vector<int> signs(p.size());
-    std::transform(p.begin(), p.end(), signs.begin(), [r](UnivariatePolynomial p) { return p.sign_at(r); });
+    std::transform(p.begin(), p.end(), signs.begin(), [r](UnivariatePolynomial p)
+                   { return p.sign_at(r); });
     return count_sign_change(signs);
   }
 
@@ -70,7 +66,8 @@ public:
   // move to UnivariatePolynomial?
   {
     std::vector<int> signs(p.size());
-    std::transform(p.begin(), p.end(), signs.begin(), [e](UnivariatePolynomial p) { return p.sign_at_extended(e); });
+    std::transform(p.begin(), p.end(), signs.begin(), [e](UnivariatePolynomial p)
+                   { return p.sign_at_extended(e); });
     return count_sign_change(signs);
   }
 
