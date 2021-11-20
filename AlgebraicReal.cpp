@@ -76,11 +76,11 @@ std::string AlgebraicReal::to_string() const
 {
   if (is_rational)
   {
-    return "AlgR/R {" + r.to_string() + "}";
+    return "AlgR " + r.to_string() + "";
   }
   else
   {
-    return "AlgR/P {" + get_defining_polynomial().to_string() + " " + interval.first.to_string() + " " + interval.second.to_string() + "}";
+    return "AlgR " + get_defining_polynomial().to_string() + " | (" + interval.first.to_string() + ", " + interval.second.to_string() + "]";
   }
 }
 
