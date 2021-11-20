@@ -7,53 +7,6 @@
 #include "SturmSequence.h"
 #include "UnivariatePolynomial.h"
 
-AlgebraicReal AlgebraicReal::make_AlgebraicReal(const SturmSequence &defining_polynomial_sturm_sequence, const std::pair<Rational, Rational> &interval)
-{
-  auto [lower_bound, upper_bound] = interval;
-
-  lower_bound.inspect();
-  upper_bound.inspect();
-
-  if (upper_bound < lower_bound)
-    throw std::domain_error("Invalid interval order: (" + lower_bound.to_string() + ", " + upper_bound.to_string() + "]");
-
-  if (lower_bound < 0 && 0 <= upper_bound && defining_polynomial_sturm_sequence.first_term().value_at(0) == 0)
-  {
-    // 0 must be representate by rational
-    return AlgebraicReal();
-  }
-  else if (defining_polynomial_sturm_sequence.first_term().value_at(upper_bound) == 0)
-  {
-    // close interval boundary upper_bound must not be zero
-    // for 0 must not be contained
-    return AlgebraicReal(upper_bound);
-  }
-  else
-  {
-    // erase constant term if it's zero and close the gap
-    // x^2 - x = 0 -> x - 1 = 0 (case x = 0 is forbidden)
-    std::vector<Rational> polynomial_coefficient = defining_polynomial_sturm_sequence.first_term().coefficient();
-    while (polynomial_coefficient[0] == 0)
-    {
-      polynomial_coefficient.erase(polynomial_coefficient.begin());
-    }
-
-    const UnivariatePolynomial defining_polynomial_without_zero = UnivariatePolynomial(polynomial_coefficient);
-
-    const auto sturm_sequence_without_zero = SturmSequence(defining_polynomial_without_zero);
-
-    auto [lower_bound, upper_bound] = interval;
-    while (lower_bound < 0 && 0 < upper_bound)
-    {
-      const std::pair<Rational, Rational> next_interval = sturm_sequence_without_zero.next_interval(interval);
-      lower_bound = next_interval.first;
-      upper_bound = next_interval.second;
-    }
-
-    return AlgebraicReal(defining_polynomial_without_zero, interval);
-  }
-}
-
 AlgebraicReal::AlgebraicReal() : AlgebraicReal(0){};
 
 AlgebraicReal::AlgebraicReal(const Rational &r)
@@ -63,9 +16,62 @@ AlgebraicReal::AlgebraicReal(const Rational &r)
       interval({r, r}){};
 
 AlgebraicReal::AlgebraicReal(const UnivariatePolynomial &defining_polynomial, const std::pair<Rational, Rational> &interval)
-    : is_rational(false),
-      defining_polynomial_sturm_sequence(SturmSequence(defining_polynomial)),
-      interval(interval){};
+{
+  // TODO: resolve complex code
+
+  auto [lower_bound, upper_bound] = interval;
+
+  lower_bound.inspect();
+  upper_bound.inspect();
+
+  // TODO: Interval class will process below by deligation
+  if (upper_bound < lower_bound)
+    throw std::domain_error("Invalid interval order: (" + lower_bound.to_string() + ", " + upper_bound.to_string() + "]");
+
+  if (lower_bound < 0 && 0 <= upper_bound && defining_polynomial.value_at(0) == 0)
+  {
+    // 0 must be representate by rational
+    is_rational = true;
+    r = 0;
+    this->interval = interval;
+  }
+  else if (defining_polynomial.value_at(upper_bound) == 0)
+  {
+    // close interval boundary upper_bound must not be zero
+    // for 0 must not be contained
+    is_rational = true;
+    r = upper_bound;
+    this->interval = interval;
+  }
+  else
+  {
+    is_rational = false;
+
+    // erase constant term if it's zero and close the gap
+    // x^2 - x = 0 -> x - 1 = 0 (case x = 0 is forbidden)
+    std::vector<Rational> polynomial_coefficient = defining_polynomial.coefficient();
+    while (polynomial_coefficient[0] == 0)
+    {
+      polynomial_coefficient.erase(polynomial_coefficient.begin());
+    }
+
+    const UnivariatePolynomial defining_polynomial_without_zero = UnivariatePolynomial(polynomial_coefficient);
+
+    const SturmSequence sturm_sequence_without_zero = SturmSequence(defining_polynomial_without_zero);
+
+    // Converge interval until not contain zero
+    while (lower_bound < 0 && 0 < upper_bound)
+    {
+      // TODO: make sure interval have just 1 root
+      const std::pair<Rational, Rational> next_interval = sturm_sequence_without_zero.next_interval(interval);
+      lower_bound = next_interval.first;
+      upper_bound = next_interval.second;
+    }
+
+    this->interval = interval;
+    this->defining_polynomial_sturm_sequence = sturm_sequence_without_zero;
+  }
+}
 
 UnivariatePolynomial AlgebraicReal::get_defining_polynomial() const
 {
@@ -88,11 +94,11 @@ std::string AlgebraicReal::to_string_detail() const
 {
   if (is_rational)
   {
-    return "AlgebraicReal/RationalNumber {" + r.to_string_detail() + "}";
+    return "#AlgebraicReal{" + r.to_string_detail() + "}";
   }
   else
   {
-    return "AlgebraicReal/Polynomial {" + get_defining_polynomial().to_string_detail() + " " + interval.first.to_string_detail() + " " + interval.second.to_string_detail() + "}";
+    return "#AlgebraicReal{" + get_defining_polynomial().to_string_detail() + " " + interval.first.to_string_detail() + " " + interval.second.to_string_detail() + "}";
   }
 }
 
@@ -288,7 +294,7 @@ std::vector<AlgebraicReal> AlgebraicReal::bisect_roots(const SturmSequence &stur
     return {}; // no root between the interval
 
   if (interval_sign_change.first == interval_sign_change.second + 1)
-    return {AlgebraicReal::make_AlgebraicReal(sturm_sequence, interval)};
+    return {AlgebraicReal(sturm_sequence.first_term(), interval)};
 
   const Rational middle = (interval.first + interval.second) / 2;
   const int middle_sign_change = sturm_sequence.count_sign_change_at(middle);
