@@ -14,12 +14,12 @@ void SturmSequenceTest()
   {
     // Test normal constructor and to_string()
     SturmSequence sturm_sequence = SturmSequence({1, 3, -2, 0, 1});
-    sturm_sequence.to_string() = "Sturm ([1/1 3/1 -2/1 0/1 1/1] [3/1 -4/1 0/1 4/1] [-1/1 9/-4 1/1] [-16/27 -1/1] [-1/1])";
+    assert(sturm_sequence.to_string() == "Sturm | [1/1 3/1 -2/1 0/1 1/1] [3/1 -4/1 0/1 4/1] [-1/1 9/-4 1/1] [-16/27 -1/1] [-1/1]");
   }
 
   { // Test to_string_detail()
     SturmSequence sturm_sequence = SturmSequence({1, 3, -2, 0, 1});
-    sturm_sequence.to_string_detail() = "SturmSequence (#UnivariatePolynomial{a[0]: #Rational{numerator: 1, denominator: 1}, a[1]: #Rational{numerator: 3, denominator: 1}, a[2]: #Rational{numerator: -2, denominator: 1}, a[3]: #Rational{numerator: 0, denominator: 1}, a[4]: #Rational{numerator: 1, denominator: 1}} #UnivariatePolynomial{a[0]: #Rational{numerator: 3, denominator: 1}, a[1]: #Rational{numerator: -4, denominator: 1}, a[2]: #Rational{numerator: 0, denominator: 1}, a[3]: #Rational{numerator: 4, denominator: 1}} #UnivariatePolynomial{a[0]: #Rational{numerator: -1, denominator: 1}, a[1]: #Rational{numerator: 9, denominator: -4}, a[2]: #Rational{numerator: 1, denominator: 1}} #UnivariatePolynomial{a[0]: #Rational{numerator: -16, denominator: 27}, a[1]: #Rational{numerator: -1, denominator: 1}} #UnivariatePolynomial{a[0]: #Rational{numerator: -1, denominator: 1}})";
+    assert(sturm_sequence.to_string_detail() == "#SturmSequence{#UnivariatePolynomial{a[0]: #Rational{numerator: 1, denominator: 1}, a[1]: #Rational{numerator: 3, denominator: 1}, a[2]: #Rational{numerator: -2, denominator: 1}, a[3]: #Rational{numerator: 0, denominator: 1}, a[4]: #Rational{numerator: 1, denominator: 1}}, #UnivariatePolynomial{a[0]: #Rational{numerator: 3, denominator: 1}, a[1]: #Rational{numerator: -4, denominator: 1}, a[2]: #Rational{numerator: 0, denominator: 1}, a[3]: #Rational{numerator: 4, denominator: 1}}, #UnivariatePolynomial{a[0]: #Rational{numerator: -1, denominator: 1}, a[1]: #Rational{numerator: 9, denominator: -4}, a[2]: #Rational{numerator: 1, denominator: 1}}, #UnivariatePolynomial{a[0]: #Rational{numerator: -16, denominator: 27}, a[1]: #Rational{numerator: -1, denominator: 1}}, #UnivariatePolynomial{a[0]: #Rational{numerator: -1, denominator: 1}}}");
   }
 
   {

@@ -30,24 +30,24 @@ UnivariatePolynomial SturmSequence::first_term() const
 
 std::string SturmSequence::to_string() const
 {
-  std::string output_string = "Sturm (";
-  for (auto term = sequence_terms.begin(); term != sequence_terms.end() - 1; term++)
+  std::string output_string = "Sturm |";
+  for (auto term = sequence_terms.begin(); term != sequence_terms.end(); term++)
   {
-    output_string += term->to_string();
     output_string += " ";
+    output_string += term->to_string();
   }
-  return output_string + sequence_terms.back().to_string() + ")";
+  return output_string;
 }
 
 std::string SturmSequence::to_string_detail() const
 {
-  std::string output_string = "SturmSequence (";
+  std::string output_string = "#SturmSequence{";
   for (auto term = sequence_terms.begin(); term != sequence_terms.end() - 1; term++)
   {
     output_string += term->to_string_detail();
-    output_string += " ";
+    output_string += ", ";
   }
-  return output_string + sequence_terms.back().to_string_detail() + ")";
+  return output_string + sequence_terms.back().to_string_detail() + "}";
 }
 
 int SturmSequence::count_sign_change(const std::vector<int> sign)
