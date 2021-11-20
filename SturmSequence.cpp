@@ -65,10 +65,8 @@ int SturmSequence::count_sign_change(const std::vector<int> sign)
 
 SturmSequence::SturmSequence(){};
 
-SturmSequence::SturmSequence(UnivariatePolynomial first_term)
-{
-  sequence_terms = negative_polynomial_reminder_sequence_with_to_monic(first_term, first_term.differential());
-}
+SturmSequence::SturmSequence(const UnivariatePolynomial first_term)
+    : sequence_terms(negative_polynomial_reminder_sequence_with_to_monic(first_term, first_term.differential())) {}
 
 int SturmSequence::count_sign_change_at(const Rational r) const
 {
