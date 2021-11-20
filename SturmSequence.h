@@ -33,6 +33,8 @@ public:
     polynomial that generated strum_seqence have one root in (r1, r2]
 
     TODO: need to make template to approximate step by step?
+
+    Is this used except for AlgebraicReal?
   */
   std::pair<Rational, Rational> next_interval(const std::pair<Rational, Rational> old_interval) const;
 };

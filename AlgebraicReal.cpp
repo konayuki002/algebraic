@@ -240,7 +240,7 @@ std::pair<Rational, Rational> AlgebraicReal::next_interval(const std::pair<Ratio
   }
   else
   {
-    return defining_polynomial_sturm_sequence.next_interval(old_interval);
+    ` return defining_polynomial_sturm_sequence.next_interval(old_interval);
   }
 }
 

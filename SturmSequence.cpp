@@ -45,7 +45,7 @@ std::string SturmSequence::to_string_detail() const
   std::string output_string = "SturmSequence (";
   for (auto term = sequence_terms.begin(); term != sequence_terms.end() - 1; term++)
   {
-    output_string += term->to_string();
+    output_string += term->to_string_detail();
     output_string += " ";
   }
   return output_string + sequence_terms.back().to_string_detail() + ")";
@@ -87,12 +87,12 @@ int SturmSequence::count_sign_change_at_extended(const Extended<Rational> e) con
 
 int SturmSequence::count_real_roots_between(const Rational r1, const Rational r2) const
 {
-  return count_sign_change_at(r2) - count_sign_change_at(r1);
+  return count_sign_change_at(r1) - count_sign_change_at(r2);
 }
 
 int SturmSequence::count_real_roots_between_extended(const Extended<Rational> e1, const Extended<Rational> e2) const
 {
-  return count_sign_change_at_extended(e2) - count_sign_change_at_extended(e1);
+  return count_sign_change_at_extended(e1) - count_sign_change_at_extended(e2);
 }
 
 std::pair<Rational, Rational> SturmSequence::next_interval(const std::pair<Rational, Rational> old_interval) const
