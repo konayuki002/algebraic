@@ -1,0 +1,63 @@
+#pragma once
+
+#include <vector>
+
+#include "Showable.cpp"
+#include "UnivariatePolynomial.h"
+
+/*
+* Class for Sturm Sequence of an univariate polynomial based on reference:
+*
+*   https://miz-ar.info/math/algebraic-real/posts/02-real-root-counting.html
+*
+* Also provides root counting method for polynomial and interval.
+*/
+class SturmSequence : public Showable<SturmSequence>
+{
+private:
+  std::vector<UnivariatePolynomial> sequence_terms;
+
+  /*
+  * Sequence of p_i, which starts with polynomial p_0, p_1 from differential of p_0 and p_i following p_(i + 1) = -(p_i % p_(i - 1)).
+  * 
+  * Make the polynomial monic after taking reminder to reduce coefficients growth.
+  */
+  static std::vector<UnivariatePolynomial> negative_polynomial_reminder_sequence_with_to_monic(const UnivariatePolynomial p_old, const UnivariatePolynomial p_new);
+
+  /*
+  * Note: "variance" is the name used for this function in the source:
+  * https://miz-ar.info/math/algebraic-real/posts/02-real-root-counting.html
+  */
+  static int count_sign_change(const std::vector<int> sign);
+
+public:
+  SturmSequence(); // For zero polynomial
+  SturmSequence(UnivariatePolynomial first_term);
+  UnivariatePolynomial first_term() const;
+  std::string to_string() const;
+  std::string to_string_detail() const;
+
+  // Count the number of sign change of polynomial sequence at certain rational number.
+  int count_sign_change_at(const Rational r) const;
+
+  // Count the number of sign change of polynomial sequence at certain extended rational number.
+  int count_sign_change_at_extended(const Extended<Rational> e) const;
+
+  // Compute the number of real roots in an interval.
+  int count_real_roots_between(const Rational r1, const Rational r2) const;
+
+  // Compute the number of real roots in an interval including infinite boundary.
+  int count_real_roots_between_extended(const Extended<Rational> e1, const Extended<Rational> e2) const;
+
+  /*
+    differ from source
+    return next step approximate rational interval
+
+    polynomial that generated strum_seqence have one root in (r1, r2]
+
+    TODO: need to make template to approximate step by step?
+
+    Is this used except for AlgebraicReal?
+  */
+  std::pair<Rational, Rational> next_interval(const std::pair<Rational, Rational> old_interval) const;
+};

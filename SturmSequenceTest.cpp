@@ -1,7 +1,6 @@
 #include <cassert>
 
-#include "AlgebraicReal.h"
-#include "SturmSequence.cpp"
+#include "SturmSequence.h"
 #include "UnivariatePolynomial.h"
 
 /*
@@ -13,76 +12,50 @@
 void SturmSequenceTest()
 {
   {
-    // Calculate Sturm Sequence
-    UnivariatePolynomial p = UnivariatePolynomial({1, 3, -2, 0, 1});
-    UnivariatePolynomial diff_p = p.differential();
-    std::vector<UnivariatePolynomial> sturm_sequence = SturmSequence::negative_polynomial_reminder_sequence_with_to_monic(p, diff_p);
-    for (auto sturm_p : sturm_sequence)
-    {
-      {
-        sturm_p.inspect();
-      }
-    }
+    // Test normal constructor and to_string()
+    SturmSequence sturm_sequence = SturmSequence({1, 3, -2, 0, 1});
+    assert(sturm_sequence.to_string() == "Sturm | [1/1 3/1 -2/1 0/1 1/1] [3/1 -4/1 0/1 4/1] [-1/1 9/-4 1/1] [-16/27 -1/1] [-1/1]");
+  }
+
+  { // Test to_string_detail()
+    SturmSequence sturm_sequence = SturmSequence({1, 3, -2, 0, 1});
+    assert(sturm_sequence.to_string_detail() == "#SturmSequence{#UnivariatePolynomial{a[0]: #Rational{numerator: 1, denominator: 1}, a[1]: #Rational{numerator: 3, denominator: 1}, a[2]: #Rational{numerator: -2, denominator: 1}, a[3]: #Rational{numerator: 0, denominator: 1}, a[4]: #Rational{numerator: 1, denominator: 1}}, #UnivariatePolynomial{a[0]: #Rational{numerator: 3, denominator: 1}, a[1]: #Rational{numerator: -4, denominator: 1}, a[2]: #Rational{numerator: 0, denominator: 1}, a[3]: #Rational{numerator: 4, denominator: 1}}, #UnivariatePolynomial{a[0]: #Rational{numerator: -1, denominator: 1}, a[1]: #Rational{numerator: 9, denominator: -4}, a[2]: #Rational{numerator: 1, denominator: 1}}, #UnivariatePolynomial{a[0]: #Rational{numerator: -16, denominator: 27}, a[1]: #Rational{numerator: -1, denominator: 1}}, #UnivariatePolynomial{a[0]: #Rational{numerator: -1, denominator: 1}}}");
   }
 
   {
-    // Calculate Sturm Sequence that cofficient grows
-    const UnivariatePolynomial p = UnivariatePolynomial({3, 0, -1, 4, 0, 1});
-    const UnivariatePolynomial diff_p = p.differential();
-    const std::vector<UnivariatePolynomial> sturm_sequence = SturmSequence::negative_polynomial_reminder_sequence_with_to_monic(p, diff_p);
-    for (auto sturm_p : sturm_sequence)
-    {
-      {
-        sturm_p.inspect();
-      }
-    }
-  }
-
-  {
-    // Test count_sign_change
-
-    std::vector<int> signs = {-1, 0, 1, -1, 1, 0, -1, -1};
-    assert(SturmSequence::count_sign_change(signs) == 4);
+    // Test sturm sequence with grown coefficient
+    SturmSequence sturm_sequence = SturmSequence({3, 0, -1, 4, 0, 1});
+    sturm_sequence.to_string() = "Sturm ([3/1 0/1 -1/1 4/1 0/1 1/1] [0/1 -2/1 12/1 0/1 5/1] [-15/8 0/1 3/8 -1/1] [75/271 728/813 -1/1] [33363/12274 1/1] [1/1])";
   }
 
   {
     // Test count_sign_change_at
-
-    const UnivariatePolynomial p = UnivariatePolynomial({});
+    SturmSequence sturm_sequence = SturmSequence({1, 3, -2, 0, 1});
+    assert(sturm_sequence.count_sign_change_at(-1) == 2);
   }
 
   {
-      // Test count_sign_change_at_extended
-  } {
-      // Test count_real_roots_between
-  } {
-      //Test count_real_roots_between_extended
-  } {
-      // Test next_intervals_with_strum_sequence
-  } {
-      // Test real_roots
-  } {
-      // Test real_roots_between
-  } {
-      // Test bisect_roots <- needed? this test is not needed if use as private function
-  } {
-    //const UnivariatePolynomial p = UnivariatePolynomial({1, 3, -2, 0, 1});
-    const UnivariatePolynomial p = UnivariatePolynomial({-1, 0, 1});
-    std::cout << p.root_bound().to_string();
-    std::vector<AlgebraicReal> roots = SturmSequence::real_roots(p);
-    std::cout << "root count: " << roots.size() << std::endl;
-    for (auto root : roots)
-    {
-      {
-        root.inspect();
-        auto interval = root.get_isolating_interval();
-        for (int i = 0; i < 100; i++) // Floating point exception when i < 10 -> have resolved with boost
-        {
-          interval = root.next_interval(interval);
-        }
-        interval.first.inspect();
-        interval.second.inspect();
-      }
-    }
+    // Test count_sign_change_at_extended
+    SturmSequence sturm_sequence = SturmSequence({1, 3, -2, 0, 1});
+    assert(sturm_sequence.count_sign_change_at_extended(Infinity::NegativeInfinity) == 3);
+  }
+
+  {
+    // Test count_real_roots_between
+    SturmSequence sturm_sequence({-2, 0, 1});
+    assert(sturm_sequence.count_real_roots_between(0, 2) == 1);
+  }
+
+  {
+    // Test count_real_roots_between_extended
+    SturmSequence sturm_sequence({-2, 0, 1});
+    assert(sturm_sequence.count_real_roots_between_extended(Infinity::NegativeInfinity, Infinity::PositiveInfinity) == 2);
+  }
+
+  {
+    // Test next_interval
+    SturmSequence sturm_sequence({-2, 0, 1});
+    assert(sturm_sequence.next_interval({1, 2}).first == 1);
+    assert(sturm_sequence.next_interval({1, 2}).second == Rational(3, 2));
   }
 }

@@ -6,6 +6,7 @@
 #include "Fractional.cpp"
 #include "Rational.cpp"
 #include "Showable.cpp"
+#include "SturmSequence.h"
 #include "UnivariatePolynomial.h"
 
 /*
@@ -20,13 +21,13 @@ private:
 
   Rational r;
 
-  UnivariatePolynomial defining_polynomial;
+  SturmSequence defining_polynomial_sturm_sequence;
 
   // (r1, r2]
   std::pair<Rational, Rational> interval;
 
 public:
-  static AlgebraicReal make_AlgebraicReal(const UnivariatePolynomial &defining_polynomial, const std::pair<Rational, Rational> &interval);
+  static AlgebraicReal make_AlgebraicReal(const SturmSequence &defining_polynomial_sturm_sequence, const std::pair<Rational, Rational> &interval);
 
   AlgebraicReal();
   // Rational initialization
@@ -50,7 +51,11 @@ public:
   Rational get_rational() const;
   UnivariatePolynomial get_defining_polynomial() const;
   std::pair<Rational, Rational> get_isolating_interval() const;
-  std::vector<UnivariatePolynomial> sturm_sequence() const;
+  SturmSequence sturm_sequence() const;
   // name differ from source (interval())
   std::pair<Rational, Rational> next_interval(const std::pair<Rational, Rational> old_interval) const;
+
+  static std::vector<AlgebraicReal> real_roots(const UnivariatePolynomial &p);
+  static std::vector<AlgebraicReal> real_roots_between(const UnivariatePolynomial &p, const Extended<Rational> &e1, const Extended<Rational> &e2);
+  static std::vector<AlgebraicReal> bisect_roots(const SturmSequence &sturm_sequence, const std::pair<Rational, Rational> interval, const std::pair<int, int> interval_sign_change);
 };
