@@ -1,9 +1,11 @@
+#pragma once
+
 #include <vector>
 
 #include "Showable.cpp"
 #include "UnivariatePolynomial.h"
 
-class SturmSequence : Showable<SturmSequence>
+class SturmSequence : public Showable<SturmSequence>
 {
 private:
   std::vector<UnivariatePolynomial> sequence_terms;

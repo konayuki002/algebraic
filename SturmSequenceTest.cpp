@@ -1,7 +1,7 @@
 #include <cassert>
 
 #include "AlgebraicReal.h"
-#include "SturmSequence.cpp"
+#include "SturmSequence.h"
 #include "UnivariatePolynomial.h"
 
 /*
@@ -13,42 +13,20 @@
 void SturmSequenceTest()
 {
   {
-    // Calculate Sturm Sequence
-    UnivariatePolynomial p = UnivariatePolynomial({1, 3, -2, 0, 1});
-    UnivariatePolynomial diff_p = p.differential();
-    std::vector<UnivariatePolynomial> sturm_sequence = SturmSequence::negative_polynomial_reminder_sequence_with_to_monic(p, diff_p);
-    for (auto sturm_p : sturm_sequence)
-    {
-      {
-        sturm_p.inspect();
-      }
-    }
+    // Test normal constructor and to_string()
+    SturmSequence sturm_sequence = SturmSequence({1, 3, -2, 0, 1});
+    sturm_sequence.inspect();
   }
 
   {
-    // Calculate Sturm Sequence that cofficient grows
-    const UnivariatePolynomial p = UnivariatePolynomial({3, 0, -1, 4, 0, 1});
-    const UnivariatePolynomial diff_p = p.differential();
-    const std::vector<UnivariatePolynomial> sturm_sequence = SturmSequence::negative_polynomial_reminder_sequence_with_to_monic(p, diff_p);
-    for (auto sturm_p : sturm_sequence)
-    {
-      {
-        sturm_p.inspect();
-      }
-    }
+    // Test sturm sequence with grown coefficient
+    SturmSequence sturm_sequence = SturmSequence({3, 0, -1, 4, 0, 1});
+    sturm_sequence.inspect();
   }
 
   {
-    // Test count_sign_change
+      // Test count_sign_change_at
 
-    std::vector<int> signs = {-1, 0, 1, -1, 1, 0, -1, -1};
-    assert(SturmSequence::count_sign_change(signs) == 4);
-  }
-
-  {
-    // Test count_sign_change_at
-
-    const UnivariatePolynomial p = UnivariatePolynomial({});
   }
 
   {
@@ -67,9 +45,7 @@ void SturmSequenceTest()
       // Test bisect_roots <- needed? this test is not needed if use as private function
   } {
     //const UnivariatePolynomial p = UnivariatePolynomial({1, 3, -2, 0, 1});
-    const UnivariatePolynomial p = UnivariatePolynomial({-1, 0, 1});
-    std::cout << p.root_bound().to_string();
-    std::vector<AlgebraicReal> roots = SturmSequence::real_roots(p);
+    std::vector<AlgebraicReal> roots = AlgebraicReal::real_roots({-1, 0, 1});
     std::cout << "root count: " << roots.size() << std::endl;
     for (auto root : roots)
     {
