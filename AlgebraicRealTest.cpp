@@ -10,4 +10,11 @@
 
 void AlgebraicRealTest()
 {
+  {
+    // Test to_string()
+    AlgebraicReal({1, 2}).inspect();
+    AlgebraicReal().inspect();
+    AlgebraicReal(-1).inspect();
+    AlgebraicReal({-2, 0, 1}, {1, 2}).inspect();
+  }
 }

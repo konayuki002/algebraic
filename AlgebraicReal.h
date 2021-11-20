@@ -29,9 +29,11 @@ private:
 public:
   static AlgebraicReal make_AlgebraicReal(const SturmSequence &defining_polynomial_sturm_sequence, const std::pair<Rational, Rational> &interval);
 
+  // Zero
   AlgebraicReal();
-  // Rational initialization
+  // Rational
   AlgebraicReal(const Rational &r);
+  // Define by univariate polynomial and interval
   AlgebraicReal(const UnivariatePolynomial &defining_polynomial, const std::pair<Rational, Rational> &interval);
 
   std::string to_string() const;

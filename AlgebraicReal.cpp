@@ -55,10 +55,17 @@ AlgebraicReal AlgebraicReal::make_AlgebraicReal(const SturmSequence &defining_po
 }
 
 AlgebraicReal::AlgebraicReal() : AlgebraicReal(0){};
-// Rational initialization
-AlgebraicReal::AlgebraicReal(const Rational &r) : is_rational(true), r(r), defining_polynomial_sturm_sequence(UnivariatePolynomial({-r, 1})), interval({r, r}){};
+
+AlgebraicReal::AlgebraicReal(const Rational &r)
+    : is_rational(true),
+      r(r),
+      defining_polynomial_sturm_sequence(SturmSequence(UnivariatePolynomial({-r, 1}))),
+      interval({r, r}){};
+
 AlgebraicReal::AlgebraicReal(const UnivariatePolynomial &defining_polynomial, const std::pair<Rational, Rational> &interval)
-    : is_rational(false), defining_polynomial_sturm_sequence(SturmSequence(defining_polynomial)), interval(interval){};
+    : is_rational(false),
+      defining_polynomial_sturm_sequence(SturmSequence(defining_polynomial)),
+      interval(interval){};
 
 UnivariatePolynomial AlgebraicReal::get_defining_polynomial() const
 {
