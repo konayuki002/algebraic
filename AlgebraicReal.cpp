@@ -21,9 +21,6 @@ AlgebraicReal::AlgebraicReal(const UnivariatePolynomial &defining_polynomial, co
 
   auto [lower_bound, upper_bound] = interval;
 
-  lower_bound.inspect();
-  upper_bound.inspect();
-
   // TODO: Interval class will process below by deligation
   if (upper_bound < lower_bound)
     throw std::domain_error("Invalid interval order: (" + lower_bound.to_string() + ", " + upper_bound.to_string() + "]");
@@ -98,7 +95,7 @@ std::string AlgebraicReal::to_string_detail() const
   }
   else
   {
-    return "#AlgebraicReal{" + get_defining_polynomial().to_string_detail() + " " + interval.first.to_string_detail() + " " + interval.second.to_string_detail() + "}";
+    return "#AlgebraicReal{ defining polynomial:" + get_defining_polynomial().to_string_detail() + ", interval from: " + interval.first.to_string_detail() + ", to: " + interval.second.to_string_detail() + "}";
   }
 }
 
@@ -231,7 +228,7 @@ std::pair<Rational, Rational> AlgebraicReal::get_isolating_interval() const
 {
   if (is_rational)
   {
-    return {r - 1, r + 1};
+    return {r, r};
   }
   else
   {

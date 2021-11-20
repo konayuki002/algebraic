@@ -50,8 +50,11 @@ public:
   AlgebraicReal inverse() const;
 
   bool get_is_rational() const;
+  // TODO: rename to rational()
   Rational get_rational() const;
+  // TODO: rename to defining_polynomial
   UnivariatePolynomial get_defining_polynomial() const;
+  // TODO: rename to isolating_interval
   std::pair<Rational, Rational> get_isolating_interval() const;
   SturmSequence sturm_sequence() const;
   // name differ from source (interval())
