@@ -10,7 +10,7 @@
 #include "UnivariatePolynomial.h"
 
 /*
-  Class for algebraic number:
+  Class for algebraic real number:
 
   Defined along with https://ufcpp.net/study/math/set/rational/
 */

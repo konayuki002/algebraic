@@ -1,7 +1,6 @@
 #include <cassert>
 
 #include "SturmSequence.h"
-#include "UnivariatePolynomial.h"
 
 /*
   Test module for SturmSequence.cpp

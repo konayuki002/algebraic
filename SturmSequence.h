@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
 
 #include "Showable.cpp"
 #include "UnivariatePolynomial.h"

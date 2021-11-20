@@ -5,7 +5,6 @@
 
 #include "Extended.cpp"
 #include "Rational.cpp"
-#include "SturmSequence.cpp"
 #include "UnivariatePolynomial.h"
 
 void UnivariatePolynomial::remove_higher_degree_zero()

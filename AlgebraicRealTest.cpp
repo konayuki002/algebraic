@@ -1,21 +1,13 @@
-#include <iostream>
+#include <cassert>
 
-#include "ExtendedTest.cpp"
-#include "RationalTest.cpp"
-#include "SturmSequenceTest.cpp"
-#include "UnivariatePolynomialTest.cpp"
+#include "AlgebraicReal.h"
 
 /*
-  Test all module
+  Test module for AlgebraicReal.cpp
 
-  Excute with g++ --std=c++1z AlgebraicRealTest.cpp AlgebraicReal.cpp UnivariatePolynomial.cpp && ./a.out
+  This check all public method including overloaded operator.
 */
-int main()
-{
-  ExtendedTest();
-  RationalTest();
-  SturmSequenceTest();
-  UnivariatePolynomialTest();
 
-  std::cout << "succeeded " << 4 << " tests" << std::endl;
+void AlgebraicRealTest()
+{
 }
