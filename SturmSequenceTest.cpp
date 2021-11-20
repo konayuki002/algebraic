@@ -1,6 +1,5 @@
 #include <cassert>
 
-#include "AlgebraicReal.h"
 #include "SturmSequence.h"
 #include "UnivariatePolynomial.h"
 

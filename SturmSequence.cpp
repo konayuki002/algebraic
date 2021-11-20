@@ -2,7 +2,6 @@
 #include <numeric>
 #include <vector>
 
-#include "AlgebraicReal.h"
 #include "SturmSequence.h"
 #include "UnivariatePolynomial.h"
 
