@@ -59,6 +59,10 @@ void UnivariatePolynomialTest()
   univariate_polynomial_compound_scalar_reminder %= UnivariatePolynomial{1, 1};
   assert(univariate_polynomial_compound_scalar_reminder == 2);
 
+  // Test power()
+  UnivariatePolynomial univariate_polynomial_power{1, 1};
+  assert(univariate_polynomial_power.pow(3) == UnivariatePolynomial({1, 3, 3, 1}));
+
   // Test value_at()
   assert(UnivariatePolynomial({4, 3, 1}).value_at({1, 3}) == Rational(46, 9));
 

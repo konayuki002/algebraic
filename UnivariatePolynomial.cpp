@@ -174,6 +174,22 @@ UnivariatePolynomial UnivariatePolynomial::negate() const
   return UnivariatePolynomial(*this) *= -1; //depends on multiply?
 }
 
+UnivariatePolynomial UnivariatePolynomial::pow(const int index) const
+{
+
+  if (index < 0)
+    throw std::domain_error("Negative power of polynomial error");
+
+  UnivariatePolynomial accumulator(1);
+
+  for (int power_i = 0; power_i < index; power_i++)
+  {
+    accumulator.multiply(*this);
+  }
+
+  return accumulator;
+}
+
 //Euclidean division by polynomial
 UnivariatePolynomial &UnivariatePolynomial::operator/=(const UnivariatePolynomial &p2)
 {

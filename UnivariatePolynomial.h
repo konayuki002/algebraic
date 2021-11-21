@@ -35,6 +35,7 @@ public:
   UnivariatePolynomial &add(const UnivariatePolynomial &p);
   UnivariatePolynomial &multiply(const UnivariatePolynomial &p);
   UnivariatePolynomial negate() const;
+  UnivariatePolynomial pow(const int index) const;
   UnivariatePolynomial &operator/=(const UnivariatePolynomial &p2); //Euclidean division by polynomial
   UnivariatePolynomial &operator%=(const UnivariatePolynomial &p2);
 
