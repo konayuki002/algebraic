@@ -2,11 +2,6 @@
 
 #include "AlgebraicReal.h"
 #include "AliasMonomial.h"
-#include "AliasRationalTest.cpp"
-#include "ExtendedTest.cpp"
-#include "RationalTest.cpp"
-#include "SturmSequenceTest.cpp"
-#include "UnivariatePolynomialTest.cpp"
 
 /*
   Test module for AlgebraicReal.cpp

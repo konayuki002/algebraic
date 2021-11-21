@@ -3,6 +3,7 @@
 #include "AlgebraicRealTest.cpp"
 #include "AliasExtendedTest.cpp"
 #include "AliasMonomialTest.cpp"
+#include "AliasRationalTest.cpp"
 #include "ExtendedTest.cpp"
 #include "RationalTest.cpp"
 #include "SturmSequenceTest.cpp"
@@ -19,9 +20,10 @@ int main()
   ExtendedTest();
   AliasExtendedTest();
   AliasMonomialTest();
+  AliasRationalTest();
   RationalTest();
   SturmSequenceTest();
   UnivariatePolynomialTest();
 
-  std::cout << "succeeded " << 7 << " tests" << std::endl;
+  std::cout << "succeeded " << 8 << " tests" << std::endl;
 }
