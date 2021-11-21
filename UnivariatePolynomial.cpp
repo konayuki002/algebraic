@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <vector>
 
+#include "AliasExtended.h"
 #include "Extended.cpp"
 #include "Rational.cpp"
 #include "UnivariatePolynomial.h"
@@ -286,11 +287,13 @@ int UnivariatePolynomial::sign_at(Rational r) const
 
 int UnivariatePolynomial::sign_at_extended(Extended<Rational> e) const
 {
+  using namespace alias::extended::rational;
+
   if (e.is_finite())
   {
     return sign_at(e.get_finite_number());
   }
-  else if (e.sign() == 1) // when PositiveInfinity
+  else if (e > 0_exr) // when PositiveInfinity
   {
     return leading_coefficient().sign();
   }
