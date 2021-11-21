@@ -46,7 +46,7 @@ void UnivariatePolynomialTest()
   assert(univariate_polynomial_compound_multiply == UnivariatePolynomial({4, 4, 1}));
 
   UnivariatePolynomial univariate_polynomial_compound_scalar_multiply{3, 1};
-  univariate_polynomial_compound_scalar_multiply *= Rational(2, 3);
+  univariate_polynomial_compound_scalar_multiply *= 2_r / 3;
   assert(univariate_polynomial_compound_scalar_multiply == UnivariatePolynomial({2, {2, 3}}));
 
   UnivariatePolynomial univariate_polynomial_compound_divide{3, 2, 1};
