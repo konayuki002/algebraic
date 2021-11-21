@@ -2,6 +2,7 @@
 
 #include "AlgebraicReal.h"
 #include "AliasMonomial.h"
+#include "AliasRational.h"
 
 /*
   Test module for AlgebraicReal.cpp
@@ -12,6 +13,8 @@
 void AlgebraicRealTest()
 {
   using namespace alias::monomial::x;
+  using namespace alias::rational;
+
   {
     // Test to_string()
 
@@ -38,12 +41,35 @@ void AlgebraicRealTest()
   }
 
   {
-      // Test integer constructor
-  } {
-      // Test rational constructor
-  } {
-      // Test polynomial constructor with root zero
-  } {
+    // Test integer constructor
+
+    AlgebraicReal algebraic_real(1);
+    assert(algebraic_real.get_is_rational() == true);
+    assert(algebraic_real.get_rational() == 1);
+    assert(algebraic_real.get_defining_polynomial() == x - 1);
+    assert(algebraic_real.get_isolating_interval().first == 1);
+    assert(algebraic_real.get_isolating_interval().second == 1);
+  }
+  {
+    // Test rational constructor
+
+    AlgebraicReal algebraic_real(1_r / 2);
+    assert(algebraic_real.get_is_rational() == true);
+    assert(algebraic_real.get_rational() == 1_r / 2);
+    assert(algebraic_real.get_defining_polynomial() == x - 1_r / 2);
+    assert(algebraic_real.get_isolating_interval().first == 1_r / 2);
+    assert(algebraic_real.get_isolating_interval().second == 1_r / 2);
+  }
+  {
+    // Test polynomial constructor with root zero
+    AlgebraicReal algebraic_real(x * (x - 2), {-1, 1});
+    assert(algebraic_real.get_is_rational() == true);
+    assert(algebraic_real.get_rational() == 0);
+    assert(algebraic_real.get_defining_polynomial() == x);
+    assert(algebraic_real.get_isolating_interval().first == 0);
+    assert(algebraic_real.get_isolating_interval().second == 0);
+  }
+  {
       // Test polynomial constructor giving rational root
   } {
     // Test polynomal constructor giving irrational root
