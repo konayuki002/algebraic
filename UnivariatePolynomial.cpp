@@ -4,13 +4,14 @@
 #include <vector>
 
 #include "AliasExtended.h"
+#include "AliasRational.h"
 #include "Extended.cpp"
 #include "Rational.cpp"
 #include "UnivariatePolynomial.h"
 
 void UnivariatePolynomial::remove_higher_degree_zero()
 {
-  while (a.size() != 0 && a.back() == Rational())
+  while (a.size() != 0 && a.back() == 0)
     a.pop_back();
 }
 
@@ -219,7 +220,10 @@ UnivariatePolynomial &UnivariatePolynomial::operator%=(const UnivariatePolynomia
   */
 Rational UnivariatePolynomial::value_at(const Rational r) const
 {
-  return std::accumulate(a.rbegin(), a.rend(), Rational(), [r](Rational acc, Rational each_a) { return acc * r + each_a; });
+  using namespace alias::rational;
+
+  return std::accumulate(a.rbegin(), a.rend(), 0_r, [r](Rational acc, Rational each_a)
+                         { return acc * r + each_a; });
 }
 
 // f.composition(g) = f(g(x))
@@ -306,14 +310,17 @@ int UnivariatePolynomial::sign_at_extended(Extended<Rational> e) const
 // http://www.allisone.co.jp/html/Notes/Mathematics/Numerical_Analysis/root/range/index.html
 Rational UnivariatePolynomial::root_bound() const
 {
+  using namespace alias::rational;
+
   if (is_zero())
     throw std::domain_error("Zero polynomial doesn't have root bound");
 
   auto absolute_leading_coefficient = leading_coefficient() * leading_coefficient().sign();
 
-  auto absolute_coefficient_sum = std::accumulate(a.begin() + 1, a.end(), Rational(), [absolute_leading_coefficient](const Rational &acc, const Rational &r) { return acc + r * r.sign() / absolute_leading_coefficient; });
+  auto absolute_coefficient_sum = std::accumulate(a.begin() + 1, a.end(), 0_r, [absolute_leading_coefficient](const Rational &acc, const Rational &r)
+                                                  { return acc + r * r.sign() / absolute_leading_coefficient; });
 
-  return std::max(absolute_coefficient_sum, Rational(1));
+  return std::max(absolute_coefficient_sum, 1_r);
 }
 
 UnivariatePolynomial operator/(const UnivariatePolynomial &p1, const UnivariatePolynomial &p2)

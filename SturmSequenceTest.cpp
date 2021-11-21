@@ -2,6 +2,7 @@
 
 #include "AliasExtended.h"
 #include "AliasMonomial.h"
+#include "AliasRational.h"
 #include "SturmSequence.h"
 
 /*
@@ -57,8 +58,10 @@ void SturmSequenceTest()
 
   {
     // Test next_interval
+    using namespace alias::rational;
+
     SturmSequence sturm_sequence(x2 - 2);
     assert(sturm_sequence.next_interval({1, 2}).first == 1);
-    assert(sturm_sequence.next_interval({1, 2}).second == Rational(3, 2));
+    assert(sturm_sequence.next_interval({1, 2}).second == 3_r / 2);
   }
 }
