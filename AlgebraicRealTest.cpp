@@ -39,17 +39,6 @@ void AlgebraicRealTest()
     assert(algebraic_real.get_isolating_interval().first == 0);
     assert(algebraic_real.get_isolating_interval().second == 0);
   }
-
-  {
-    // Test integer constructor
-
-    AlgebraicReal algebraic_real(1);
-    assert(algebraic_real.get_is_rational() == true);
-    assert(algebraic_real.get_rational() == 1);
-    assert(algebraic_real.get_defining_polynomial() == x - 1);
-    assert(algebraic_real.get_isolating_interval().first == 1);
-    assert(algebraic_real.get_isolating_interval().second == 1);
-  }
   {
     // Test rational constructor
 
@@ -62,6 +51,7 @@ void AlgebraicRealTest()
   }
   {
     // Test polynomial constructor with root zero
+
     AlgebraicReal algebraic_real(x * (x - 2), {-1, 1});
     assert(algebraic_real.get_is_rational() == true);
     assert(algebraic_real.get_rational() == 0);
@@ -70,8 +60,16 @@ void AlgebraicRealTest()
     assert(algebraic_real.get_isolating_interval().second == 0);
   }
   {
-      // Test polynomial constructor giving rational root
-  } {
+    // Test polynomial constructor giving rational root
+
+    AlgebraicReal algebraic_real((x + 1_r / 2) * (x - 1_r / 2), {0, 1_r / 2});
+    assert(algebraic_real.get_is_rational() == true);
+    assert(algebraic_real.get_rational() == 1_r / 2);
+    assert(algebraic_real.get_defining_polynomial() == x - 1_r / 2);
+    assert(algebraic_real.get_isolating_interval().first == 1_r / 2);
+    assert(algebraic_real.get_isolating_interval().second == 1_r / 2);
+  }
+  {
     // Test polynomal constructor giving irrational root
   }
 }

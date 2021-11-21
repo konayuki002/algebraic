@@ -1,5 +1,6 @@
 #include <stdexcept>
 
+#include "AliasMonomial.h"
 #include "AliasExtended.h"
 #include "AlgebraicReal.h"
 #include "Comparable.cpp"
@@ -31,7 +32,7 @@ AlgebraicReal::AlgebraicReal(const UnivariatePolynomial &defining_polynomial, co
     // 0 must be representate by rational
     is_rational = true;
     r = 0;
-    this->interval = interval;
+    this->interval = {0, 0};
   }
   else if (defining_polynomial.value_at(upper_bound) == 0)
   {
@@ -39,7 +40,7 @@ AlgebraicReal::AlgebraicReal(const UnivariatePolynomial &defining_polynomial, co
     // for 0 must not be contained
     is_rational = true;
     r = upper_bound;
-    this->interval = interval;
+    this->interval = {r, r};
   }
   else
   {
@@ -73,6 +74,11 @@ AlgebraicReal::AlgebraicReal(const UnivariatePolynomial &defining_polynomial, co
 
 UnivariatePolynomial AlgebraicReal::get_defining_polynomial() const
 {
+  if (is_rational)
+  {
+    using namespace alias::monomial::x;
+    return x - r;
+  }
   return defining_polynomial_sturm_sequence.first_term();
 }
 
