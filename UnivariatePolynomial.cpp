@@ -337,23 +337,3 @@ UnivariatePolynomial square_free(const UnivariatePolynomial &p)
 {
   return p / gcd(p, p.differential());
 }
-
-UnivariatePolynomial indetermined::x::operator"" _x(const unsigned long long coefficient)
-{
-  return coefficient * UnivariatePolynomial({0, 1});
-}
-
-UnivariatePolynomial indetermined::x::operator"" _x2(const unsigned long long coefficient)
-{
-  return coefficient * 1_x * 1_x;
-}
-
-UnivariatePolynomial indetermined::x::operator"" _x3(const unsigned long long coefficient)
-{
-  return coefficient * 1_x2 * 1_x;
-}
-
-UnivariatePolynomial indetermined::x::operator"" _x4(const unsigned long long coefficient)
-{
-  return coefficient * 1_x3 * 1_x;
-}

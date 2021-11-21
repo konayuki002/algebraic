@@ -2,6 +2,7 @@
 
 #include "AlgebraicRealTest.cpp"
 #include "ExtendedTest.cpp"
+#include "IndeterminedTest.cpp"
 #include "RationalTest.cpp"
 #include "SturmSequenceTest.cpp"
 #include "UnivariatePolynomialTest.cpp"
@@ -15,9 +16,10 @@ int main()
 {
   AlgebraicRealTest();
   ExtendedTest();
+  IndeterminedTest();
   RationalTest();
   SturmSequenceTest();
   UnivariatePolynomialTest();
 
-  std::cout << "succeeded " << 4 << " tests" << std::endl;
+  std::cout << "succeeded " << 6 << " tests" << std::endl;
 }
