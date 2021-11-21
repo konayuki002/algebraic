@@ -1,6 +1,7 @@
 #include <cassert>
 
 #include "AliasExtended.h"
+#include "AliasRational.h"
 #include "UnivariatePolynomial.h"
 
 /*

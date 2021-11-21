@@ -33,7 +33,7 @@ void AlgebraicRealTest()
     // Test zero constructor
 
     AlgebraicReal algebraic_real;
-    assert(algebraic_real.get_is_rational() == true);
+    assert(algebraic_real.get_from_rational() == true);
     assert(algebraic_real.get_rational() == 0);
     assert(algebraic_real.get_defining_polynomial() == x);
     assert(algebraic_real.get_isolating_interval().first == 0);
@@ -43,7 +43,7 @@ void AlgebraicRealTest()
     // Test rational constructor
 
     AlgebraicReal algebraic_real(1_r / 2);
-    assert(algebraic_real.get_is_rational() == true);
+    assert(algebraic_real.get_from_rational() == true);
     assert(algebraic_real.get_rational() == 1_r / 2);
     assert(algebraic_real.get_defining_polynomial() == x - 1_r / 2);
     assert(algebraic_real.get_isolating_interval().first == 1_r / 2);
@@ -53,7 +53,7 @@ void AlgebraicRealTest()
     // Test polynomial constructor with root zero
 
     AlgebraicReal algebraic_real(x * (x - 2), {-1, 1});
-    assert(algebraic_real.get_is_rational() == true);
+    assert(algebraic_real.get_from_rational() == true);
     assert(algebraic_real.get_rational() == 0);
     assert(algebraic_real.get_defining_polynomial() == x);
     assert(algebraic_real.get_isolating_interval().first == 0);
@@ -63,7 +63,7 @@ void AlgebraicRealTest()
     // Test polynomial constructor giving rational root
 
     AlgebraicReal algebraic_real((x + 1_r / 2) * (x - 1_r / 2), {0, 1_r / 2});
-    assert(algebraic_real.get_is_rational() == true);
+    assert(algebraic_real.get_from_rational() == true);
     assert(algebraic_real.get_rational() == 1_r / 2);
     assert(algebraic_real.get_defining_polynomial() == x - 1_r / 2);
     assert(algebraic_real.get_isolating_interval().first == 1_r / 2);
@@ -71,5 +71,30 @@ void AlgebraicRealTest()
   }
   {
     // Test polynomal constructor giving irrational root
+
+    AlgebraicReal algebraic_real(x2 - 2, {1, 2});
+    assert(algebraic_real.get_from_rational() == false);
+    assert(algebraic_real.get_defining_polynomial() == x2 - 2);
+    assert(algebraic_real.get_isolating_interval().first == 1);
+    assert(algebraic_real.get_isolating_interval().second == 2);
+  }
+
+  {
+    // Test compare operator
+    assert(AlgebraicReal(1) < AlgebraicReal(2));
+    assert(AlgebraicReal(1) < AlgebraicReal(x2 - 2, {1, 2}));
+    assert(AlgebraicReal(x2 - 2, {1, 2}) < AlgebraicReal(2));
+    assert(AlgebraicReal(x2 - 2, {1, 2}) < AlgebraicReal(x2 - 3, {1, 2}));
+
+    assert(AlgebraicReal(2) > AlgebraicReal(1));
+    assert(AlgebraicReal(1) <= AlgebraicReal(2));
+    assert(AlgebraicReal(2) >= AlgebraicReal(1));
+
+    assert(AlgebraicReal(1) == AlgebraicReal(1));
+    assert(AlgebraicReal(1) == AlgebraicReal(x2 - 1, {0, 2}));
+    assert(AlgebraicReal(x2 - 1, {0, 2}) == AlgebraicReal(1));
+    assert(AlgebraicReal(x2 - 1, {0, 2}) == AlgebraicReal(x2 + x - 2, {0, 2}));
+
+    assert(AlgebraicReal(1) != AlgebraicReal(2));
   }
 }

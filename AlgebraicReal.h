@@ -17,7 +17,7 @@
 class AlgebraicReal : public Showable<AlgebraicReal>, public Comparable<AlgebraicReal>, public Fractional<AlgebraicReal>
 {
 private:
-  bool is_rational;
+  bool from_rational;
 
   Rational r;
 
@@ -25,6 +25,8 @@ private:
 
   // (r1, r2]
   std::pair<Rational, Rational> interval;
+
+  static bool is_overlapping(const std::pair<Rational, Rational> i1, const std::pair<Rational, Rational> i2);
 
 public:
   static AlgebraicReal make_AlgebraicReal(const SturmSequence &defining_polynomial_sturm_sequence, const std::pair<Rational, Rational> &interval);
@@ -49,7 +51,7 @@ public:
 
   AlgebraicReal inverse() const;
 
-  bool get_is_rational() const;
+  bool get_from_rational() const;
   // TODO: rename to rational()
   Rational get_rational() const;
   // TODO: rename to defining_polynomial
