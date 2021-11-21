@@ -173,6 +173,22 @@ UnivariatePolynomial UnivariatePolynomial::negate() const
   return UnivariatePolynomial(*this) *= -1; //depends on multiply?
 }
 
+UnivariatePolynomial UnivariatePolynomial::pow(const int index) const
+{
+
+  if (index < 0)
+    throw std::domain_error("Negative power of polynomial error");
+
+  UnivariatePolynomial accumulator(1);
+
+  for (int power_i = 0; power_i < index; power_i++)
+  {
+    accumulator.multiply(*this);
+  }
+
+  return accumulator;
+}
+
 //Euclidean division by polynomial
 UnivariatePolynomial &UnivariatePolynomial::operator/=(const UnivariatePolynomial &p2)
 {
@@ -320,4 +336,24 @@ UnivariatePolynomial gcd(const UnivariatePolynomial &p1, const UnivariatePolynom
 UnivariatePolynomial square_free(const UnivariatePolynomial &p)
 {
   return p / gcd(p, p.differential());
+}
+
+UnivariatePolynomial indetermined::x::operator"" _x(const unsigned long long coefficient)
+{
+  return coefficient * UnivariatePolynomial({0, 1});
+}
+
+UnivariatePolynomial indetermined::x::operator"" _x2(const unsigned long long coefficient)
+{
+  return coefficient * 1_x * 1_x;
+}
+
+UnivariatePolynomial indetermined::x::operator"" _x3(const unsigned long long coefficient)
+{
+  return coefficient * 1_x2 * 1_x;
+}
+
+UnivariatePolynomial indetermined::x::operator"" _x4(const unsigned long long coefficient)
+{
+  return coefficient * 1_x3 * 1_x;
 }

@@ -35,6 +35,7 @@ public:
   UnivariatePolynomial &add(const UnivariatePolynomial &p);
   UnivariatePolynomial &multiply(const UnivariatePolynomial &p);
   UnivariatePolynomial negate() const;
+  UnivariatePolynomial pow(const int index) const;
   UnivariatePolynomial &operator/=(const UnivariatePolynomial &p2); //Euclidean division by polynomial
   UnivariatePolynomial &operator%=(const UnivariatePolynomial &p2);
 
@@ -64,3 +65,11 @@ UnivariatePolynomial operator/(const UnivariatePolynomial &p1, const UnivariateP
 UnivariatePolynomial operator%(const UnivariatePolynomial &p1, const UnivariatePolynomial &p2);
 UnivariatePolynomial gcd(const UnivariatePolynomial &p1, const UnivariatePolynomial &p2);
 UnivariatePolynomial square_free(const UnivariatePolynomial &p);
+
+namespace indetermined::x
+{
+  UnivariatePolynomial operator"" _x(const unsigned long long coefficient);
+  UnivariatePolynomial operator"" _x2(const unsigned long long coefficient);
+  UnivariatePolynomial operator"" _x3(const unsigned long long coefficient);
+  UnivariatePolynomial operator"" _x4(const unsigned long long coefficient);
+} // namespace indetermined::x

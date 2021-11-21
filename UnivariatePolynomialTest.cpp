@@ -59,6 +59,10 @@ void UnivariatePolynomialTest()
   univariate_polynomial_compound_scalar_reminder %= UnivariatePolynomial{1, 1};
   assert(univariate_polynomial_compound_scalar_reminder == 2);
 
+  // Test power()
+  UnivariatePolynomial univariate_polynomial_power{1, 1};
+  assert(univariate_polynomial_power.pow(3) == UnivariatePolynomial({1, 3, 3, 1}));
+
   // Test value_at()
   assert(UnivariatePolynomial({4, 3, 1}).value_at({1, 3}) == Rational(46, 9));
 
@@ -112,4 +116,11 @@ void UnivariatePolynomialTest()
 
   // Test root_bound()
   assert(UnivariatePolynomial({1, 3, -2, 0, 1}).root_bound() == 6);
+
+  // Test user-defined literal
+  {
+    using namespace indetermined::x;
+
+    assert(4_x4 + 3_x3 + 2_x2 + 1_x + 0 == UnivariatePolynomial({0, 1, 2, 3, 4}));
+  }
 }
