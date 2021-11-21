@@ -2,8 +2,8 @@
 
 #include "AlgebraicRealTest.cpp"
 #include "AliasExtendedTest.cpp"
+#include "AliasMonomialTest.cpp"
 #include "ExtendedTest.cpp"
-#include "MonomialAliasTest.cpp"
 #include "RationalTest.cpp"
 #include "SturmSequenceTest.cpp"
 #include "UnivariatePolynomialTest.cpp"
@@ -18,7 +18,7 @@ int main()
   AlgebraicRealTest();
   ExtendedTest();
   AliasExtendedTest();
-  MonomialAliasTest();
+  AliasMonomialTest();
   RationalTest();
   SturmSequenceTest();
   UnivariatePolynomialTest();

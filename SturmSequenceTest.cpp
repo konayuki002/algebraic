@@ -1,7 +1,7 @@
 #include <cassert>
 
 #include "AliasExtended.h"
-#include "MonomialAlias.h"
+#include "AliasMonomial.h"
 #include "SturmSequence.h"
 
 /*
@@ -13,7 +13,7 @@
 void SturmSequenceTest()
 {
   using namespace alias::extended::rational;
-  using namespace monomial_alias::x;
+  using namespace alias::monomial::x;
   {
     // Test normal constructor and to_string()
     SturmSequence sturm_sequence = SturmSequence(x4 - 2_x2 + 3_x + 1);

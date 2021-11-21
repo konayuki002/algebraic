@@ -1,10 +1,10 @@
-#include "MonomialAlias.h"
+#include "AliasMonomial.h"
 
-void MonomialAliasTest()
+void AliasMonomialTest()
 {
   // Test user-defined literal for monomial
   {
-    using namespace monomial_alias::x;
+    using namespace alias::monomial::x;
 
     assert(x5 + x4 + x3 + x2 + x + 1 == UnivariatePolynomial({1, 1, 1, 1, 1, 1}));
 

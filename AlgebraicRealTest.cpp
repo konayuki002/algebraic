@@ -1,7 +1,7 @@
 #include <cassert>
 
 #include "AlgebraicReal.h"
-#include "MonomialAlias.h"
+#include "AliasMonomial.h"
 
 /*
   Test module for AlgebraicReal.cpp
@@ -11,7 +11,7 @@
 
 void AlgebraicRealTest()
 {
-  using namespace monomial_alias::x;
+  using namespace alias::monomial::x;
   {
     // Test to_string()
 
