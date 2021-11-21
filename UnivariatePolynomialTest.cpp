@@ -1,7 +1,7 @@
 #include <cassert>
 
+#include "AliasExtended.h"
 #include "UnivariatePolynomial.h"
-#include "InfinityAlias.h"
 
 /*
   Test module for UnivariatePolynomial.cpp
@@ -111,9 +111,8 @@ void UnivariatePolynomialTest()
   assert(UnivariatePolynomial({1, 1, 1, 1}).differential() == UnivariatePolynomial({1, 2, 3}));
 
   // Test sign_at()
-  assert(UnivariatePolynomial({1, 0, 1, -1}).sign_at_extended(Extended<Rational>(-1)) == 1);
-
-  using namespace ::infinity_alias::rational;
+  using namespace alias::extended::rational;
+  assert(UnivariatePolynomial({1, 0, 1, -1}).sign_at_extended(-1_exr) == 1);
   assert(UnivariatePolynomial({1, 0, 1, -1}).sign_at_extended(+oo) == -1);
   assert(UnivariatePolynomial({1, 0, 1, -1}).sign_at_extended(-oo) == 1);
 

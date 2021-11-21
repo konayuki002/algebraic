@@ -1,8 +1,8 @@
 #include <iostream>
 
 #include "AlgebraicRealTest.cpp"
+#include "AliasExtendedTest.cpp"
 #include "ExtendedTest.cpp"
-#include "InfinityAliasTest.cpp"
 #include "MonomialAliasTest.cpp"
 #include "RationalTest.cpp"
 #include "SturmSequenceTest.cpp"
@@ -17,11 +17,11 @@ int main()
 {
   AlgebraicRealTest();
   ExtendedTest();
-  InfinityAliasTest();
+  AliasExtendedTest();
   MonomialAliasTest();
   RationalTest();
   SturmSequenceTest();
   UnivariatePolynomialTest();
 
-  std::cout << "succeeded " << 6 << " tests" << std::endl;
+  std::cout << "succeeded " << 7 << " tests" << std::endl;
 }

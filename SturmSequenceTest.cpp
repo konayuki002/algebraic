@@ -1,6 +1,6 @@
 #include <cassert>
 
-#include "InfinityAlias.h"
+#include "AliasExtended.h"
 #include "MonomialAlias.h"
 #include "SturmSequence.h"
 
@@ -12,7 +12,7 @@
 
 void SturmSequenceTest()
 {
-  using namespace infinity_alias::rational;
+  using namespace alias::extended::rational;
   using namespace monomial_alias::x;
   {
     // Test normal constructor and to_string()

@@ -1,9 +1,9 @@
 #include <stdexcept>
 
+#include "AliasExtended.h"
 #include "AlgebraicReal.h"
 #include "Comparable.cpp"
 #include "Fractional.cpp"
-#include "InfinityAlias.h"
 #include "Showable.cpp"
 #include "SturmSequence.h"
 #include "UnivariatePolynomial.h"
@@ -258,7 +258,7 @@ std::pair<Rational, Rational> AlgebraicReal::next_interval(const std::pair<Ratio
 // move to AlgebraicReal
 std::vector<AlgebraicReal> AlgebraicReal::real_roots(const UnivariatePolynomial &p)
 {
-  using namespace infinity_alias::rational;
+  using namespace alias::extended::rational;
   return real_roots_between(p, -oo, +oo);
 }
 
