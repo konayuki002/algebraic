@@ -2,7 +2,7 @@
 
 #include "AlgebraicRealTest.cpp"
 #include "ExtendedTest.cpp"
-#include "IndeterminedTest.cpp"
+#include "MonomialAliasTest.cpp"
 #include "RationalTest.cpp"
 #include "SturmSequenceTest.cpp"
 #include "UnivariatePolynomialTest.cpp"
@@ -16,7 +16,7 @@ int main()
 {
   AlgebraicRealTest();
   ExtendedTest();
-  IndeterminedTest();
+  MonomialAliasTest();
   RationalTest();
   SturmSequenceTest();
   UnivariatePolynomialTest();

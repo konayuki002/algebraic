@@ -2,7 +2,7 @@
 
 #include "UnivariatePolynomial.h"
 
-namespace indetermined::x
+namespace monomial_alias::x
 {
   static const UnivariatePolynomial x = UnivariatePolynomial({0, 1});
   static const UnivariatePolynomial x2 = x * x;
@@ -19,4 +19,4 @@ namespace indetermined::x
   static UnivariatePolynomial operator"" _x4(const unsigned long long coefficient) { return coefficient * x4; }
 
   static UnivariatePolynomial operator"" _x5(const unsigned long long coefficient) { return coefficient * x5; };
-} // namespace indetermined::x
+} // namespace monomial_alias::x

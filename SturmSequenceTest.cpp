@@ -1,6 +1,6 @@
 #include <cassert>
 
-#include "Indetermined.h"
+#include "MonomialAlias.h"
 #include "SturmSequence.h"
 
 /*
@@ -11,7 +11,7 @@
 
 void SturmSequenceTest()
 {
-  using namespace indetermined::x;
+  using namespace monomial_alias::x;
   {
     // Test normal constructor and to_string()
     SturmSequence sturm_sequence = SturmSequence(x4 - 2_x2 + 3_x + 1);

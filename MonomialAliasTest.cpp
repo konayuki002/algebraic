@@ -1,10 +1,10 @@
-#include "Indetermined.h"
+#include "MonomialAlias.h"
 
-void IndeterminedTest()
+void MonomialAliasTest()
 {
   // Test user-defined literal for monomial
   {
-    using namespace indetermined::x;
+    using namespace monomial_alias::x;
 
     assert(x5 + x4 + x3 + x2 + x + 1 == UnivariatePolynomial({1, 1, 1, 1, 1, 1}));
 
