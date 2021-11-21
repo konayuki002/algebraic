@@ -1,5 +1,6 @@
 #include <cassert>
 
+#include "InfinityAlias.h"
 #include "MonomialAlias.h"
 #include "SturmSequence.h"
 
@@ -11,6 +12,7 @@
 
 void SturmSequenceTest()
 {
+  using namespace infinity_alias::rational;
   using namespace monomial_alias::x;
   {
     // Test normal constructor and to_string()
@@ -38,7 +40,7 @@ void SturmSequenceTest()
   {
     // Test count_sign_change_at_extended
     SturmSequence sturm_sequence = SturmSequence(x4 - 2_x2 + 3_x + 1);
-    assert(sturm_sequence.count_sign_change_at_extended(Infinity::NegativeInfinity) == 3);
+    assert(sturm_sequence.count_sign_change_at_extended(-oo) == 3);
   }
 
   {
@@ -50,7 +52,7 @@ void SturmSequenceTest()
   {
     // Test count_real_roots_between_extended
     SturmSequence sturm_sequence(x2 - 2);
-    assert(sturm_sequence.count_real_roots_between_extended(Infinity::NegativeInfinity, Infinity::PositiveInfinity) == 2);
+    assert(sturm_sequence.count_real_roots_between_extended(-oo, +oo) == 2);
   }
 
   {

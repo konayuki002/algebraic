@@ -3,6 +3,7 @@
 #include "AlgebraicReal.h"
 #include "Comparable.cpp"
 #include "Fractional.cpp"
+#include "InfinityAlias.h"
 #include "Showable.cpp"
 #include "SturmSequence.h"
 #include "UnivariatePolynomial.h"
@@ -257,7 +258,8 @@ std::pair<Rational, Rational> AlgebraicReal::next_interval(const std::pair<Ratio
 // move to AlgebraicReal
 std::vector<AlgebraicReal> AlgebraicReal::real_roots(const UnivariatePolynomial &p)
 {
-  return real_roots_between(p, Extended<Rational>(Infinity::NegativeInfinity), Extended<Rational>(Infinity::PositiveInfinity));
+  using namespace infinity_alias::rational;
+  return real_roots_between(p, -oo, +oo);
 }
 
 std::vector<AlgebraicReal> AlgebraicReal::real_roots_between(const UnivariatePolynomial &p, const Extended<Rational> &e1, const Extended<Rational> &e2)

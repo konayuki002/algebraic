@@ -2,6 +2,7 @@
 
 #include "AlgebraicRealTest.cpp"
 #include "ExtendedTest.cpp"
+#include "InfinityAliasTest.cpp"
 #include "MonomialAliasTest.cpp"
 #include "RationalTest.cpp"
 #include "SturmSequenceTest.cpp"
@@ -16,6 +17,7 @@ int main()
 {
   AlgebraicRealTest();
   ExtendedTest();
+  InfinityAliasTest();
   MonomialAliasTest();
   RationalTest();
   SturmSequenceTest();
