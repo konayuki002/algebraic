@@ -1,5 +1,6 @@
 #include <cassert>
 
+#include "AliasRational.h"
 #include "Extended.cpp"
 #include "Rational.cpp"
 
@@ -12,19 +13,21 @@
 */
 void ExtendedTest()
 {
+  using namespace alias::rational;
+
   // Test to_string()
-  assert(Extended<Rational>(Rational({1, 2})).to_string() == "Ext 1/2");
+  assert(Extended<Rational>(1_r / 2).to_string() == "Ext 1/2");
 
   // Test to_string_detail()
-  assert(Extended<Rational>(Rational({1, 2})).to_string_detail() == "#Extended[#Rational{numerator: 1, denominator: 2}]");
+  assert(Extended<Rational>(1_r / 2).to_string_detail() == "#Extended[#Rational{numerator: 1, denominator: 2}]");
 
   // Test get_finite_number()
-  assert(Extended<Rational>(Rational({1, 2})).get_finite_number() == Rational(1, 2));
+  assert(Extended<Rational>(1_r / 2).get_finite_number() == 1_r / 2);
 
   // Test get_finite_number() is fail when infinity
   try
   {
-    assert(Extended<Rational>(Infinity::PositiveInfinity).get_finite_number() == Rational(1, 2));
+    assert(Extended<Rational>(Infinity::PositiveInfinity).get_finite_number() == 1_r / 2);
   }
   catch (std::domain_error e)
   {
@@ -33,17 +36,17 @@ void ExtendedTest()
 
   // Test sign()
   assert(Extended<Rational>(Infinity::NegativeInfinity).sign() == -1);
-  assert(Extended<Rational>(Rational(-1, 2)).sign() == -1);
+  assert(Extended<Rational>(-1_r / 2).sign() == -1);
   assert(Extended<Rational>().sign() == 0);
-  assert(Extended<Rational>(Rational(1, 2)).sign() == +1);
+  assert(Extended<Rational>(1_r / 2).sign() == +1);
   assert(Extended<Rational>(Infinity::PositiveInfinity).sign() == +1);
 
   // Test calculating when finite
-  Extended<Rational> e(Rational(1, 2));
-  assert(e + e == Rational(1));
-  assert(e - e == Rational(0));
-  assert(e * e == Rational(1, 4));
-  assert(e / e == Rational(1));
+  Extended<Rational> e(1_r / 2);
+  assert(e + e == 1_r);
+  assert(e - e == 0_r);
+  assert(e * e == 1_r / 4);
+  assert(e / e == 1_r);
 
   // Test calculating when infinity
   Extended<Rational> ep(Infinity::PositiveInfinity);
@@ -83,7 +86,7 @@ void ExtendedTest()
   assert((e / ep) == Extended<Rational>());
 
   // Test equality of finite numbers
-  assert(Extended<Rational>(Rational(1, 2)) == Extended<Rational>(Rational(1, 2)));
+  assert(Extended<Rational>(1_r / 2) == Extended<Rational>(1_r / 2));
 
   // Opposite sign infinity can be discriminated
   Extended<Rational>(Infinity::PositiveInfinity) != Extended<Rational>(Infinity::NegativeInfinity);
@@ -104,12 +107,12 @@ void ExtendedTest()
   // Test clamp
   assert(Extended<Rational>(Infinity::NegativeInfinity).clamp(1, 3) == 1);
   assert(Extended<Rational>().clamp(1, 3) == 1);
-  assert(Extended<Rational>(Rational(2)).clamp(1, 3) == 2);
-  assert(Extended<Rational>(Rational(4)).clamp(1, 3) == 3);
+  assert(Extended<Rational>(2_r).clamp(1, 3) == 2);
+  assert(Extended<Rational>(4_r).clamp(1, 3) == 3);
   assert(Extended<Rational>(Infinity::PositiveInfinity).clamp(1, 3) == 3);
 
   // Test is_finite()
-  assert(Extended<Rational>(Rational(1, 2)).is_finite());
+  assert(Extended<Rational>(1_r / 2).is_finite());
   assert(!Extended<Rational>(Infinity::PositiveInfinity).is_finite());
   assert(!Extended<Rational>(Infinity::NegativeInfinity).is_finite());
 }

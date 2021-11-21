@@ -9,6 +9,8 @@
 */
 void UnivariatePolynomialTest()
 {
+  using namespace alias::rational;
+
   // Test to_string()
   assert(UnivariatePolynomial({1, 2}).to_string() == "[1/1 2/1]");
 
@@ -64,7 +66,7 @@ void UnivariatePolynomialTest()
   assert(univariate_polynomial_power.pow(3) == UnivariatePolynomial({1, 3, 3, 1}));
 
   // Test value_at()
-  assert(UnivariatePolynomial({4, 3, 1}).value_at({1, 3}) == Rational(46, 9));
+  assert(UnivariatePolynomial({4, 3, 1}).value_at({1, 3}) == 46_r / 9);
 
   // Test composition()
   assert(UnivariatePolynomial({1, 3, 1}).composition(UnivariatePolynomial({1, 2, 1})) == UnivariatePolynomial({5, 10, 9, 4, 1}));

@@ -1,5 +1,6 @@
 #include <cassert>
 
+#include "AliasRational.h"
 #include "SturmSequence.h"
 #include "UnivariatePolynomial.h"
 
@@ -54,8 +55,10 @@ void SturmSequenceTest()
 
   {
     // Test next_interval
+    using namespace alias::rational;
+
     SturmSequence sturm_sequence({-2, 0, 1});
     assert(sturm_sequence.next_interval({1, 2}).first == 1);
-    assert(sturm_sequence.next_interval({1, 2}).second == Rational(3, 2));
+    assert(sturm_sequence.next_interval({1, 2}).second == 3_r / 2);
   }
 }
