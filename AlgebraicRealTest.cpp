@@ -34,49 +34,49 @@ void AlgebraicRealTest()
 
     AlgebraicReal algebraic_real;
     assert(algebraic_real.get_from_rational() == true);
-    assert(algebraic_real.get_rational() == 0);
-    assert(algebraic_real.get_defining_polynomial() == x);
-    assert(algebraic_real.get_isolating_interval().first == 0);
-    assert(algebraic_real.get_isolating_interval().second == 0);
+    assert(algebraic_real.rational() == 0);
+    assert(algebraic_real.defining_polynomial() == x);
+    assert(algebraic_real.get_interval().first == 0);
+    assert(algebraic_real.get_interval().second == 0);
   }
   {
     // Test rational constructor
 
     AlgebraicReal algebraic_real(1_r / 2);
     assert(algebraic_real.get_from_rational() == true);
-    assert(algebraic_real.get_rational() == 1_r / 2);
-    assert(algebraic_real.get_defining_polynomial() == x - 1_r / 2);
-    assert(algebraic_real.get_isolating_interval().first == 1_r / 2);
-    assert(algebraic_real.get_isolating_interval().second == 1_r / 2);
+    assert(algebraic_real.rational() == 1_r / 2);
+    assert(algebraic_real.defining_polynomial() == x - 1_r / 2);
+    assert(algebraic_real.get_interval().first == 1_r / 2);
+    assert(algebraic_real.get_interval().second == 1_r / 2);
   }
   {
     // Test polynomial constructor with root zero
 
     AlgebraicReal algebraic_real(x * (x - 2), {-1, 1});
     assert(algebraic_real.get_from_rational() == true);
-    assert(algebraic_real.get_rational() == 0);
-    assert(algebraic_real.get_defining_polynomial() == x);
-    assert(algebraic_real.get_isolating_interval().first == 0);
-    assert(algebraic_real.get_isolating_interval().second == 0);
+    assert(algebraic_real.rational() == 0);
+    assert(algebraic_real.defining_polynomial() == x);
+    assert(algebraic_real.get_interval().first == 0);
+    assert(algebraic_real.get_interval().second == 0);
   }
   {
     // Test polynomial constructor giving rational root
 
     AlgebraicReal algebraic_real((x + 1_r / 2) * (x - 1_r / 2), {0, 1_r / 2});
     assert(algebraic_real.get_from_rational() == true);
-    assert(algebraic_real.get_rational() == 1_r / 2);
-    assert(algebraic_real.get_defining_polynomial() == x - 1_r / 2);
-    assert(algebraic_real.get_isolating_interval().first == 1_r / 2);
-    assert(algebraic_real.get_isolating_interval().second == 1_r / 2);
+    assert(algebraic_real.rational() == 1_r / 2);
+    assert(algebraic_real.defining_polynomial() == x - 1_r / 2);
+    assert(algebraic_real.get_interval().first == 1_r / 2);
+    assert(algebraic_real.get_interval().second == 1_r / 2);
   }
   {
     // Test polynomal constructor giving irrational root
 
     AlgebraicReal algebraic_real(x2 - 2, {1, 2});
     assert(algebraic_real.get_from_rational() == false);
-    assert(algebraic_real.get_defining_polynomial() == x2 - 2);
-    assert(algebraic_real.get_isolating_interval().first == 1);
-    assert(algebraic_real.get_isolating_interval().second == 2);
+    assert(algebraic_real.defining_polynomial() == x2 - 2);
+    assert(algebraic_real.get_interval().first == 1);
+    assert(algebraic_real.get_interval().second == 2);
   }
 
   {
@@ -107,7 +107,7 @@ void AlgebraicRealTest()
 
   {
     // Test next_interval() when rational
-    assert(AlgebraicReal(0).next_interval({0, 0}) == AlgebraicReal(0).get_isolating_interval());
+    assert(AlgebraicReal(0).next_interval({0, 0}) == AlgebraicReal(0).get_interval());
   }
 
   {
@@ -122,11 +122,11 @@ void AlgebraicRealTest()
 
     assert(roots.size() == 2);
 
-    assert(roots.at(0).get_isolating_interval().first == 4);
-    assert(roots.at(0).get_isolating_interval().second == 8);
+    assert(roots.at(0).get_interval().first == 4);
+    assert(roots.at(0).get_interval().second == 8);
 
-    assert(roots.at(1).get_isolating_interval().first == 8);
-    assert(roots.at(1).get_isolating_interval().second == 12);
+    assert(roots.at(1).get_interval().first == 8);
+    assert(roots.at(1).get_interval().second == 12);
 
     assert(roots.at(0).next_interval({5, 9}).first == 5);
     assert(roots.at(0).next_interval({5, 9}).second == 7);
@@ -138,11 +138,11 @@ void AlgebraicRealTest()
 
     assert(roots.size() == 2);
 
-    assert(roots.at(0).get_isolating_interval().first == -2);
-    assert(roots.at(0).get_isolating_interval().second == 0);
+    assert(roots.at(0).get_interval().first == -2);
+    assert(roots.at(0).get_interval().second == 0);
 
-    assert(roots.at(1).get_isolating_interval().first == 0);
-    assert(roots.at(1).get_isolating_interval().second == 2);
+    assert(roots.at(1).get_interval().first == 0);
+    assert(roots.at(1).get_interval().second == 2);
 
     assert(roots.at(0).next_interval({-2, 0}).first == -2);
     assert(roots.at(0).next_interval({-2, 0}).second == -1);

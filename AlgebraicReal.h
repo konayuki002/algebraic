@@ -29,8 +29,6 @@ private:
   static bool is_overlapping(const std::pair<Rational, Rational> i1, const std::pair<Rational, Rational> i2);
 
 public:
-  static AlgebraicReal make_AlgebraicReal(const SturmSequence &defining_polynomial_sturm_sequence, const std::pair<Rational, Rational> &interval);
-
   // Zero
   AlgebraicReal();
   // Rational
@@ -52,14 +50,12 @@ public:
   AlgebraicReal inverse() const;
 
   bool get_from_rational() const;
-  // TODO: rename to rational()
-  Rational get_rational() const;
-  // TODO: rename to defining_polynomial
-  UnivariatePolynomial get_defining_polynomial() const;
-  // TODO: rename to isolating_interval
-  std::pair<Rational, Rational> get_isolating_interval() const;
+  Rational rational() const;
+  UnivariatePolynomial defining_polynomial() const;
+  std::pair<Rational, Rational> get_interval() const;
   SturmSequence sturm_sequence() const;
   // name differ from source (interval())
+  // update interval or recreate interval?
   std::pair<Rational, Rational> next_interval(const std::pair<Rational, Rational> old_interval) const;
 
   static std::vector<AlgebraicReal> real_roots(const UnivariatePolynomial &p);
