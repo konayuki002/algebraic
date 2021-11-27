@@ -28,26 +28,16 @@ UnivariatePolynomial SturmSequence::first_term() const
   return sequence_terms.at(0);
 }
 
-std::string SturmSequence::to_string() const
+std::ostream &operator<<(std::ostream &os, const SturmSequence &s)
 {
-  std::string output_string = "Sturm |";
-  for (auto term = sequence_terms.begin(); term != sequence_terms.end(); term++)
-  {
-    output_string += " ";
-    output_string += term->to_string();
-  }
-  return output_string;
-}
+  os << "Sturm |";
 
-std::string SturmSequence::to_string_detail() const
-{
-  std::string output_string = "#SturmSequence{";
-  for (auto term = sequence_terms.begin(); term != sequence_terms.end() - 1; term++)
+  for (auto &term : s.sequence_terms)
   {
-    output_string += term->to_string_detail();
-    output_string += ", ";
+    os << " " << term.to_string();
   }
-  return output_string + sequence_terms.back().to_string_detail() + "}";
+
+  return os;
 }
 
 int SturmSequence::count_sign_change(const std::vector<int> sign)
@@ -71,14 +61,16 @@ SturmSequence::SturmSequence(const UnivariatePolynomial first_term)
 int SturmSequence::count_sign_change_at(const Rational r) const
 {
   std::vector<int> signs(sequence_terms.size());
-  std::transform(sequence_terms.begin(), sequence_terms.end(), signs.begin(), [r](UnivariatePolynomial p) { return p.sign_at(r); });
+  std::transform(sequence_terms.begin(), sequence_terms.end(), signs.begin(), [r](UnivariatePolynomial p)
+                 { return p.sign_at(r); });
   return count_sign_change(signs);
 }
 
 int SturmSequence::count_sign_change_at_extended(const Extended<Rational> e) const
 {
   std::vector<int> signs(sequence_terms.size());
-  std::transform(sequence_terms.begin(), sequence_terms.end(), signs.begin(), [e](UnivariatePolynomial p) { return p.sign_at_extended(e); });
+  std::transform(sequence_terms.begin(), sequence_terms.end(), signs.begin(), [e](UnivariatePolynomial p)
+                 { return p.sign_at_extended(e); });
   return count_sign_change(signs);
 }
 
