@@ -111,68 +111,6 @@ std::string AlgebraicReal::to_string_detail() const
   }
 }
 
-bool AlgebraicReal::less_than(const AlgebraicReal &a) const
-{
-  if (from_rational && a.get_from_rational())
-    return r.less_than(a.rational());
-
-  if (from_rational)
-  {
-    /* r < a when
-    *   1. r is lower than low limit of a
-    *   2. there is a root (= a) in (low, r)
-    */
-    if (r <= a.get_interval().first)
-      return true;
-
-    if (a.get_interval().second < r)
-      return false;
-
-    return defining_polynomial_sturm_sequence.count_real_roots_between(r, a.get_interval().second) == 1;
-  }
-
-  if (a.get_from_rational())
-  {
-    if (interval.second < a.rational())
-      return true;
-
-    if (a.rational() <= interval.first)
-      return false;
-
-    return defining_polynomial_sturm_sequence.count_real_roots_between(interval.first, a.rational()) == 1;
-  }
-
-  // both are not rational
-
-  if (interval.second <= a.get_interval().first)
-    return true;
-
-  if (a.get_interval().second <= interval.first)
-    return false;
-
-  auto a_interval = a.get_interval();
-  auto defining_polynomial_gcd_sturm_sequence = SturmSequence(gcd(defining_polynomial(), a.defining_polynomial()));
-  Rational overlap_interval_left = std::max(interval.first, a_interval.first);
-  Rational overlap_interval_right = std::min(interval.second, a_interval.second);
-  if (defining_polynomial_gcd_sturm_sequence.count_real_roots_between(overlap_interval_left, overlap_interval_right) == 1)
-  {
-    // if equal
-    return false;
-  }
-  else
-  {
-    auto this_interval = interval;
-    // not equal and intervals overlap
-    while (is_overlapping(this_interval, a_interval))
-    {
-      // converge intervals until overlap resolves
-      this_interval = this->next_interval(this_interval);
-      a_interval = a.next_interval(a_interval);
-    }
-    return this_interval.second <= a_interval.first;
-  }
-}
-
 bool operator<(const AlgebraicReal &a, const AlgebraicReal &b)
 {
   if (a.from_rational && b.from_rational)
@@ -232,53 +170,6 @@ bool operator<(const AlgebraicReal &a, const AlgebraicReal &b)
     }
     return a_interval.second <= b_interval.first;
   }
-}
-
-bool AlgebraicReal::equal_to(const AlgebraicReal &a) const
-{
-  if (from_rational && a.get_from_rational())
-    return r == a.rational();
-
-  if (from_rational)
-  {
-    auto a_interval = a.get_interval();
-
-    if (r <= a_interval.first || a_interval.second < r)
-    { // differ from source https://miz-ar.info/math/algebraic-real/posts/02-real-root-counting.html. not leq but l
-      return false;
-    }
-    else
-    {
-      return a.defining_polynomial().value_at(r) == 0;
-    }
-  }
-
-  if (a.from_rational)
-  {
-    Rational a_r = a.rational();
-
-    if (a_r <= interval.first || interval.second < a_r)
-    { // same above difference
-      return false;
-    }
-    else
-    {
-      return defining_polynomial().value_at(a_r) == 0;
-    }
-  }
-
-  // both are not rational
-  auto a_interval = a.get_interval();
-  auto this_interval = get_interval();
-
-  if (!is_overlapping(this_interval, a_interval)) // intervals not overlap
-    return false;
-
-  auto defining_polynomial_gcd_sturm_sequence = SturmSequence(gcd(defining_polynomial(), a.defining_polynomial()));
-  Rational overlap_interval_left = std::min(interval.first, a_interval.first);
-  Rational overlap_interval_right = std::max(interval.second, a_interval.second);
-
-  return defining_polynomial_gcd_sturm_sequence.count_real_roots_between(overlap_interval_left, overlap_interval_right) == 1;
 }
 
 bool operator==(const AlgebraicReal &a, const AlgebraicReal &b)
