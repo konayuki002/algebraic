@@ -13,7 +13,7 @@
   Class for Number with positive/negative infinity
 */
 template <class Number>
-class Extended : public Showable<Extended<Number>>, public Comparable<Extended<Number>>, public Fractional<Extended<Number>>
+class Extended : public Showable<Extended<Number>>, private boost::ordered_field_operators<Extended>
 {
 private:
   Number a;
