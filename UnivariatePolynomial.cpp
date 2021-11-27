@@ -74,18 +74,6 @@ std::string UnivariatePolynomial::to_string_detail() const
   return inspected_string + "}";
 }
 
-bool UnivariatePolynomial::equal_to(const UnivariatePolynomial &p) const
-{
-  if (degree() != p.degree())
-    return false;
-  for (int a_i = 0; a_i < a.size(); a_i++)
-  {
-    if (a[a_i] != p.coefficient()[a_i])
-      return false;
-  }
-  return true;
-}
-
 std::vector<Rational> UnivariatePolynomial::coefficient() const
 {
   return a;
@@ -131,7 +119,33 @@ UnivariatePolynomial &UnivariatePolynomial::to_monic()
   return *this;
 }
 
-UnivariatePolynomial &UnivariatePolynomial::add(const UnivariatePolynomial &p)
+UnivariatePolynomial UnivariatePolynomial::pow(const int index) const
+{
+
+  if (index < 0)
+    throw std::domain_error("Negative power of polynomial error");
+
+  UnivariatePolynomial accumulator(1);
+
+  for (int power_i = 0; power_i < index; power_i++)
+  {
+    accumulator *= *this;
+  }
+
+  return accumulator;
+}
+
+UnivariatePolynomial UnivariatePolynomial::operator+() const
+{
+  return UnivariatePolynomial(*this);
+}
+
+UnivariatePolynomial UnivariatePolynomial::operator-() const
+{
+  return UnivariatePolynomial(*this) *= -1;
+};
+
+UnivariatePolynomial &UnivariatePolynomial::operator+=(const UnivariatePolynomial &p)
 {
   std::vector<Rational> new_a(std::max(a.size(), p.coefficient().size()), 0);
 
@@ -140,9 +154,9 @@ UnivariatePolynomial &UnivariatePolynomial::add(const UnivariatePolynomial &p)
     new_a[a_i] = a[a_i];
   }
 
-  for (int p2_a_i = 0; p2_a_i < p.coefficient().size(); p2_a_i++)
+  for (int p_a_i = 0; p_a_i < p.coefficient().size(); p_a_i++)
   {
-    new_a[p2_a_i] += p.coefficient()[p2_a_i];
+    new_a[p_a_i] += p.coefficient()[p_a_i];
   }
 
   this->a = new_a;
@@ -152,7 +166,9 @@ UnivariatePolynomial &UnivariatePolynomial::add(const UnivariatePolynomial &p)
   return *this;
 }
 
-UnivariatePolynomial &UnivariatePolynomial::multiply(const UnivariatePolynomial &p)
+UnivariatePolynomial &UnivariatePolynomial::operator-=(const UnivariatePolynomial &p) { return *this += (-p); }
+
+UnivariatePolynomial &UnivariatePolynomial::operator*=(const UnivariatePolynomial &p)
 {
   std::vector<Rational> new_a(this->degree() + p.degree() + 1, 0);
   for (int a_i = 0; a_i < a.size(); a_i++)
@@ -170,31 +186,9 @@ UnivariatePolynomial &UnivariatePolynomial::multiply(const UnivariatePolynomial 
   return *this;
 }
 
-UnivariatePolynomial UnivariatePolynomial::negate() const
+UnivariatePolynomial &UnivariatePolynomial::operator/=(const UnivariatePolynomial &p)
 {
-  return UnivariatePolynomial(*this) *= -1; //depends on multiply?
-}
-
-UnivariatePolynomial UnivariatePolynomial::pow(const int index) const
-{
-
-  if (index < 0)
-    throw std::domain_error("Negative power of polynomial error");
-
-  UnivariatePolynomial accumulator(1);
-
-  for (int power_i = 0; power_i < index; power_i++)
-  {
-    accumulator.multiply(*this);
-  }
-
-  return accumulator;
-}
-
-//Euclidean division by polynomial
-UnivariatePolynomial &UnivariatePolynomial::operator/=(const UnivariatePolynomial &p2)
-{
-  auto [quotient, reminder] = this->euclidean_division(p2);
+  auto [quotient, reminder] = this->euclidean_division(p);
 
   *this = quotient;
 
@@ -203,15 +197,29 @@ UnivariatePolynomial &UnivariatePolynomial::operator/=(const UnivariatePolynomia
   return *this;
 }
 
-UnivariatePolynomial &UnivariatePolynomial::operator%=(const UnivariatePolynomial &p2)
+UnivariatePolynomial &UnivariatePolynomial::operator%=(const UnivariatePolynomial &p)
 {
-  auto [quotient, reminder] = this->euclidean_division(p2);
+  auto [quotient, reminder] = this->euclidean_division(p);
 
   *this = reminder;
 
   remove_higher_degree_zero();
 
   return *this;
+}
+
+bool operator==(const UnivariatePolynomial &p, const UnivariatePolynomial &q)
+{
+  if (p.degree() != q.degree())
+    return false;
+
+  for (int i = 0; i < p.a.size(); i++)
+  {
+    if (p.a.at(i) != q.a.at(i))
+      return false;
+  }
+
+  return true;
 }
 
 /** @brief Compute polynomial value at r by Horner's rule.
@@ -322,13 +330,6 @@ Rational UnivariatePolynomial::root_bound() const
 
   return std::max(absolute_coefficient_sum, 1_r);
 }
-
-UnivariatePolynomial operator/(const UnivariatePolynomial &p1, const UnivariatePolynomial &p2)
-{
-  return UnivariatePolynomial(p1) /= p2;
-}
-
-UnivariatePolynomial operator%(const UnivariatePolynomial &p1, const UnivariatePolynomial &p2) { return UnivariatePolynomial(p1) %= p2; }
 
 UnivariatePolynomial gcd(const UnivariatePolynomial &p1, const UnivariatePolynomial &p2)
 {

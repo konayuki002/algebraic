@@ -47,6 +47,9 @@ public:
   AlgebraicReal operator*=(const AlgebraicReal &a);
   AlgebraicReal operator/=(const AlgebraicReal &a);
 
+  friend bool operator<(const AlgebraicReal &a, const AlgebraicReal &b);
+  friend bool operator==(const AlgebraicReal &a, const AlgebraicReal &b);
+
   bool get_from_rational() const;
   Rational rational() const;
   UnivariatePolynomial defining_polynomial() const;
@@ -59,7 +62,4 @@ public:
   static std::vector<AlgebraicReal> real_roots(const UnivariatePolynomial &p);
   static std::vector<AlgebraicReal> real_roots_between(const UnivariatePolynomial &p, const Extended<Rational> &e1, const Extended<Rational> &e2);
   static std::vector<AlgebraicReal> bisect_roots(const SturmSequence &sturm_sequence, const std::pair<Rational, Rational> interval, const std::pair<int, int> interval_sign_change);
-
-  friend bool operator<(const AlgebraicReal &a, const AlgebraicReal &b);
-  friend bool operator==(const AlgebraicReal &a, const AlgebraicReal &b);
 };

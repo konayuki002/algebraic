@@ -111,99 +111,6 @@ std::string AlgebraicReal::to_string_detail() const
   }
 }
 
-bool AlgebraicReal::get_from_rational() const
-{
-  return from_rational;
-}
-
-Rational AlgebraicReal::rational() const
-{
-  if (from_rational)
-    return r;
-  throw std::domain_error("Not a rational number");
-}
-
-std::pair<Rational, Rational> AlgebraicReal::get_interval() const
-{
-  if (from_rational)
-  {
-    return {r, r};
-  }
-  else
-  {
-    return interval;
-  }
-}
-
-SturmSequence AlgebraicReal::sturm_sequence() const
-{
-  return defining_polynomial_sturm_sequence;
-}
-
-// name differ from source (interval())
-std::pair<Rational, Rational> AlgebraicReal::next_interval(const std::pair<Rational, Rational> old_interval) const
-{
-  if (from_rational)
-  {
-    return interval;
-  }
-  else
-  {
-    return defining_polynomial_sturm_sequence.next_interval(old_interval);
-  }
-}
-
-// move to AlgebraicReal
-std::vector<AlgebraicReal> AlgebraicReal::real_roots(const UnivariatePolynomial &p)
-{
-  using namespace alias::extended::rational;
-
-  return real_roots_between(p, -oo, +oo);
-}
-
-std::vector<AlgebraicReal> AlgebraicReal::real_roots_between(const UnivariatePolynomial &p, const Extended<Rational> &e1, const Extended<Rational> &e2)
-{
-  if (p.is_zero())
-    throw std::domain_error("Zero polynomial doesn't have root");
-
-  if (p.degree() == 0)
-    return {};
-
-  //? f' = square_free, seq = negativeP f'...
-  const UnivariatePolynomial square_free_polynomial = square_free(p);
-  const Rational bound = square_free_polynomial.root_bound();
-  const Rational finite_lower_bound = e1.clamp(-bound, bound);
-  const Rational finite_upper_bound = e2.clamp(-bound, bound);
-  const SturmSequence sturm_sequence = SturmSequence(square_free_polynomial);
-
-  return bisect_roots(sturm_sequence,
-                      {finite_lower_bound, finite_upper_bound},
-                      {sturm_sequence.count_sign_change_at_extended(e1), sturm_sequence.count_sign_change_at_extended(e2)});
-}
-
-// each pair is {r, count_of_sign_change}
-std::vector<AlgebraicReal> AlgebraicReal::bisect_roots(const SturmSequence &sturm_sequence, const std::pair<Rational, Rational> interval, const std::pair<int, int> interval_sign_change)
-{
-  if (interval_sign_change.first <= interval_sign_change.second)
-    return {}; // no root between the interval
-
-  if (interval_sign_change.first == interval_sign_change.second + 1)
-  {
-    return {AlgebraicReal(sturm_sequence.first_term(), interval)};
-  }
-
-  Rational middle = (interval.first + interval.second) / 2;
-  const int middle_sign_change = sturm_sequence.count_sign_change_at(middle);
-
-  std::vector<AlgebraicReal> first_half_roots = bisect_roots(sturm_sequence, {interval.first, middle}, {interval_sign_change.first, middle_sign_change});
-  const std::vector<AlgebraicReal> last_half_roots = bisect_roots(sturm_sequence, {middle, interval.second}, {middle_sign_change, interval_sign_change.second});
-
-  // concat results, could be bottle-neck
-  first_half_roots.insert(first_half_roots.end(), last_half_roots.begin(), last_half_roots.end());
-
-  return first_half_roots;
-}
-
 bool operator<(const AlgebraicReal &a, const AlgebraicReal &b)
 {
   if (a.from_rational && b.from_rational)
@@ -304,4 +211,97 @@ bool operator==(const AlgebraicReal &a, const AlgebraicReal &b)
   Rational overlap_interval_right = std::max(a.interval.second, b.interval.second);
 
   return defining_polynomial_gcd_sturm_sequence.count_real_roots_between(overlap_interval_left, overlap_interval_right) == 1;
+}
+
+bool AlgebraicReal::get_from_rational() const
+{
+  return from_rational;
+}
+
+Rational AlgebraicReal::rational() const
+{
+  if (from_rational)
+    return r;
+  throw std::domain_error("Not a rational number");
+}
+
+std::pair<Rational, Rational> AlgebraicReal::get_interval() const
+{
+  if (from_rational)
+  {
+    return {r, r};
+  }
+  else
+  {
+    return interval;
+  }
+}
+
+SturmSequence AlgebraicReal::sturm_sequence() const
+{
+  return defining_polynomial_sturm_sequence;
+}
+
+// name differ from source (interval())
+std::pair<Rational, Rational> AlgebraicReal::next_interval(const std::pair<Rational, Rational> old_interval) const
+{
+  if (from_rational)
+  {
+    return interval;
+  }
+  else
+  {
+    return defining_polynomial_sturm_sequence.next_interval(old_interval);
+  }
+}
+
+// move to AlgebraicReal
+std::vector<AlgebraicReal> AlgebraicReal::real_roots(const UnivariatePolynomial &p)
+{
+  using namespace alias::extended::rational;
+
+  return real_roots_between(p, -oo, +oo);
+}
+
+std::vector<AlgebraicReal> AlgebraicReal::real_roots_between(const UnivariatePolynomial &p, const Extended<Rational> &e1, const Extended<Rational> &e2)
+{
+  if (p.is_zero())
+    throw std::domain_error("Zero polynomial doesn't have root");
+
+  if (p.degree() == 0)
+    return {};
+
+  //? f' = square_free, seq = negativeP f'...
+  const UnivariatePolynomial square_free_polynomial = square_free(p);
+  const Rational bound = square_free_polynomial.root_bound();
+  const Rational finite_lower_bound = e1.clamp(-bound, bound);
+  const Rational finite_upper_bound = e2.clamp(-bound, bound);
+  const SturmSequence sturm_sequence = SturmSequence(square_free_polynomial);
+
+  return bisect_roots(sturm_sequence,
+                      {finite_lower_bound, finite_upper_bound},
+                      {sturm_sequence.count_sign_change_at_extended(e1), sturm_sequence.count_sign_change_at_extended(e2)});
+}
+
+// each pair is {r, count_of_sign_change}
+std::vector<AlgebraicReal> AlgebraicReal::bisect_roots(const SturmSequence &sturm_sequence, const std::pair<Rational, Rational> interval, const std::pair<int, int> interval_sign_change)
+{
+  if (interval_sign_change.first <= interval_sign_change.second)
+    return {}; // no root between the interval
+
+  if (interval_sign_change.first == interval_sign_change.second + 1)
+  {
+    return {AlgebraicReal(sturm_sequence.first_term(), interval)};
+  }
+
+  Rational middle = (interval.first + interval.second) / 2;
+  const int middle_sign_change = sturm_sequence.count_sign_change_at(middle);
+
+  std::vector<AlgebraicReal> first_half_roots = bisect_roots(sturm_sequence, {interval.first, middle}, {interval_sign_change.first, middle_sign_change});
+  const std::vector<AlgebraicReal> last_half_roots = bisect_roots(sturm_sequence, {middle, interval.second}, {middle_sign_change, interval_sign_change.second});
+
+  // concat results, could be bottle-neck
+  first_half_roots.insert(first_half_roots.end(), last_half_roots.begin(), last_half_roots.end());
+
+  return first_half_roots;
 }
