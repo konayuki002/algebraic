@@ -197,7 +197,7 @@ std::ostream &operator<<(std::ostream &os, const AlgebraicReal &a)
   }
   else
   {
-    os << a.defining_polynomial().to_string() << " | ";
+    os << a.defining_polynomial() << " | ";
 
     auto interval = a.get_interval();
     os << "(" << interval.first.to_string() << " " << interval.second.to_string() << "]";

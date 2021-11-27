@@ -44,36 +44,6 @@ UnivariatePolynomial::UnivariatePolynomial(const std::vector<Rational> a) : a(a)
   remove_higher_degree_zero();
 };
 
-std::string UnivariatePolynomial::to_string() const
-{
-  std::string inspected_string = "[";
-  for (int a_i = 0; a_i < a.size(); a_i++)
-  {
-    inspected_string += a[a_i].to_string();
-
-    if (a_i != a.size() - 1)
-    {
-      inspected_string += " ";
-    }
-  }
-  return inspected_string + "]";
-}
-
-std::string UnivariatePolynomial::to_string_detail() const
-{
-  std::string inspected_string = "#UnivariatePolynomial{";
-  for (int a_i = 0; a_i < a.size(); a_i++)
-  {
-    inspected_string += "a[" + std::to_string(a_i) + "]: " + a[a_i].to_string_detail();
-
-    if (a_i != a.size() - 1)
-    {
-      inspected_string += ", ";
-    }
-  }
-  return inspected_string + "}";
-}
-
 std::vector<Rational> UnivariatePolynomial::coefficient() const
 {
   return a;
@@ -222,6 +192,25 @@ bool operator==(const UnivariatePolynomial &p, const UnivariatePolynomial &q)
   return true;
 }
 
+std::ostream &operator<<(std::ostream &os, const UnivariatePolynomial &p)
+{
+  os << "[";
+
+  for (int a_i = 0; a_i < p.a.size(); a_i++)
+  {
+    os << p.a.at(a_i).to_string();
+
+    if (a_i != p.a.size() - 1)
+    {
+      os << " ";
+    }
+  }
+
+  os << "]";
+
+  return os;
+}
+
 /** @brief Compute polynomial value at r by Horner's rule.
   * @param[in] r parameter
   * @return function value
@@ -253,7 +242,7 @@ UnivariatePolynomial UnivariatePolynomial::composition(const UnivariatePolynomia
 std::pair<UnivariatePolynomial, UnivariatePolynomial> UnivariatePolynomial::euclidean_division(const UnivariatePolynomial &p2) const
 {
   if (p2.is_zero())
-    throw std::domain_error("Zero division numerator error: " + p2.to_string());
+    throw std::domain_error("Zero division numerator error");
   if (this->degree() < p2.degree())
     return std::pair<UnivariatePolynomial, UnivariatePolynomial>{UnivariatePolynomial(), *this};
 

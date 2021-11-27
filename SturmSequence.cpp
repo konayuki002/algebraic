@@ -34,7 +34,7 @@ std::ostream &operator<<(std::ostream &os, const SturmSequence &s)
 
   for (auto &term : s.sequence_terms)
   {
-    os << " " << term.to_string();
+    os << " " << term;
   }
 
   return os;

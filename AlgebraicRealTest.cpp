@@ -86,7 +86,6 @@ void AlgebraicRealTest()
 
   // Test output stream operator '<<'
   {
-
     std::ostringstream oss;
     oss << AlgebraicReal();
 

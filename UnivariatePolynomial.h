@@ -7,7 +7,7 @@
 #include "Rational.h"
 #include "Showable.cpp"
 
-class UnivariatePolynomial : public Showable<UnivariatePolynomial>, private boost::euclidean_ring_operators<UnivariatePolynomial>, private boost::equality_comparable<UnivariatePolynomial>
+class UnivariatePolynomial : private boost::euclidean_ring_operators<UnivariatePolynomial>, private boost::equality_comparable<UnivariatePolynomial>
 {
 private:
   void remove_higher_degree_zero();
@@ -20,9 +20,6 @@ public:
   UnivariatePolynomial(const int c);      // Constructor for constant
   UnivariatePolynomial(const std::initializer_list<Rational> a);
   UnivariatePolynomial(const std::vector<Rational> a);
-
-  std::string to_string() const;
-  std::string to_string_detail() const;
 
   std::vector<Rational> coefficient() const;
   bool is_zero() const; // Return is this a zero polynomial. A zero polynomial is not a zero degree polynomial.
@@ -41,6 +38,8 @@ public:
   UnivariatePolynomial &operator%=(const UnivariatePolynomial &p);
 
   friend bool operator==(const UnivariatePolynomial &p, const UnivariatePolynomial &q);
+
+  friend std::ostream &operator<<(std::ostream &os, const UnivariatePolynomial &p);
 
   /** @brief Compute polynomial value at r by Horner's rule.
   * @param[in] r parameter
