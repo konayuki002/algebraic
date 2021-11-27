@@ -3,9 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "Equatable.cpp"
 #include "Extended.h"
-#include "Number.cpp"
 #include "Rational.h"
 #include "Showable.cpp"
 

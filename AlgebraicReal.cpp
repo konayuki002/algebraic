@@ -3,8 +3,6 @@
 #include "AliasMonomial.h"
 #include "AliasExtended.h"
 #include "AlgebraicReal.h"
-#include "Comparable.cpp"
-#include "Fractional.cpp"
 #include "Showable.cpp"
 #include "SturmSequence.h"
 #include "UnivariatePolynomial.h"

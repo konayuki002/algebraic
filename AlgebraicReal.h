@@ -2,8 +2,6 @@
 
 #include <stdexcept>
 
-#include "Comparable.cpp"
-#include "Fractional.cpp"
 #include "Rational.h"
 #include "Showable.cpp"
 #include "SturmSequence.h"

@@ -6,8 +6,6 @@
 
 #include <boost/multiprecision/cpp_int.hpp> //install boost: sudo apt install libboost-dev
 
-#include "Comparable.cpp"
-#include "Fractional.cpp"
 #include "Showable.cpp"
 
 /*

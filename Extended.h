@@ -5,8 +5,6 @@
 #include <stdexcept>
 #include <string>
 
-#include "Comparable.cpp"
-#include "Fractional.cpp"
 #include "Infinity.cpp"
 #include "Showable.cpp"
 
