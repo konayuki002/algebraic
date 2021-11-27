@@ -25,7 +25,7 @@ private:
   {
     if (infinity == Infinity::Finite)
     {
-      return Extended(a.inverse());
+      return Extended(1 / a);
     }
     else
     {
