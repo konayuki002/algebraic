@@ -10,14 +10,14 @@
 #include "UnivariatePolynomial.h"
 
 /*
-  Class for algebraic number:
+  Class for algebraic real number:
 
   Defined along with https://ufcpp.net/study/math/set/rational/
 */
 class AlgebraicReal : public Showable<AlgebraicReal>, public Comparable<AlgebraicReal>, public Fractional<AlgebraicReal>
 {
 private:
-  bool is_rational;
+  bool from_rational;
 
   Rational r;
 
@@ -26,12 +26,14 @@ private:
   // (r1, r2]
   std::pair<Rational, Rational> interval;
 
-public:
-  static AlgebraicReal make_AlgebraicReal(const SturmSequence &defining_polynomial_sturm_sequence, const std::pair<Rational, Rational> &interval);
+  static bool is_overlapping(const std::pair<Rational, Rational> i1, const std::pair<Rational, Rational> i2);
 
+public:
+  // Zero
   AlgebraicReal();
-  // Rational initialization
+  // Rational
   AlgebraicReal(const Rational &r);
+  // Define by univariate polynomial and interval
   AlgebraicReal(const UnivariatePolynomial &defining_polynomial, const std::pair<Rational, Rational> &interval);
 
   std::string to_string() const;
@@ -47,12 +49,13 @@ public:
 
   AlgebraicReal inverse() const;
 
-  bool get_is_rational() const;
-  Rational get_rational() const;
-  UnivariatePolynomial get_defining_polynomial() const;
-  std::pair<Rational, Rational> get_isolating_interval() const;
+  bool get_from_rational() const;
+  Rational rational() const;
+  UnivariatePolynomial defining_polynomial() const;
+  std::pair<Rational, Rational> get_interval() const;
   SturmSequence sturm_sequence() const;
   // name differ from source (interval())
+  // update interval or recreate interval?
   std::pair<Rational, Rational> next_interval(const std::pair<Rational, Rational> old_interval) const;
 
   static std::vector<AlgebraicReal> real_roots(const UnivariatePolynomial &p);

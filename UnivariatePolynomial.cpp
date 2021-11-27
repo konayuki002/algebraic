@@ -3,10 +3,10 @@
 #include <stdexcept>
 #include <vector>
 
+#include "AliasExtended.h"
 #include "AliasRational.h"
 #include "Extended.cpp"
 #include "Rational.cpp"
-#include "SturmSequence.cpp"
 #include "UnivariatePolynomial.h"
 
 void UnivariatePolynomial::remove_higher_degree_zero()
@@ -291,11 +291,13 @@ int UnivariatePolynomial::sign_at(Rational r) const
 
 int UnivariatePolynomial::sign_at_extended(Extended<Rational> e) const
 {
+  using namespace alias::extended::rational;
+
   if (e.is_finite())
   {
     return sign_at(e.get_finite_number());
   }
-  else if (e.sign() == 1) // when PositiveInfinity
+  else if (e > 0_exr) // when PositiveInfinity
   {
     return leading_coefficient().sign();
   }
@@ -315,7 +317,7 @@ Rational UnivariatePolynomial::root_bound() const
 
   auto absolute_leading_coefficient = leading_coefficient() * leading_coefficient().sign();
 
-  auto absolute_coefficient_sum = std::accumulate(a.begin() + 1, a.end(), 0_r, [absolute_leading_coefficient](const Rational &acc, const Rational &r)
+  auto absolute_coefficient_sum = std::accumulate(a.begin(), a.end() - 1, 0_r, [absolute_leading_coefficient](const Rational &acc, const Rational &r)
                                                   { return acc + r * r.sign() / absolute_leading_coefficient; });
 
   return std::max(absolute_coefficient_sum, 1_r);
@@ -344,24 +346,4 @@ UnivariatePolynomial gcd(const UnivariatePolynomial &p1, const UnivariatePolynom
 UnivariatePolynomial square_free(const UnivariatePolynomial &p)
 {
   return p / gcd(p, p.differential());
-}
-
-UnivariatePolynomial indetermined::x::operator"" _x(const unsigned long long coefficient)
-{
-  return coefficient * UnivariatePolynomial({0, 1});
-}
-
-UnivariatePolynomial indetermined::x::operator"" _x2(const unsigned long long coefficient)
-{
-  return coefficient * 1_x * 1_x;
-}
-
-UnivariatePolynomial indetermined::x::operator"" _x3(const unsigned long long coefficient)
-{
-  return coefficient * 1_x2 * 1_x;
-}
-
-UnivariatePolynomial indetermined::x::operator"" _x4(const unsigned long long coefficient)
-{
-  return coefficient * 1_x3 * 1_x;
 }
