@@ -85,30 +85,6 @@ UnivariatePolynomial AlgebraicReal::defining_polynomial() const
   return defining_polynomial_sturm_sequence.first_term();
 }
 
-std::string AlgebraicReal::to_string() const
-{
-  if (from_rational)
-  {
-    return "AlgR " + r.to_string() + "";
-  }
-  else
-  {
-    return "AlgR " + defining_polynomial().to_string() + " | (" + interval.first.to_string() + ", " + interval.second.to_string() + "]";
-  }
-}
-
-std::string AlgebraicReal::to_string_detail() const
-{
-  if (from_rational)
-  {
-    return "#AlgebraicReal{" + r.to_string_detail() + "}";
-  }
-  else
-  {
-    return "#AlgebraicReal{ defining polynomial:" + defining_polynomial().to_string_detail() + ", interval from: " + interval.first.to_string_detail() + ", to: " + interval.second.to_string_detail() + "}";
-  }
-}
-
 bool operator<(const AlgebraicReal &a, const AlgebraicReal &b)
 {
   if (a.from_rational && b.from_rational)
@@ -209,6 +185,25 @@ bool operator==(const AlgebraicReal &a, const AlgebraicReal &b)
   Rational overlap_interval_right = std::max(a.interval.second, b.interval.second);
 
   return defining_polynomial_gcd_sturm_sequence.count_real_roots_between(overlap_interval_left, overlap_interval_right) == 1;
+}
+
+std::ostream &operator<<(std::ostream &os, const AlgebraicReal &a)
+{
+  os << "AlgReal ";
+
+  if (a.get_from_rational())
+  {
+    os << a.r.to_string();
+  }
+  else
+  {
+    os << a.defining_polynomial().to_string() << " | ";
+
+    auto interval = a.get_interval();
+    os << "(" << interval.first.to_string() << " " << interval.second.to_string() << "]";
+  }
+
+  return os;
 }
 
 bool AlgebraicReal::get_from_rational() const

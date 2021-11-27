@@ -16,20 +16,6 @@ void AlgebraicRealTest()
   using namespace alias::rational;
 
   {
-    // Test to_string()
-
-    assert(AlgebraicReal().to_string() == "AlgR 0/1");
-    assert(AlgebraicReal(x2 - 2, {1, 2}).to_string() == "AlgR [-2/1 0/1 1/1] | (1/1, 2/1]");
-  }
-
-  {
-    // Test to_string_interval()
-
-    assert(AlgebraicReal().to_string_detail() == "#AlgebraicReal{#Rational{numerator: 0, denominator: 1}}");
-    assert(AlgebraicReal(x2 - 2, {1, 2}).to_string_detail() == "#AlgebraicReal{ defining polynomial:#UnivariatePolynomial{a[0]: #Rational{numerator: -2, denominator: 1}, a[1]: #Rational{numerator: 0, denominator: 1}, a[2]: #Rational{numerator: 1, denominator: 1}}, interval from: #Rational{numerator: 1, denominator: 1}, to: #Rational{numerator: 2, denominator: 1}}");
-  }
-
-  {
     // Test zero constructor
 
     AlgebraicReal algebraic_real;
@@ -96,6 +82,22 @@ void AlgebraicRealTest()
     assert(AlgebraicReal(x2 - 1, {0, 2}) == AlgebraicReal(x2 + x - 2, {0, 2}));
 
     assert(AlgebraicReal(1) != AlgebraicReal(2));
+  }
+
+  // Test output stream operator '<<'
+  {
+
+    std::ostringstream oss;
+    oss << AlgebraicReal();
+
+    assert(oss.str() == "AlgReal 0/1");
+  }
+
+  {
+    std::ostringstream oss;
+
+    oss << AlgebraicReal(x2 - 2, {1, 2});
+    assert(oss.str() == "AlgReal [-2/1 0/1 1/1] | (1/1 2/1]");
   }
 
   {
