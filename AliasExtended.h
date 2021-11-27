@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Extended.h"
-#include "Rational.cpp"
+#include "Rational.h"
 
 namespace alias::extended::rational
 {

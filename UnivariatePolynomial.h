@@ -6,7 +6,7 @@
 #include "Equatable.cpp"
 #include "Extended.h"
 #include "Number.cpp"
-#include "Rational.cpp"
+#include "Rational.h"
 #include "Showable.cpp"
 
 class UnivariatePolynomial : public Showable<UnivariatePolynomial>, private boost::euclidean_ring_operators<UnivariatePolynomial>, private boost::equality_comparable<UnivariatePolynomial>

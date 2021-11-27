@@ -6,7 +6,7 @@
 #include "AliasExtended.h"
 #include "AliasRational.h"
 #include "Extended.h"
-#include "Rational.cpp"
+#include "Rational.h"
 #include "UnivariatePolynomial.h"
 
 void UnivariatePolynomial::remove_higher_degree_zero()

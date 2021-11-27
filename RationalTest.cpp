@@ -1,9 +1,9 @@
 #include <cassert>
 
-#include "Rational.cpp"
+#include "Rational.h"
 
 /*
-  Test module for Rational.cpp
+  Test module for Rational.h
 
   This check all public method including overloaded operator.
 */

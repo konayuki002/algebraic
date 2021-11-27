@@ -2,7 +2,7 @@
 
 #include "AliasRational.h"
 #include "Extended.h"
-#include "Rational.cpp"
+#include "Rational.h"
 
 /*
   Test module for Extended.cpp
