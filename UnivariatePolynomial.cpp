@@ -317,7 +317,7 @@ Rational UnivariatePolynomial::root_bound() const
 
   auto absolute_leading_coefficient = leading_coefficient() * leading_coefficient().sign();
 
-  auto absolute_coefficient_sum = std::accumulate(a.begin() + 1, a.end(), 0_r, [absolute_leading_coefficient](const Rational &acc, const Rational &r)
+  auto absolute_coefficient_sum = std::accumulate(a.begin(), a.end() - 1, 0_r, [absolute_leading_coefficient](const Rational &acc, const Rational &r)
                                                   { return acc + r * r.sign() / absolute_leading_coefficient; });
 
   return std::max(absolute_coefficient_sum, 1_r);

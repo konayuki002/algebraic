@@ -309,10 +309,6 @@ std::vector<AlgebraicReal> AlgebraicReal::real_roots_between(const UnivariatePol
   const Rational finite_upper_bound = e2.clamp(-bound, bound);
   const SturmSequence sturm_sequence = SturmSequence(square_free_polynomial);
 
-  std::cout << "finite bound" << finite_lower_bound.to_string() << " " << finite_upper_bound.to_string() << std::endl;
-  std::cout << "real_roots_between:269 sturm_sequence" << sturm_sequence.to_string() << std::endl;
-  std::cout << "count sign at " << sturm_sequence.count_sign_change_at_extended(e1) << std::endl;
-
   return bisect_roots(sturm_sequence,
                       {finite_lower_bound, finite_upper_bound},
                       {sturm_sequence.count_sign_change_at_extended(e1), sturm_sequence.count_sign_change_at_extended(e2)});
@@ -325,9 +321,11 @@ std::vector<AlgebraicReal> AlgebraicReal::bisect_roots(const SturmSequence &stur
     return {}; // no root between the interval
 
   if (interval_sign_change.first == interval_sign_change.second + 1)
+  {
     return {AlgebraicReal(sturm_sequence.first_term(), interval)};
+  }
 
-  const Rational middle = (interval.first + interval.second) / 2;
+  Rational middle = (interval.first + interval.second) / 2;
   const int middle_sign_change = sturm_sequence.count_sign_change_at(middle);
 
   std::vector<AlgebraicReal> first_half_roots = bisect_roots(sturm_sequence, {interval.first, middle}, {interval_sign_change.first, middle_sign_change});
