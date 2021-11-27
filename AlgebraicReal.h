@@ -14,7 +14,7 @@
 
   Defined along with https://ufcpp.net/study/math/set/rational/
 */
-class AlgebraicReal : public Showable<AlgebraicReal>, public Comparable<AlgebraicReal>, public Fractional<AlgebraicReal>
+class AlgebraicReal : public Showable<AlgebraicReal>, private boost::ordered_field_operators<AlgebraicReal>
 {
 private:
   bool from_rational;
@@ -47,6 +47,9 @@ public:
   AlgebraicReal &multiply(const AlgebraicReal &a);
   AlgebraicReal negate() const;
 
+  AlgebraicReal operator+=(const AlgebraicReal &a);
+  AlgebraicReal operator*=(const AlgebraicReal &a);
+
   AlgebraicReal inverse() const;
 
   bool get_from_rational() const;
@@ -61,4 +64,7 @@ public:
   static std::vector<AlgebraicReal> real_roots(const UnivariatePolynomial &p);
   static std::vector<AlgebraicReal> real_roots_between(const UnivariatePolynomial &p, const Extended<Rational> &e1, const Extended<Rational> &e2);
   static std::vector<AlgebraicReal> bisect_roots(const SturmSequence &sturm_sequence, const std::pair<Rational, Rational> interval, const std::pair<int, int> interval_sign_change);
+
+  friend bool operator<(const AlgebraicReal &a, const AlgebraicReal &b);
+  friend bool operator==(const AlgebraicReal &a, const AlgebraicReal &b);
 };
