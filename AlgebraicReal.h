@@ -39,18 +39,13 @@ public:
   std::string to_string() const;
   std::string to_string_detail() const;
 
-  bool less_than(const AlgebraicReal &a) const;
-
-  bool equal_to(const AlgebraicReal &a) const;
-
-  AlgebraicReal &add(const AlgebraicReal &a);
-  AlgebraicReal &multiply(const AlgebraicReal &a);
-  AlgebraicReal negate() const;
+  AlgebraicReal operator+() const;
+  AlgebraicReal operator-() const;
 
   AlgebraicReal operator+=(const AlgebraicReal &a);
+  AlgebraicReal operator-=(const AlgebraicReal &a);
   AlgebraicReal operator*=(const AlgebraicReal &a);
-
-  AlgebraicReal inverse() const;
+  AlgebraicReal operator/=(const AlgebraicReal &a);
 
   bool get_from_rational() const;
   Rational rational() const;
