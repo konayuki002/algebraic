@@ -213,6 +213,7 @@ public:
     if (l < a)
       return Number(u);
   }
+
   bool is_finite() const
   {
     return infinity == Infinity::Finite;
