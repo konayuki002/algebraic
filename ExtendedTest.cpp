@@ -1,7 +1,7 @@
 #include <cassert>
 
 #include "AliasRational.h"
-#include "Extended.cpp"
+#include "Extended.h"
 #include "Rational.cpp"
 
 /*

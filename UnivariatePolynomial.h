@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "Equatable.cpp"
-#include "Extended.cpp"
+#include "Extended.h"
 #include "Number.cpp"
 #include "Rational.cpp"
 #include "Showable.cpp"

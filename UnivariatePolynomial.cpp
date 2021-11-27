@@ -5,7 +5,7 @@
 
 #include "AliasExtended.h"
 #include "AliasRational.h"
-#include "Extended.cpp"
+#include "Extended.h"
 #include "Rational.cpp"
 #include "UnivariatePolynomial.h"
 
