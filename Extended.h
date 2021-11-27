@@ -54,7 +54,7 @@ public:
   std::string to_string() const
   {
     if (infinity == Infinity::Finite)
-      return "Ext " + a.to_string();
+      return "Ex " + a.to_string();
 
     if (infinity == Infinity::PositiveInfinity)
       return "+oo";

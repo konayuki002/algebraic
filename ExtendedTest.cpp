@@ -16,7 +16,7 @@ void ExtendedTest()
   using namespace alias::rational;
 
   // Test to_string()
-  assert(Extended<Rational>(1_r / 2).to_string() == "Ext 1/2");
+  assert(Extended<Rational>(1_r / 2).to_string() == "Ex 1/2");
 
   // Test to_string_detail()
   assert(Extended<Rational>(1_r / 2).to_string_detail() == "#Extended[#Rational{numerator: 1, denominator: 2}]");
