@@ -12,7 +12,7 @@
   Class for Number with positive/negative infinity
 */
 template <class Number>
-class Extended : public Showable<Extended<Number>>, private boost::equivalent<Extended<Number>>, private boost::ordered_field_operators<Extended<Number>>
+class Extended : private boost::equivalent<Extended<Number>>, private boost::ordered_field_operators<Extended<Number>>
 {
 private:
   Number a;
@@ -47,30 +47,6 @@ public:
       return a;
 
     throw std::domain_error("Only finite number can be get");
-  }
-
-  std::string to_string() const
-  {
-    if (infinity == Infinity::Finite)
-      return "Ex " + a.to_string();
-
-    if (infinity == Infinity::PositiveInfinity)
-      return "+oo";
-
-    if (infinity == Infinity::NegativeInfinity)
-      return "-oo";
-  }
-
-  std::string to_string_detail() const
-  {
-    if (infinity == Infinity::Finite)
-      return "#Extended[" + a.to_string_detail() + "]";
-
-    if (infinity == Infinity::PositiveInfinity)
-      return "#Extended{POSITIVE_INFINITY}";
-
-    if (infinity == Infinity::NegativeInfinity)
-      return "#Extended{NEGATIVE_INFINITY}";
   }
 
   Extended operator+() const
@@ -177,6 +153,23 @@ public:
         }
       }
     }
+  }
+
+  friend std::ostream &operator<<(std::ostream &os, const Extended &e)
+  {
+    if (e.infinity == Infinity::Finite)
+    {
+      os << "Ex " << e.a.to_string();
+    }
+    else if (e.infinity == Infinity::PositiveInfinity)
+    {
+      os << "Ex +oo";
+    }
+    else
+    {
+      os << "Ex -oo";
+    }
+    return os;
   }
 
   int sign() const
