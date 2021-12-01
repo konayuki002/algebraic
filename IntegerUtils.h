@@ -1,5 +1,8 @@
 #pragma once
 
+/*
+  Class for integer power function
+*/
 class IntegerUtils
 {
 public:
