@@ -2,6 +2,10 @@
 #include "Rational.h"
 #include "UnivariatePolynomial.h"
 
+/*
+ * Class for calculateresultant (Determinant of SylvesterMatrix
+ * It is used to compose polynomial that defining function of two algebraic number converted into by +-* or /
+*/
 class SylvesterMatrix
 {
 private:
