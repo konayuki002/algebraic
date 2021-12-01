@@ -10,6 +10,7 @@ class UnivariatePolynomial : private boost::euclidean_ring_operators<UnivariateP
 {
 private:
   void remove_higher_degree_zero();
+  std::tuple<int, UnivariatePolynomial, UnivariatePolynomial> do_pseudo_division(const int divisor_leading_coefficient, const int divide_count, const UnivariatePolynomial &p, const UnivariatePolynomial &q) const;
 
 public:
   std::vector<Rational> a;                // coefficient array inducing a[0] + a[1] x + a[2] x^2 + ... a[n] x^n
@@ -59,6 +60,9 @@ public:
 
   // http://www.allisone.co.jp/html/Notes/Mathematics/Numerical_Analysis/root/range/index.html
   Rational root_bound() const;
+
+  // Polynomial division with coefficient adjustment so that it will be integer
+  std::pair<UnivariatePolynomial, UnivariatePolynomial> pseudo_division(const UnivariatePolynomial &p) const;
 };
 
 UnivariatePolynomial gcd(const UnivariatePolynomial &p1, const UnivariatePolynomial &p2);

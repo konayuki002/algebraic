@@ -316,7 +316,27 @@ Rational UnivariatePolynomial::root_bound() const
   return std::max(absolute_coefficient_sum, 1_r);
 }
 
-UnivariatePolynomial gcd(const UnivariatePolynomial &p1, const UnivariatePolynomial &p2)
+std::pair<UnivariatePolynomial, UnivariatePolynomial> UnivariatePolynomial::pseudo_division(const UnivariatePolynomial &p) const
+{
+  if (p == 0)
+    throw std::domain_error("Divide by zero");
+
+  if (this->degree() < p.degree())
+    return {0, *this};
+
+  do_pseudo_division(p.leading_coefficient(), 0, 0, *this);
+}
+
+std::tuple<int, UnivariatePolynomial, UnivariatePolynomial> do_pseudo_division(const int divisor_leading_coefficient, const int divide_count, const UnivariatePolynomial &q, const UnivariatePolynomial &r) const
+{
+  if (q.degree() < r.degree())
+    return {divide_count, q, r};
+
+    return do_pseudo_division(divisor_leading_coefficient, divide_count + 1, divisor_leading_coefficient * q + q_, divisor_leading_coefficient * r - q_ * g)
+}
+
+UnivariatePolynomial
+gcd(const UnivariatePolynomial &p1, const UnivariatePolynomial &p2)
 {
   UnivariatePolynomial p_a = p1, p_b = p2;
   while (!p_b.is_zero())
