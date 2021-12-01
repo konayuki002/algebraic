@@ -2,10 +2,7 @@
 
 #include <stdexcept>
 
-#include "Comparable.cpp"
-#include "Fractional.cpp"
-#include "Rational.cpp"
-#include "Showable.cpp"
+#include "Rational.h"
 #include "SturmSequence.h"
 #include "UnivariatePolynomial.h"
 
@@ -14,7 +11,7 @@
 
   Defined along with https://ufcpp.net/study/math/set/rational/
 */
-class AlgebraicReal : public Showable<AlgebraicReal>, public Comparable<AlgebraicReal>, public Fractional<AlgebraicReal>
+class AlgebraicReal : private boost::ordered_field_operators<AlgebraicReal>
 {
 private:
   bool from_rational;
@@ -36,18 +33,18 @@ public:
   // Define by univariate polynomial and interval
   AlgebraicReal(const UnivariatePolynomial &defining_polynomial, const std::pair<Rational, Rational> &interval);
 
-  std::string to_string() const;
-  std::string to_string_detail() const;
+  AlgebraicReal operator+() const;
+  AlgebraicReal operator-() const;
 
-  bool less_than(const AlgebraicReal &a) const;
+  AlgebraicReal operator+=(const AlgebraicReal &a);
+  AlgebraicReal operator-=(const AlgebraicReal &a);
+  AlgebraicReal operator*=(const AlgebraicReal &a);
+  AlgebraicReal operator/=(const AlgebraicReal &a);
 
-  bool equal_to(const AlgebraicReal &a) const;
+  friend bool operator<(const AlgebraicReal &a, const AlgebraicReal &b);
+  friend bool operator==(const AlgebraicReal &a, const AlgebraicReal &b);
 
-  AlgebraicReal &add(const AlgebraicReal &a);
-  AlgebraicReal &multiply(const AlgebraicReal &a);
-  AlgebraicReal negate() const;
-
-  AlgebraicReal inverse() const;
+  friend std::ostream &operator<<(std::ostream &os, const AlgebraicReal &a);
 
   bool get_from_rational() const;
   Rational rational() const;

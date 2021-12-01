@@ -3,7 +3,6 @@
 #include <vector>
 #include <iostream>
 
-#include "Showable.cpp"
 #include "UnivariatePolynomial.h"
 
 /*
@@ -13,7 +12,7 @@
 *
 * Also provides root counting method for polynomial and interval.
 */
-class SturmSequence : public Showable<SturmSequence>
+class SturmSequence
 {
 private:
   std::vector<UnivariatePolynomial> sequence_terms;
@@ -35,8 +34,8 @@ public:
   SturmSequence(); // For zero polynomial
   SturmSequence(UnivariatePolynomial first_term);
   UnivariatePolynomial first_term() const;
-  std::string to_string() const;
-  std::string to_string_detail() const;
+
+  friend std::ostream &operator<<(std::ostream &os, const SturmSequence &s);
 
   // Count the number of sign change of polynomial sequence at certain rational number.
   int count_sign_change_at(const Rational r) const;

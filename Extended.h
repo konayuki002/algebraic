@@ -1,24 +1,34 @@
 #pragma once
 
+#include <boost/operators.hpp>
 #include <iostream>
 #include <stdexcept>
 #include <string>
 
-#include "Comparable.cpp"
-#include "Fractional.cpp"
 #include "Infinity.cpp"
-#include "Showable.cpp"
 
 /*
   Class for Number with positive/negative infinity
 */
 template <class Number>
-class Extended : public Showable<Extended<Number>>, public Comparable<Extended<Number>>, public Fractional<Extended<Number>>
+class Extended : private boost::equivalent<Extended<Number>>, private boost::ordered_field_operators<Extended<Number>>
 {
 private:
   Number a;
 
   Infinity infinity = Infinity::Finite;
+
+  Extended inverse() const
+  {
+    if (infinity == Infinity::Finite)
+    {
+      return Extended(1 / a);
+    }
+    else
+    {
+      return Extended();
+    }
+  }
 
 public:
   // Constructor for zero
@@ -34,60 +44,28 @@ public:
   {
     if (infinity == Infinity::Finite)
       return a;
+
     throw std::domain_error("Only finite number can be get");
   }
 
-  std::string to_string() const
+  Extended operator+() const
+  {
+    return Extended(*this);
+  }
+
+  Extended operator-() const
   {
     if (infinity == Infinity::Finite)
-      return "Ext " + a.to_string();
+      return -a;
+
     if (infinity == Infinity::PositiveInfinity)
-      return "+oo";
+      return Extended(Infinity::NegativeInfinity);
+
     if (infinity == Infinity::NegativeInfinity)
-      return "-oo";
+      return Extended(Infinity::PositiveInfinity);
   }
 
-  std::string to_string_detail() const
-  {
-    if (infinity == Infinity::Finite)
-      return "#Extended[" + a.to_string_detail() + "]";
-    if (infinity == Infinity::PositiveInfinity)
-      return "#Extended{POSITIVE_INFINITY}";
-    if (infinity == Infinity::NegativeInfinity)
-      return "#Extended{NEGATIVE_INFINITY}";
-  }
-
-  bool less_than(const Extended &e) const
-  {
-    if (infinity == e.infinity)
-    {
-      if (infinity == Infinity::Finite)
-      {
-        return a.less_than(e.get_finite_number());
-      }
-      else
-      {
-        throw std::domain_error("Cannot determine order between same sign infinity");
-      }
-    }
-    else
-    {
-      if (infinity == Infinity::NegativeInfinity)
-      {
-        return true;
-      }
-      else if (infinity == Infinity::Finite)
-      {
-        return e.infinity == Infinity::PositiveInfinity;
-      }
-      else
-      {
-        return false;
-      }
-    }
-  }
-
-  Extended &add(const Extended &e)
+  Extended &operator+=(const Extended &e)
   {
     if (infinity == Infinity::Finite && e.infinity == Infinity::Finite)
     {
@@ -97,6 +75,7 @@ public:
 
     if (infinity == Infinity::PositiveInfinity && e.infinity == Infinity::NegativeInfinity)
       throw std::domain_error("'infinity + (-infinity)' is not defined");
+
     if (infinity == Infinity::NegativeInfinity && e.infinity == Infinity::PositiveInfinity)
       throw std::domain_error("'(-infinity) + infinity is not defined'");
 
@@ -104,9 +83,14 @@ public:
       infinity = e.infinity;
 
     return *this;
-  };
+  }
 
-  Extended &multiply(const Extended &e)
+  Extended &operator-=(const Extended &e)
+  {
+    return *this += -e;
+  }
+
+  Extended &operator*=(const Extended &e)
   {
     if (infinity == Infinity::Finite && e.infinity == Infinity::Finite)
     {
@@ -121,38 +105,70 @@ public:
       throw std::domain_error("'infinity * zero' is not defined");
     }
 
-    if (Extended<Number>().less_than(*this) ^ Extended<Number>().less_than(e))
-    {
-      infinity = Infinity::NegativeInfinity;
-    }
-    else
+    if (this->sign() == e.sign())
     {
       infinity = Infinity::PositiveInfinity;
     }
+    else
+    {
+      infinity = Infinity::NegativeInfinity;
+    }
 
     return *this;
-  };
-
-  Extended negate() const
-  {
-    if (infinity == Infinity::Finite)
-      return -a;
-    if (infinity == Infinity::PositiveInfinity)
-      return Extended(Infinity::NegativeInfinity);
-    if (infinity == Infinity::NegativeInfinity)
-      return Extended(Infinity::PositiveInfinity);
   }
 
-  Extended inverse() const
+  Extended &operator/=(const Extended &e)
   {
-    if (infinity == Infinity::Finite)
+    return *this *= e.inverse();
+  }
+
+  friend bool operator<(const Extended &d, const Extended &e)
+  {
     {
-      return Extended(a.inverse());
+      if (d.infinity == e.infinity)
+      {
+        if (d.infinity == Infinity::Finite)
+        {
+          return d.a < e.a;
+        }
+        else
+        {
+          throw std::domain_error("Cannot determine order between same sign infinity");
+        }
+      }
+      else
+      {
+        if (d.infinity == Infinity::NegativeInfinity)
+        {
+          return true;
+        }
+        else if (d.infinity == Infinity::Finite)
+        {
+          return e.infinity == Infinity::PositiveInfinity;
+        }
+        else
+        {
+          return false;
+        }
+      }
+    }
+  }
+
+  friend std::ostream &operator<<(std::ostream &os, const Extended &e)
+  {
+    if (e.infinity == Infinity::Finite)
+    {
+      os << "Ex " << e.a;
+    }
+    else if (e.infinity == Infinity::PositiveInfinity)
+    {
+      os << "Ex +oo";
     }
     else
     {
-      return Extended();
+      os << "Ex -oo";
     }
+    return os;
   }
 
   int sign() const
@@ -187,6 +203,7 @@ public:
     if (l < a)
       return Number(u);
   }
+
   bool is_finite() const
   {
     return infinity == Infinity::Finite;

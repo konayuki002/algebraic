@@ -1,8 +1,8 @@
 #include <cassert>
 
 #include "AliasRational.h"
-#include "Extended.cpp"
-#include "Rational.cpp"
+#include "Extended.h"
+#include "Rational.h"
 
 /*
   Test module for Extended.cpp
@@ -15,11 +15,14 @@ void ExtendedTest()
 {
   using namespace alias::rational;
 
-  // Test to_string()
-  assert(Extended<Rational>(1_r / 2).to_string() == "Ext 1/2");
+  {
+    // Test output stream operator '<<'
+    std::ostringstream oss;
 
-  // Test to_string_detail()
-  assert(Extended<Rational>(1_r / 2).to_string_detail() == "#Extended[#Rational{numerator: 1, denominator: 2}]");
+    oss << Extended<Rational>(1_r / 2);
+
+    assert(oss.str() == "Ex 1/2");
+  }
 
   // Test get_finite_number()
   assert(Extended<Rational>(1_r / 2).get_finite_number() == 1_r / 2);

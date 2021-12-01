@@ -6,10 +6,6 @@
 
 #include <boost/multiprecision/cpp_int.hpp> //install boost: sudo apt install libboost-dev
 
-#include "Comparable.cpp"
-#include "Fractional.cpp"
-#include "Showable.cpp"
-
 /*
   Class for rational number:
 
@@ -17,10 +13,11 @@
 
   Defined along with https://ufcpp.net/study/math/set/rational/
 */
-class Rational : public Showable<Rational>, public Comparable<Rational>, public Fractional<Rational>
+class Rational : private boost::equivalent<Rational>, private boost::ordered_field_operators<Rational>
 {
 private:
   boost::multiprecision::cpp_int numerator, denominator;
+
   Rational reduce()
   {
     Rational r_not_reduced(*this);
@@ -35,6 +32,14 @@ private:
     denominator /= a;
     return r_not_reduced;
   }
+
+  Rational inverse() const
+  {
+    if (denominator == 0)
+      throw std::domain_error("Zero inverse error");
+    return Rational(denominator, numerator);
+  }
+
   int sign(boost::multiprecision::cpp_int k) const
   {
     if (k == 0)
@@ -72,22 +77,10 @@ public:
 
   Rational(const int integer) : numerator(integer), denominator(1){};
 
-  std::string to_string() const
-  {
-    return numerator.str() + "/" + denominator.str();
-  }
+  Rational operator+() const { return Rational(*this); }
+  Rational operator-() const { return Rational(-numerator, denominator); }
 
-  std::string to_string_detail() const
-  {
-    return "#Rational{numerator: " + numerator.str() + ", denominator: " + denominator.str() + "}";
-  }
-
-  bool less_than(const Rational &r) const
-  {
-    return (numerator * r.denominator - denominator * r.numerator) * (denominator * r.denominator) < 0;
-  }
-
-  Rational &add(const Rational &r)
+  Rational &operator+=(const Rational &r)
   {
     this->numerator = this->numerator * r.denominator + this->denominator * r.numerator;
     this->denominator = this->denominator * r.denominator;
@@ -95,7 +88,9 @@ public:
     return *this;
   };
 
-  Rational &multiply(const Rational &r)
+  Rational operator-=(const Rational &r) { return *this += -r; }
+
+  Rational &operator*=(const Rational &r)
   {
     this->numerator = this->numerator * r.numerator;
     this->denominator = this->denominator * r.denominator;
@@ -103,16 +98,18 @@ public:
     return *this;
   };
 
-  Rational negate() const
+  Rational operator/=(const Rational &r) { return *this *= r.inverse(); }
+
+  friend bool operator<(const Rational &r, const Rational &p)
   {
-    return Rational(-numerator, denominator);
+    return (r.numerator * p.denominator - r.denominator * p.numerator) * (r.denominator * p.denominator) < 0;
   }
 
-  Rational inverse() const
+  friend std::ostream &operator<<(std::ostream &os, const Rational &r)
   {
-    if (denominator == 0)
-      throw std::domain_error("Zero inverse error: " + to_string());
-    return Rational(denominator, numerator);
+    os << r.numerator << "/" << r.denominator;
+
+    return os;
   }
 
   int sign() const

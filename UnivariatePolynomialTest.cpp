@@ -13,14 +13,8 @@ void UnivariatePolynomialTest()
 {
   using namespace alias::rational;
 
-  // Test to_string()
-  assert(UnivariatePolynomial({1, 2}).to_string() == "[1/1 2/1]");
-
-  // Test to_string_detail()
-  assert(UnivariatePolynomial({1, 2}).to_string_detail() == "#UnivariatePolynomial{a[0]: #Rational{numerator: 1, denominator: 1}, a[1]: #Rational{numerator: 2, denominator: 1}}");
-
   // Test integer constructer
-  assert(UnivariatePolynomial(2).to_string() == "[2/1]");
+  assert(UnivariatePolynomial(2).coefficient().at(0) == 2);
 
   // Test coefficient()
   assert(UnivariatePolynomial({1, 2}).coefficient() == std::vector<Rational>({1, 2}));
@@ -66,6 +60,13 @@ void UnivariatePolynomialTest()
   // Test power()
   UnivariatePolynomial univariate_polynomial_power{1, 1};
   assert(univariate_polynomial_power.pow(3) == UnivariatePolynomial({1, 3, 3, 1}));
+
+  // Test ostream operator '<<'
+  std::ostringstream oss;
+
+  oss << UnivariatePolynomial({-1, 2, 1});
+
+  assert(oss.str() == "[-1/1 2/1 1/1]");
 
   // Test value_at()
   assert(UnivariatePolynomial({4, 3, 1}).value_at({1, 3}) == 46_r / 9);
