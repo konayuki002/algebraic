@@ -5,7 +5,6 @@
 
 #include "Extended.h"
 #include "Rational.h"
-#include "Showable.cpp"
 
 class UnivariatePolynomial : private boost::euclidean_ring_operators<UnivariatePolynomial>, private boost::equality_comparable<UnivariatePolynomial>
 {

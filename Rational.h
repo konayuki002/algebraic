@@ -6,8 +6,6 @@
 
 #include <boost/multiprecision/cpp_int.hpp> //install boost: sudo apt install libboost-dev
 
-#include "Showable.cpp"
-
 /*
   Class for rational number:
 
@@ -15,7 +13,7 @@
 
   Defined along with https://ufcpp.net/study/math/set/rational/
 */
-class Rational : public Showable<Rational>, private boost::equivalent<Rational>, private boost::ordered_field_operators<Rational>
+class Rational : private boost::equivalent<Rational>, private boost::ordered_field_operators<Rational>
 {
 private:
   boost::multiprecision::cpp_int numerator, denominator;
@@ -38,7 +36,7 @@ private:
   Rational inverse() const
   {
     if (denominator == 0)
-      throw std::domain_error("Zero inverse error: " + to_string());
+      throw std::domain_error("Zero inverse error");
     return Rational(denominator, numerator);
   }
 
@@ -78,16 +76,6 @@ public:
   }
 
   Rational(const int integer) : numerator(integer), denominator(1){};
-
-  std::string to_string() const
-  {
-    return numerator.str() + "/" + denominator.str();
-  }
-
-  std::string to_string_detail() const
-  {
-    return "#Rational{numerator: " + numerator.str() + ", denominator: " + denominator.str() + "}";
-  }
 
   Rational operator+() const { return Rational(*this); }
   Rational operator-() const { return Rational(-numerator, denominator); }

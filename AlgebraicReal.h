@@ -3,7 +3,6 @@
 #include <stdexcept>
 
 #include "Rational.h"
-#include "Showable.cpp"
 #include "SturmSequence.h"
 #include "UnivariatePolynomial.h"
 

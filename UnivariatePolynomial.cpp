@@ -198,7 +198,7 @@ std::ostream &operator<<(std::ostream &os, const UnivariatePolynomial &p)
 
   for (int a_i = 0; a_i < p.a.size(); a_i++)
   {
-    os << p.a.at(a_i).to_string();
+    os << p.a.at(a_i);
 
     if (a_i != p.a.size() - 1)
     {

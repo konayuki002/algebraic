@@ -6,7 +6,6 @@
 #include <string>
 
 #include "Infinity.cpp"
-#include "Showable.cpp"
 
 /*
   Class for Number with positive/negative infinity
@@ -159,7 +158,7 @@ public:
   {
     if (e.infinity == Infinity::Finite)
     {
-      os << "Ex " << e.a.to_string();
+      os << "Ex " << e.a;
     }
     else if (e.infinity == Infinity::PositiveInfinity)
     {

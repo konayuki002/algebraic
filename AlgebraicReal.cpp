@@ -3,7 +3,6 @@
 #include "AliasMonomial.h"
 #include "AliasExtended.h"
 #include "AlgebraicReal.h"
-#include "Showable.cpp"
 #include "SturmSequence.h"
 #include "UnivariatePolynomial.h"
 
@@ -28,7 +27,11 @@ AlgebraicReal::AlgebraicReal(const UnivariatePolynomial &defining_polynomial, co
 
   // TODO: Interval class will process below by deligation
   if (upper_bound < lower_bound)
-    throw std::domain_error("Invalid interval order: (" + lower_bound.to_string() + ", " + upper_bound.to_string() + "]");
+  {
+    std::stringstream error_message;
+    error_message << "Invalid interval order: (" << lower_bound << ", " << upper_bound << "]";
+    throw std::domain_error(error_message.str());
+  }
 
   if (lower_bound < 0 && 0 <= upper_bound && defining_polynomial.value_at(0) == 0)
   {
@@ -193,14 +196,14 @@ std::ostream &operator<<(std::ostream &os, const AlgebraicReal &a)
 
   if (a.get_from_rational())
   {
-    os << a.r.to_string();
+    os << a.r;
   }
   else
   {
     os << a.defining_polynomial() << " | ";
 
     auto interval = a.get_interval();
-    os << "(" << interval.first.to_string() << " " << interval.second.to_string() << "]";
+    os << "(" << interval.first << " " << interval.second << "]";
   }
 
   return os;
