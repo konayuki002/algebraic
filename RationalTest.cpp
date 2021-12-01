@@ -32,13 +32,13 @@ void RationalTest()
   }
 
   // Test zero constructor
-  assert(Rational().to_string() == "0/1");
+  assert(Rational() == Rational(0, 1));
 
   // Test integer constructor
-  assert(Rational(2).to_string() == "2/1");
+  assert(Rational(2) == Rational(2, 1));
 
   // Test initializer list constructor
-  assert(Rational({1, 2}).to_string() == "1/2");
+  assert(Rational({1, 2}) == Rational(1, 2));
 
   // Test sign()
   assert(Rational(1, 2).sign() == 1);
@@ -53,22 +53,18 @@ void RationalTest()
   Rational rational_compound_assignment_multiply(3, 2);
   rational_compound_assignment_multiply *= Rational(1, 3);
   assert(rational_compound_assignment_multiply == Rational(1, 2));
-  assert(rational_compound_assignment_multiply.to_string() == "1/2");
 
   Rational rational_compound_assignment_divide(1, 2);
   rational_compound_assignment_divide /= Rational(3, 2);
   assert(rational_compound_assignment_divide == Rational(1, 3));
-  assert(rational_compound_assignment_divide.to_string() == "1/3");
 
   Rational rational_compound_assignment_plus(1, 6);
   rational_compound_assignment_plus += Rational(1, 3);
   assert(rational_compound_assignment_plus == Rational(1, 2));
-  assert(rational_compound_assignment_plus.to_string() == "1/2");
 
   Rational rational_compound_assignment_minus(3, 4);
   rational_compound_assignment_minus -= Rational(1, 4);
   assert(rational_compound_assignment_minus == Rational(1, 2));
-  assert(rational_compound_assignment_minus.to_string() == "1/2");
 
   // Test compound assignment copying to two variable
   Rational rational_compound_assignment_copying_multiply1(1, 2);
@@ -139,5 +135,5 @@ void RationalTest()
 
   //Test reducing big numerator and denominator
   const Rational rational_reducing_big(13 * 347 * 3001, 23 * 347 * 3001);
-  assert(rational_reducing_big.to_string() == "13/23");
+  assert(rational_reducing_big == Rational(13, 23));
 }
