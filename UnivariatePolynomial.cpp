@@ -6,6 +6,7 @@
 #include "AliasExtended.h"
 #include "AliasRational.h"
 #include "Extended.h"
+#include "IntegerUtils.h"
 #include "Rational.h"
 #include "UnivariatePolynomial.h"
 
@@ -13,11 +14,6 @@ void UnivariatePolynomial::remove_higher_degree_zero()
 {
   while (a.size() != 0 && a.back() == 0)
     a.pop_back();
-}
-
-int UnivariatePolynomial::minus_one_power(int index) const
-{
-  return 1 - ((index & 1) << 1);
 }
 
 UnivariatePolynomial::UnivariatePolynomial(){}; // zero polynomial
@@ -300,7 +296,7 @@ int UnivariatePolynomial::sign_at_extended(Extended<Rational> e) const
   }
   else // when NegativeInfinity
   {
-    return leading_coefficient().sign() * minus_one_power(degree());
+    return leading_coefficient().sign() * IntegerUtils::minus_one_power(degree());
   }
 }
 

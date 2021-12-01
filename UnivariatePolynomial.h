@@ -10,7 +10,6 @@ class UnivariatePolynomial : private boost::euclidean_ring_operators<UnivariateP
 {
 private:
   void remove_higher_degree_zero();
-  int minus_one_power(int index) const;
 
 public:
   std::vector<Rational> a;                // coefficient array inducing a[0] + a[1] x + a[2] x^2 + ... a[n] x^n

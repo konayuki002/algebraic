@@ -136,4 +136,9 @@ void RationalTest()
   //Test reducing big numerator and denominator
   const Rational rational_reducing_big(13 * 347 * 3001, 23 * 347 * 3001);
   assert(rational_reducing_big == Rational(13, 23));
+
+  {
+    // Test pow()
+    assert(Rational(2, 3).pow(2) == Rational(4, 9));
+  }
 }

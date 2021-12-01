@@ -127,4 +127,19 @@ public:
       return 0;
     }
   }
+
+  Rational pow(int index) const
+  {
+    if (index < 0)
+      throw std::domain_error("Negative power of polynomial error");
+
+    Rational accumulator(1);
+
+    for (int i = 0; i < index; i++)
+    {
+      accumulator *= *this;
+    }
+
+    return accumulator;
+  }
 };
