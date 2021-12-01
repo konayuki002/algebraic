@@ -117,6 +117,13 @@ public:
     return (r.numerator * p.denominator - r.denominator * p.numerator) * (r.denominator * p.denominator) < 0;
   }
 
+  friend std::ostream &operator<<(std::ostream &os, const Rational &r)
+  {
+    os << r.numerator << "/" << r.denominator;
+
+    return os;
+  }
+
   int sign() const
   {
     if (sign(numerator) * sign(denominator) == 1) // when same sign
