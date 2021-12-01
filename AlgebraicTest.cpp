@@ -5,8 +5,10 @@
 #include "AliasMonomialTest.cpp"
 #include "AliasRationalTest.cpp"
 #include "ExtendedTest.cpp"
+#include "IntegerUtilsTest.cpp"
 #include "RationalTest.cpp"
 #include "SturmSequenceTest.cpp"
+#include "SylvesterMatrixTest.cpp"
 #include "UnivariatePolynomialTest.cpp"
 
 /*
@@ -21,9 +23,11 @@ int main()
   AliasExtendedTest();
   AliasMonomialTest();
   AliasRationalTest();
+  IntegerUtilsTest();
   RationalTest();
   SturmSequenceTest();
+  SylvesterMatrixTest();
   UnivariatePolynomialTest();
 
-  std::cout << "succeeded " << 8 << " tests" << std::endl;
+  std::cout << "succeeded " << 10 << " tests" << std::endl;
 }
