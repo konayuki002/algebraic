@@ -22,15 +22,6 @@ void RationalTest()
     assert(e.what());
   }
 
-  // Test to_string()
-  Rational rational_to_string(1, 2);
-
-  assert(rational_to_string.to_string() == "1/2");
-
-  // Test to_string_detail()
-
-  assert(rational_to_string.to_string_detail() == "#Rational{numerator: 1, denominator: 2}");
-
   {
     // Test output stream operator '<<'
     std::ostringstream oss;
