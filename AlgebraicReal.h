@@ -18,7 +18,7 @@ private:
 
   Rational r;
 
-  SturmSequence<Rational> defining_polynomial_sturm_sequence;
+  SturmSequence defining_polynomial_sturm_sequence;
 
   // (r1, r2]
   std::pair<Rational, Rational> interval;
@@ -31,7 +31,7 @@ public:
   // Rational
   AlgebraicReal(const Rational &r);
   // Define by univariate polynomial and interval
-  AlgebraicReal(const UnivariatePolynomial<Rational> &defining_polynomial, const std::pair<Rational, Rational> &interval);
+  AlgebraicReal(const UnivariatePolynomial &defining_polynomial, const std::pair<Rational, Rational> &interval);
 
   AlgebraicReal operator+() const;
   AlgebraicReal operator-() const;
@@ -48,14 +48,14 @@ public:
 
   bool get_from_rational() const;
   Rational rational() const;
-  UnivariatePolynomial<Rational> defining_polynomial() const;
+  UnivariatePolynomial defining_polynomial() const;
   std::pair<Rational, Rational> get_interval() const;
-  SturmSequence<Rational> sturm_sequence() const;
+  SturmSequence sturm_sequence() const;
   // name differ from source (interval())
   // update interval or recreate interval?
   std::pair<Rational, Rational> next_interval(const std::pair<Rational, Rational> old_interval) const;
 
-  static std::vector<AlgebraicReal> real_roots(const UnivariatePolynomial<Rational> &p);
-  static std::vector<AlgebraicReal> real_roots_between(const UnivariatePolynomial<Rational> &p, const Extended<Rational> &e1, const Extended<Rational> &e2);
-  static std::vector<AlgebraicReal> bisect_roots(const SturmSequence<Rational> &sturm_sequence, const std::pair<Rational, Rational> interval, const std::pair<int, int> interval_sign_change);
+  static std::vector<AlgebraicReal> real_roots(const UnivariatePolynomial &p);
+  static std::vector<AlgebraicReal> real_roots_between(const UnivariatePolynomial &p, const Extended<Rational> &e1, const Extended<Rational> &e2);
+  static std::vector<AlgebraicReal> bisect_roots(const SturmSequence &sturm_sequence, const std::pair<Rational, Rational> interval, const std::pair<int, int> interval_sign_change);
 };
