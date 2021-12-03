@@ -12,7 +12,7 @@
 
 void AlgebraicRealTest()
 {
-  using namespace alias::monomial::x;
+  using namespace alias::monomial::rational::x;
   using namespace alias::rational;
 
   {
