@@ -6,11 +6,11 @@
 #include "UnivariatePolynomial.h"
 
 /*
-* Class for Sturm Sequence of an univariate polynomial based on reference:
+*  Class for Sturm Sequence of an univariate polynomial based on reference:
 *
-*   https://miz-ar.info/math/algebraic-real/posts/02-real-root-counting.html
+*    https://miz-ar.info/math/algebraic-real/posts/02-real-root-counting.html
 *
-* Also provides root counting method for polynomial and interval.
+*  Also provides root counting method for polynomial and interval.
 */
 template <class K>
 class SturmSequence
@@ -19,9 +19,9 @@ private:
   std::vector<UnivariatePolynomial<K>> sequence_terms;
 
   /*
-  * Sequence of p_i, which starts with polynomial p_0, p_1 from differential of p_0 and p_i following p_(i + 1) = -(p_i % p_(i - 1)).
+  *  Sequence of p_i, which starts with polynomial p_0, p_1 from differential of p_0 and p_i following p_(i + 1) = -(p_i % p_(i - 1)).
   * 
-  * Make the polynomial monic after taking reminder to reduce coefficients growth.
+  *  Make the polynomial monic after calculating modulo to reduce coefficients growth.
   */
   static std::vector<UnivariatePolynomial<K>> negative_polynomial_reminder_sequence_with_to_monic(const UnivariatePolynomial<K> p_old, const UnivariatePolynomial<K> p_new)
   {
@@ -42,8 +42,8 @@ private:
   }
 
   /*
-  * Note: "variance" is the name used for this function in the source:
-  * https://miz-ar.info/math/algebraic-real/posts/02-real-root-counting.html
+  *   Note: "variance" is the name used for this function in the source:
+  *   https://miz-ar.info/math/algebraic-real/posts/02-real-root-counting.html
   */
   static int count_sign_change(const std::vector<int> sign)
   {
@@ -60,9 +60,11 @@ private:
 
 public:
   SturmSequence() {} // For zero polynomial
-  SturmSequence(UnivariatePolynomial<K> first_term) 
-  : sequence_terms(negative_polynomial_reminder_sequence_with_to_monic(first_term, first_term.differential())) {}
 
+  SturmSequence(UnivariatePolynomial<K> first_term)
+      : sequence_terms(negative_polynomial_reminder_sequence_with_to_monic(first_term, first_term.differential())) {}
+
+  // The first term of Strum sequence is the original polynomial.
   UnivariatePolynomial<K> first_term() const
   {
     return sequence_terms.at(0);
