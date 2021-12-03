@@ -12,17 +12,24 @@
 *
 * Also provides root counting method for polynomial and interval.
 */
+template <class K>
+class SturmSequence;
+
+template <class K>
+std::ostream &operator<<(std::ostream &os, const SturmSequence<K> &s);
+
+template <class K>
 class SturmSequence
 {
 private:
-  std::vector<UnivariatePolynomial> sequence_terms;
+  std::vector<UnivariatePolynomial<K>> sequence_terms;
 
   /*
   * Sequence of p_i, which starts with polynomial p_0, p_1 from differential of p_0 and p_i following p_(i + 1) = -(p_i % p_(i - 1)).
   * 
   * Make the polynomial monic after taking reminder to reduce coefficients growth.
   */
-  static std::vector<UnivariatePolynomial> negative_polynomial_reminder_sequence_with_to_monic(const UnivariatePolynomial p_old, const UnivariatePolynomial p_new);
+  static std::vector<UnivariatePolynomial<K>> negative_polynomial_reminder_sequence_with_to_monic(const UnivariatePolynomial<K> p_old, const UnivariatePolynomial<K> p_new);
 
   /*
   * Note: "variance" is the name used for this function in the source:
@@ -32,26 +39,26 @@ private:
 
 public:
   SturmSequence(); // For zero polynomial
-  SturmSequence(UnivariatePolynomial first_term);
-  UnivariatePolynomial first_term() const;
+  SturmSequence(UnivariatePolynomial<K> first_term);
+  UnivariatePolynomial<K> first_term() const;
 
-  friend std::ostream &operator<<(std::ostream &os, const SturmSequence &s);
+  friend std::ostream &operator<<<K>(std::ostream &os, const SturmSequence &s);
 
-  // Count the number of sign change of polynomial sequence at certain rational number.
-  int count_sign_change_at(const Rational r) const;
+  // Count the number of sign change of polynomial sequence at certain number.
+  int count_sign_change_at(const K r) const;
 
-  // Count the number of sign change of polynomial sequence at certain extended rational number.
-  int count_sign_change_at_extended(const Extended<Rational> e) const;
+  // Count the number of sign change of polynomial sequence at certain extended number.
+  int count_sign_change_at_extended(const Extended<K> e) const;
 
   // Compute the number of real roots in an interval.
-  int count_real_roots_between(const Rational r1, const Rational r2) const;
+  int count_real_roots_between(const K r1, const K r2) const;
 
   // Compute the number of real roots in an interval including infinite boundary.
-  int count_real_roots_between_extended(const Extended<Rational> e1, const Extended<Rational> e2) const;
+  int count_real_roots_between_extended(const Extended<K> e1, const Extended<K> e2) const;
 
   /*
     differ from source
-    return next step approximate rational interval
+    return next step approximate interval
 
     polynomial that generated strum_seqence have one root in (r1, r2]
 
@@ -59,5 +66,5 @@ public:
 
     Is this used except for AlgebraicReal?
   */
-  std::pair<Rational, Rational> next_interval(const std::pair<Rational, Rational> old_interval) const;
+  std::pair<K, K> next_interval(const std::pair<K, K> old_interval) const;
 };

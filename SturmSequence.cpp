@@ -5,7 +5,8 @@
 #include "SturmSequence.h"
 #include "UnivariatePolynomial.h"
 
-std::vector<UnivariatePolynomial> SturmSequence::negative_polynomial_reminder_sequence_with_to_monic(const UnivariatePolynomial p_old, const UnivariatePolynomial p_new)
+template <class K>
+std::vector<UnivariatePolynomial<K>> SturmSequence<K>::negative_polynomial_reminder_sequence_with_to_monic(const UnivariatePolynomial<K> p_old, const UnivariatePolynomial<K> p_new)
 {
   if (p_new.is_zero())
     return {p_old};
@@ -23,12 +24,14 @@ std::vector<UnivariatePolynomial> SturmSequence::negative_polynomial_reminder_se
   return tail;
 }
 
-UnivariatePolynomial SturmSequence::first_term() const
+template <class K>
+UnivariatePolynomial<K> SturmSequence<K>::first_term() const
 {
   return sequence_terms.at(0);
 }
 
-std::ostream &operator<<(std::ostream &os, const SturmSequence &s)
+template <class K>
+std::ostream &operator<<(std::ostream &os, const SturmSequence<K> &s)
 {
   os << "Sturm |";
 
@@ -40,7 +43,8 @@ std::ostream &operator<<(std::ostream &os, const SturmSequence &s)
   return os;
 }
 
-int SturmSequence::count_sign_change(const std::vector<int> sign)
+template <class K>
+int SturmSequence<K>::count_sign_change(const std::vector<int> sign)
 {
   int count = 0;
 
@@ -53,44 +57,51 @@ int SturmSequence::count_sign_change(const std::vector<int> sign)
   return count;
 }
 
-SturmSequence::SturmSequence(){};
+template <class K>
+SturmSequence<K>::SturmSequence(){};
 
-SturmSequence::SturmSequence(const UnivariatePolynomial first_term)
+template <class K>
+SturmSequence<K>::SturmSequence(const UnivariatePolynomial<K> first_term)
     : sequence_terms(negative_polynomial_reminder_sequence_with_to_monic(first_term, first_term.differential())) {}
 
-int SturmSequence::count_sign_change_at(const Rational r) const
+template <class K>
+int SturmSequence<K>::count_sign_change_at(const K r) const
 {
   std::vector<int> signs(sequence_terms.size());
-  std::transform(sequence_terms.begin(), sequence_terms.end(), signs.begin(), [r](UnivariatePolynomial p)
+  std::transform(sequence_terms.begin(), sequence_terms.end(), signs.begin(), [r](UnivariatePolynomial<K> p)
                  { return p.sign_at(r); });
   return count_sign_change(signs);
 }
 
-int SturmSequence::count_sign_change_at_extended(const Extended<Rational> e) const
+template <class K>
+int SturmSequence<K>::count_sign_change_at_extended(const Extended<K> e) const
 {
   std::vector<int> signs(sequence_terms.size());
-  std::transform(sequence_terms.begin(), sequence_terms.end(), signs.begin(), [e](UnivariatePolynomial p)
+  std::transform(sequence_terms.begin(), sequence_terms.end(), signs.begin(), [e](UnivariatePolynomial<K> p)
                  { return p.sign_at_extended(e); });
   return count_sign_change(signs);
 }
 
-int SturmSequence::count_real_roots_between(const Rational r1, const Rational r2) const
+template <class K>
+int SturmSequence<K>::count_real_roots_between(const K r1, const K r2) const
 {
   return count_sign_change_at(r1) - count_sign_change_at(r2);
 }
 
-int SturmSequence::count_real_roots_between_extended(const Extended<Rational> e1, const Extended<Rational> e2) const
+template <class K>
+int SturmSequence<K>::count_real_roots_between_extended(const Extended<K> e1, const Extended<K> e2) const
 {
   return count_sign_change_at_extended(e1) - count_sign_change_at_extended(e2);
 }
 
-std::pair<Rational, Rational> SturmSequence::next_interval(const std::pair<Rational, Rational> old_interval) const
+template <class K>
+std::pair<K, K> SturmSequence<K>::next_interval(const std::pair<K, K> old_interval) const
 {
   auto [r1, r2] = old_interval;
 
   const int sign_change_at_r1 = count_sign_change_at(r1);
 
-  const Rational r_middle = (r1 + r2) / 2;
+  const K r_middle = (r1 + r2) / 2;
 
   const int sign_change_at_r_middle = count_sign_change_at(r_middle);
 
