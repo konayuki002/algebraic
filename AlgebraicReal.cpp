@@ -16,10 +16,10 @@ AlgebraicReal::AlgebraicReal() : AlgebraicReal(0){};
 AlgebraicReal::AlgebraicReal(const Rational &r)
     : from_rational(true),
       r(r),
-      defining_polynomial_sturm_sequence(SturmSequence(UnivariatePolynomial<Rational>({-r, 1}))),
+      defining_polynomial_sturm_sequence(SturmSequence(UnivariatePolynomial({-r, 1}))),
       interval({r, r}){};
 
-AlgebraicReal::AlgebraicReal(const UnivariatePolynomial<Rational> &defining_polynomial, const std::pair<Rational, Rational> &interval)
+AlgebraicReal::AlgebraicReal(const UnivariatePolynomial &defining_polynomial, const std::pair<Rational, Rational> &interval)
 {
   // TODO: resolve complex code
 
@@ -78,11 +78,11 @@ AlgebraicReal::AlgebraicReal(const UnivariatePolynomial<Rational> &defining_poly
   }
 }
 
-UnivariatePolynomial<Rational> AlgebraicReal::defining_polynomial() const
+UnivariatePolynomial AlgebraicReal::defining_polynomial() const
 {
   if (from_rational)
   {
-    using namespace alias::monomial::rational::x;
+    using namespace alias::monomial::x;
     return x - r;
   }
   return defining_polynomial_sturm_sequence.first_term();
@@ -233,7 +233,7 @@ std::pair<Rational, Rational> AlgebraicReal::get_interval() const
   }
 }
 
-SturmSequence<Rational> AlgebraicReal::sturm_sequence() const
+SturmSequence AlgebraicReal::sturm_sequence() const
 {
   return defining_polynomial_sturm_sequence;
 }
@@ -252,14 +252,14 @@ std::pair<Rational, Rational> AlgebraicReal::next_interval(const std::pair<Ratio
 }
 
 // move to AlgebraicReal
-std::vector<AlgebraicReal> AlgebraicReal::real_roots(const UnivariatePolynomial<Rational> &p)
+std::vector<AlgebraicReal> AlgebraicReal::real_roots(const UnivariatePolynomial &p)
 {
   using namespace alias::extended::rational;
 
   return real_roots_between(p, -oo, +oo);
 }
 
-std::vector<AlgebraicReal> AlgebraicReal::real_roots_between(const UnivariatePolynomial<Rational> &p, const Extended<Rational> &e1, const Extended<Rational> &e2)
+std::vector<AlgebraicReal> AlgebraicReal::real_roots_between(const UnivariatePolynomial &p, const Extended<Rational> &e1, const Extended<Rational> &e2)
 {
   if (p.is_zero())
     throw std::domain_error("Zero polynomial doesn't have root");
@@ -280,7 +280,7 @@ std::vector<AlgebraicReal> AlgebraicReal::real_roots_between(const UnivariatePol
 }
 
 // each pair is {r, count_of_sign_change}
-std::vector<AlgebraicReal> AlgebraicReal::bisect_roots(const SturmSequence<Rational> &sturm_sequence, const std::pair<Rational, Rational> interval, const std::pair<int, int> interval_sign_change)
+std::vector<AlgebraicReal> AlgebraicReal::bisect_roots(const SturmSequence &sturm_sequence, const std::pair<Rational, Rational> interval, const std::pair<int, int> interval_sign_change)
 {
   if (interval_sign_change.first <= interval_sign_change.second)
     return {}; // no root between the interval

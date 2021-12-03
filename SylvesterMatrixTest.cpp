@@ -3,7 +3,7 @@
 
 void SylvesterMatrixTest()
 {
-  using namespace alias::monomial::rational::x;
+  using namespace alias::monomial::x;
 
   assert(SylvesterMatrix::resultant(x2 + 2_x + 1, x3 + 3_x) == 16);
   assert(SylvesterMatrix::resultant(x + 1, x3 + 2_x + 1) == -2);

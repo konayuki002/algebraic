@@ -1,4 +1,3 @@
-#include "AliasMonomial.h"
 #include "IntegerUtils.h"
 #include "Rational.h"
 #include "UnivariatePolynomial.h"
@@ -10,14 +9,14 @@
 class SylvesterMatrix
 {
 private:
-  static Rational do_resultant(const Rational &p, const UnivariatePolynomial<Rational> &f, const UnivariatePolynomial<Rational> &g)
+  static Rational do_resultant(const Rational &p, const UnivariatePolynomial &f, const UnivariatePolynomial &g)
   {
     if (g.degree() == 0)
       return p * g.leading_coefficient().pow(f.degree());
 
     auto remainder = f % g;
 
-    if (remainder == UnivariatePolynomial<Rational>(0))
+    if (remainder == 0)
       return 0;
 
     // Recursion with tail call
@@ -28,13 +27,12 @@ public:
   /*
    * Determinant of SylvesterMatrix between polynomial f and g
    */
-  static Rational resultant(const UnivariatePolynomial<Rational> &f, const UnivariatePolynomial<Rational> &g)
+  static Rational resultant(const UnivariatePolynomial &f, const UnivariatePolynomial &g)
   {
-    using namespace alias::monomial::rational::x;
-    if (f == 0_up && g.degree() == 0 || f.degree() == 0 && g == 0_up)
+    if (f == 0 && g.degree() == 0 || f.degree() == 0 && g == 0)
       return 1;
 
-    if (f == 0_up || g == 0_up)
+    if (f == 0 || g == 0)
       return 0;
 
     if (f.degree() == 0)
