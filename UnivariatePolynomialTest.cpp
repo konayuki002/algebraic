@@ -122,4 +122,8 @@ void UnivariatePolynomialTest()
 
   // Test root_bound()
   assert(UnivariatePolynomial({1, 3, -2, 0, 1}).root_bound() == 6);
+
+  // Test pseudo_division()
+  assert(UnivariatePolynomial({1, 3, 1}).pseudo_divide(UnivariatePolynomial({1, 2})) == UnivariatePolynomial({5, 2}));
+  assert(UnivariatePolynomial({1, 3, 1}).pseudo_mod(UnivariatePolynomial({1, 2})) == -1);
 }

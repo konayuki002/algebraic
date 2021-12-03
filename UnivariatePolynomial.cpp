@@ -316,23 +316,41 @@ Rational UnivariatePolynomial::root_bound() const
   return std::max(absolute_coefficient_sum, 1_r);
 }
 
-std::pair<UnivariatePolynomial, UnivariatePolynomial> UnivariatePolynomial::pseudo_division(const UnivariatePolynomial &p) const
+std::pair<UnivariatePolynomial, UnivariatePolynomial> UnivariatePolynomial::pseudo_division(const UnivariatePolynomial &divisor) const
 {
-  if (p == 0)
+  if (divisor == 0)
     throw std::domain_error("Divide by zero");
 
-  if (this->degree() < p.degree())
+  if (this->degree() < divisor.degree())
     return {0, *this};
 
-  do_pseudo_division(p.leading_coefficient(), 0, 0, *this);
+  return do_pseudo_division(this->degree(), 0, divisor);
 }
 
-std::tuple<int, UnivariatePolynomial, UnivariatePolynomial> do_pseudo_division(const int divisor_leading_coefficient, const int divide_count, const UnivariatePolynomial &q, const UnivariatePolynomial &r) const
+std::pair<UnivariatePolynomial, UnivariatePolynomial> UnivariatePolynomial::do_pseudo_division(const int divident_degree, const UnivariatePolynomial &sum_quotient, const UnivariatePolynomial &divisor) const
 {
-  if (q.degree() < r.degree())
-    return {divide_count, q, r};
+  if (divident_degree < divisor.degree())
+    return {sum_quotient, *this};
 
-    return do_pseudo_division(divisor_leading_coefficient, divide_count + 1, divisor_leading_coefficient * q + q_, divisor_leading_coefficient * r - q_ * g)
+  Rational leading_coefficient = divident_degree == this->degree() ? this->leading_coefficient() : 0;
+
+  UnivariatePolynomial quotient = leading_coefficient * UnivariatePolynomial({0, 1}).pow(divident_degree - divisor.degree());
+
+  UnivariatePolynomial remainder = -quotient * (divisor - divisor.leading_coefficient() * UnivariatePolynomial({0, 1}).pow(divisor.degree()));
+
+  UnivariatePolynomial next_divident = remainder + divisor.leading_coefficient() * (*this - leading_coefficient * UnivariatePolynomial({0, 1}).pow(divident_degree));
+
+  return next_divident.do_pseudo_division(divident_degree - 1, divisor.leading_coefficient() * sum_quotient + quotient, divisor);
+}
+
+UnivariatePolynomial UnivariatePolynomial::pseudo_divide(const UnivariatePolynomial &divisor) const
+{
+  return this->pseudo_division(divisor).first;
+}
+
+UnivariatePolynomial UnivariatePolynomial::pseudo_mod(const UnivariatePolynomial &divisor) const
+{
+  return this->pseudo_division(divisor).second;
 }
 
 UnivariatePolynomial
