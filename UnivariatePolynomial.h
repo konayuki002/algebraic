@@ -37,17 +37,19 @@ private:
   }
 
 public:
-  std::vector<K> a;                                                          // coefficient array inducing a[0] + a[1] x + a[2] x^2 + ... a[n] x^n
-  UnivariatePolynomial(){};                                                  // zero polynomial
-  UnivariatePolynomial(const K c) : a(1, c) { remove_higher_degree_zero(); } // Constructor for constant
-  UnivariatePolynomial(const int c) : a(1, c) { remove_higher_degree_zero(); }
-  UnivariatePolynomial(const std::initializer_list<K> a) : a(a) { remove_higher_degree_zero(); }
-  UnivariatePolynomial(const std::vector<K> a) : a(a) { remove_higher_degree_zero(); }
+  std::vector<K> a; // Coefficient array corresponding a[0] + a[1] x + a[2] x^2 + ... a[n] x^n
 
-  std::vector<K> coefficient() const { return a; }
-  bool is_zero() const { return a.size() == 0; } // Return is this a zero polynomial. A zero polynomial is not a zero degree polynomial.
-  int degree() const { return a.size() - 1; }    // Return polynomial degree. Return -1 when zero polynomial.
+  UnivariatePolynomial(){};                                                                      // Zero polynomial
+  UnivariatePolynomial(const K c) : a(1, c) { remove_higher_degree_zero(); }                     // Constructor for one with only constant term
+  UnivariatePolynomial(const int c) : a(1, c) { remove_higher_degree_zero(); }                   // Constructor for one with only constant term representated by integer
+  UnivariatePolynomial(const std::initializer_list<K> a) : a(a) { remove_higher_degree_zero(); } // It can be write like "UnivariatePolynomial({0, 0, 1})" then you get x^2
+  UnivariatePolynomial(const std::vector<K> a) : a(a) { remove_higher_degree_zero(); }           // Make polynomial from vector as it is array of coefficient
 
+  std::vector<K> coefficient() const { return a; } // Coefficients of polynomial arranged in acending orders of their degree
+  bool is_zero() const { return a.size() == 0; }   // Return is this a zero polynomial. A zero polynomial is not a zero degree polynomial.
+  int degree() const { return a.size() - 1; }      // Return polynomial degree. Return -1 when zero polynomial.
+
+  // Return a coefficient of the largest degree
   K leading_coefficient() const
   {
     if (a.size() == 0)
@@ -55,6 +57,7 @@ public:
     return a.back();
   }
 
+  // Make the coefficient of the largest degree 1 by dividing all coefficients by the same number
   UnivariatePolynomial &to_monic()
   {
     K divisor = leading_coefficient();
@@ -67,6 +70,7 @@ public:
     return *this;
   }
 
+  // Interger (>= 0) power of the polynomial.
   UnivariatePolynomial pow(const int index) const
   {
 
@@ -194,7 +198,7 @@ public:
                            { return acc * r + each_a; });
   }
 
-  // f(g(x))
+  // f \\circ g so that (f \\circ g)(x) gives f(g(x))
   UnivariatePolynomial composition(const UnivariatePolynomial p2) const
   {
     // Fix intial value
@@ -209,7 +213,12 @@ public:
     return composit_polynomial;
   }
 
-  // return {quotient, reminder}
+  /*   Calculate the quotient and remainder of euclidean division, dividing method of integer.
+  *    Two polynomial F, the dividend and G, the divisor are made into Q, the quotient and R, the remainder
+  *   such that F = QG + R with degree R < degree G where degree P is the coefficient of the largest degree in P.
+  *
+  *   Return {quotient, remainder}
+  */
   std::pair<UnivariatePolynomial, UnivariatePolynomial> euclidean_division(const UnivariatePolynomial &p2) const
   {
     if (p2.is_zero())
@@ -251,7 +260,7 @@ public:
     return new_p;
   }
 
-  // Return sign at r. Extとnon-Extを分ける 今後の数学上での区別のため?
+  // Return sign at certain number r.
   int sign_at(K r) const { return value_at(r).sign(); }
   int sign_at_extended(Extended<K> e) const
   {
@@ -271,7 +280,11 @@ public:
     }
   }
 
-  // http://www.allisone.co.jp/html/Notes/Mathematics/Numerical_Analysis/root/range/index.html
+  /* 
+  *   Return bound of the range which the polynomial have root in.
+  *   There are all roots in [-r, r] where bound r.
+  *   http://www.allisone.co.jp/html/Notes/Mathematics/Numerical_Analysis/root/range/index.html
+  */
   K root_bound() const
   {
     using namespace alias::rational;
@@ -287,7 +300,13 @@ public:
     return std::max(absolute_coefficient_sum, 1_r);
   }
 
-  // Polynomial division with coefficient adjustment so that it will be integer
+  /*
+  * Polynomial division with coefficient adjustment so that it will be integer.
+  *  If F = QG + R when F, Q, G and R is polynomial on integer, the coefficient of Q
+  *  is not only integer even if all of the coefficient of F and G are integer.
+  *  To make it integer, multiply the power of leading coefficient of G to both sides.
+  *  It is called "pseudo division" when the index of power is fixed to degree F - degree G + 1
+  */
   std::pair<UnivariatePolynomial, UnivariatePolynomial> pseudo_division(const UnivariatePolynomial &divisor) const
   {
     if (divisor == 0)
@@ -299,11 +318,13 @@ public:
     return do_pseudo_division(this->degree(), 0, divisor);
   }
 
+  // The quotient of pseudo division
   UnivariatePolynomial pseudo_divide(const UnivariatePolynomial &divisor) const
   {
     return this->pseudo_division(divisor).first;
   }
 
+  // The remainder of pseudo division
   UnivariatePolynomial pseudo_mod(const UnivariatePolynomial &divisor) const
   {
     return this->pseudo_division(divisor).second;
