@@ -1,3 +1,4 @@
+#include <gtest/gtest.h>
 #include <iostream>
 
 #include "AlgebraicRealTest.cpp"
@@ -16,15 +17,23 @@
 
   Excute with g++ --std=c++1z AlgebraicTest.cpp AlgebraicReal.cpp SturmSequence.cpp UnivariatePolynomial.cpp && ./a.out
 */
-int main()
+int main(int argc, char **argv)
 {
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+}
+
+void AllTest()
+{
+  EXPECT_EQ(2 + 2, 4);
+
   AlgebraicRealTest();
   ExtendedTest();
   AliasExtendedTest();
   AliasMonomialTest();
   AliasRationalTest();
   IntegerUtilsTest();
-  RationalTest();
+  //RationalTest();
   SturmSequenceTest();
   SylvesterMatrixTest();
   UnivariatePolynomialTest();

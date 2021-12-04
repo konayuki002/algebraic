@@ -1,4 +1,5 @@
 #include <cassert>
+#include <gtest/gtest.h>
 
 #include "Rational.h"
 
@@ -7,138 +8,167 @@
 
   This check all public method including overloaded operator.
 */
-void RationalTest()
+
+TEST(RationalTest, ConstructorWithZeroDenominator)
 {
-  // Test zero denominator is banned
-  try
-  {
-    const Rational rational(1, 0);
+  EXPECT_THROW(Rational(1, 0), std::domain_error);
+}
 
-    // Make sure an error has occured
-    assert(false);
-  }
-  catch (std::domain_error e)
-  {
-    assert(e.what());
-  }
+TEST(RationalTest, Constructor)
+{
+  EXPECT_EQ(Rational(), Rational(0, 1));
+  EXPECT_EQ(Rational(2), Rational(2, 1));
+  EXPECT_EQ(Rational({1, 2}), Rational(1, 2));
+}
 
-  {
-    // Test output stream operator '<<'
-    std::ostringstream oss;
+TEST(RationalTest, Sign)
+{
+  EXPECT_EQ(Rational(1, 2).sign(), 1);
+  EXPECT_EQ(Rational().sign(), 0);
+  EXPECT_EQ(Rational(-1).sign(), -1);
+}
 
-    oss << Rational(1, 2);
+TEST(RationalTest, UnaryPlus)
+{
+  EXPECT_EQ(+Rational(1, 2), Rational(1, 2));
+}
 
-    assert(oss.str() == "1/2");
-  }
+TEST(RationalTest, UnaryNegate)
+{
+  EXPECT_EQ(-Rational(1, 2), Rational(-1, 2));
+}
 
-  // Test zero constructor
-  assert(Rational() == Rational(0, 1));
+TEST(RationalTest, MultiplicationAssignment)
+{
+  Rational r(3, 2);
+  r *= Rational(1, 3);
 
-  // Test integer constructor
-  assert(Rational(2) == Rational(2, 1));
+  EXPECT_EQ(r, Rational(1, 2));
 
-  // Test initializer list constructor
-  assert(Rational({1, 2}) == Rational(1, 2));
+  Rational r1(1, 2), r2(1, 3);
 
-  // Test sign()
-  assert(Rational(1, 2).sign() == 1);
-  assert(Rational().sign() == 0);
-  assert(Rational(-1).sign() == -1);
+  r1 *= r2 *= Rational(1, 4);
 
-  // Test unary negation/plus
-  assert(+Rational(1, 2) == Rational(1, 2));
-  assert(-Rational(1, 2) == Rational(-1, 2));
+  EXPECT_EQ(r1, Rational(1, 24));
+  EXPECT_EQ(r2, Rational(1, 12));
+}
 
-  // Test compound assignment operators and its reduction
-  Rational rational_compound_assignment_multiply(3, 2);
-  rational_compound_assignment_multiply *= Rational(1, 3);
-  assert(rational_compound_assignment_multiply == Rational(1, 2));
+TEST(RationalTest, DivisionAssignment)
+{
+  Rational r(1, 2);
+  r /= Rational(3, 2);
 
-  Rational rational_compound_assignment_divide(1, 2);
-  rational_compound_assignment_divide /= Rational(3, 2);
-  assert(rational_compound_assignment_divide == Rational(1, 3));
+  EXPECT_EQ(r, Rational(1, 3));
 
-  Rational rational_compound_assignment_plus(1, 6);
-  rational_compound_assignment_plus += Rational(1, 3);
-  assert(rational_compound_assignment_plus == Rational(1, 2));
+  Rational r1(1, 2), r2(1, 3);
 
-  Rational rational_compound_assignment_minus(3, 4);
-  rational_compound_assignment_minus -= Rational(1, 4);
-  assert(rational_compound_assignment_minus == Rational(1, 2));
+  r1 /= r2 /= Rational(1, 4);
 
-  // Test compound assignment copying to two variable
-  Rational rational_compound_assignment_copying_multiply1(1, 2);
-  Rational rational_compound_assignment_copying_multiply2(1, 3);
-  rational_compound_assignment_copying_multiply1 *= rational_compound_assignment_copying_multiply2 *= Rational(1, 4);
-  assert(rational_compound_assignment_copying_multiply1 == Rational(1, 24));
-  assert(rational_compound_assignment_copying_multiply2 == Rational(1, 12));
+  EXPECT_EQ(r1, Rational(3, 8));
+  EXPECT_EQ(r2, Rational(4, 3));
+}
 
-  Rational rational_compound_assignment_copying_divide1(1, 2);
-  Rational rational_compound_assignment_copying_divide2(1, 3);
-  rational_compound_assignment_copying_divide1 /= rational_compound_assignment_copying_divide2 /= Rational(1, 4);
-  assert(rational_compound_assignment_copying_divide1 == Rational(3, 8));
-  assert(rational_compound_assignment_copying_divide2 == Rational(4, 3));
+TEST(RationalTest, AdditionAssignment)
+{
+  Rational r(1, 6);
+  r += Rational(1, 3);
 
-  Rational rational_compound_assignment_copying_plus1(1, 2);
-  Rational rational_compound_assignment_copying_plus2(1, 3);
-  rational_compound_assignment_copying_plus1 += rational_compound_assignment_copying_plus2 += Rational(1, 4);
-  assert(rational_compound_assignment_copying_plus1 == Rational(13, 12));
-  assert(rational_compound_assignment_copying_plus2 == Rational(7, 12));
+  EXPECT_EQ(r, Rational(1, 2));
 
-  Rational rational_compound_assignment_copying_minus1(1, 2);
-  Rational rational_compound_assignment_copying_minus2(1, 3);
-  rational_compound_assignment_copying_minus1 -= rational_compound_assignment_copying_minus2 -= Rational(1, 4);
-  assert(rational_compound_assignment_copying_minus1 == Rational(5, 12));
-  assert(rational_compound_assignment_copying_minus2 == Rational(1, 12));
+  Rational r1(1, 2), r2(1, 3);
 
-  // Test global arthimetic operators
-  assert(Rational(1, 7) * Rational(21, 5) == Rational(3, 5));
-  assert(Rational(6, 5) / Rational(4, 3) == Rational(9, 10));
-  assert(Rational(4, 3) + Rational(5, 6) == Rational(13, 6));
-  assert(Rational(3, 2) - Rational(1, 2) == 1);
-  //Rational(1));
+  r1 += r2 += Rational(1, 4);
 
-  // Test global compare operators
-  assert(Rational(1, 3) > Rational(1, 6));
-  assert(Rational(1, 2) < Rational(2, 3));
-  assert(Rational(3, 5) >= Rational(1, 2));
-  assert(Rational(4, 5) <= Rational(8, 9));
-  assert(Rational(5, 6) == Rational(5, 6));
-  assert(Rational(1, 3) != Rational(1, 6));
+  EXPECT_EQ(r1, Rational(13, 12));
+  EXPECT_EQ(r2, Rational(7, 12));
+}
 
-  // Test devide by zero
-  try
-  {
-    Rational rational_compound_assignment_divide_dividend(1);
-    rational_compound_assignment_divide_dividend /= 0;
+TEST(RationalTest, SubtractionAssignment)
+{
+  Rational r(3, 4);
+  r -= Rational(1, 4);
 
-    // Make sure an error has occured
-    assert(false);
-  }
-  catch (std::domain_error e)
-  {
-    assert(e.what());
-  }
+  EXPECT_EQ(r, Rational(1, 2));
 
-  // Test deviding by zero
-  try
-  {
-    const Rational rational_global_divide_zero = Rational(1) / 0;
+  Rational r1(1, 2), r2(1, 3);
 
-    // Make sure an error has occured
-    assert(false);
-  }
-  catch (std::domain_error e)
-  {
-    assert(e.what());
-  }
+  r1 -= r2 -= Rational(1, 4);
 
-  //Test reducing big numerator and denominator
-  const Rational rational_reducing_big(13 * 347 * 3001, 23 * 347 * 3001);
-  assert(rational_reducing_big == Rational(13, 23));
+  EXPECT_EQ(r1, Rational(5, 12));
+  EXPECT_EQ(r2, Rational(1, 12));
+}
 
-  {
-    // Test pow()
-    assert(Rational(2, 3).pow(2) == Rational(4, 9));
-  }
+TEST(RationalTest, Multiplication)
+{
+  EXPECT_EQ(Rational(1, 7) * Rational(21, 5), Rational(3, 5));
+}
+
+TEST(RationalTest, Division)
+{
+  EXPECT_EQ(Rational(6, 5) / Rational(4, 3), Rational(9, 10));
+}
+
+TEST(RationalTest, Addition)
+{
+  EXPECT_EQ(Rational(4, 3) + Rational(5, 6), Rational(13, 6));
+}
+
+TEST(RationalTest, Subtraction)
+{
+  EXPECT_EQ(Rational(3, 2) - Rational(1, 2), 1);
+}
+
+TEST(RationalTest, LessThan)
+{
+  EXPECT_EQ(Rational(1, 2) < Rational(2, 3), true);
+}
+
+TEST(RationalTest, GreaterThan)
+{
+  EXPECT_EQ(Rational(1, 3) > Rational(1, 6), true);
+}
+
+TEST(RationalTest, LessThanOrEqualTo)
+{
+  EXPECT_EQ(Rational(4, 5) <= Rational(8, 9), true);
+}
+
+TEST(RationalTest, GreaterThanOrEqualTo)
+{
+  EXPECT_EQ(Rational(3, 5) >= Rational(1, 2), true);
+}
+
+TEST(RationalTest, Equality)
+{
+  EXPECT_EQ(Rational(5, 6) == Rational(5, 6), true);
+}
+
+TEST(RationalTest, Inequality)
+{
+  EXPECT_EQ(Rational(1, 3) != Rational(1, 6), true);
+}
+
+TEST(RationalTest, DivideByZero)
+{
+  EXPECT_THROW(Rational(1) /= 0, std::domain_error);
+  EXPECT_THROW(Rational(1) / 0, std::domain_error);
+}
+
+TEST(RationalTest, OutputStream)
+{
+  std::ostringstream oss;
+
+  oss << Rational(1, 2);
+
+  EXPECT_EQ(oss.str(), "1/2");
+}
+
+TEST(RationalTest, Reduction)
+{
+  EXPECT_EQ(Rational(13 * 347 * 3001, 23 * 347 * 3001), Rational(13, 23));
+}
+
+TEST(RationalTest, Power)
+{
+  EXPECT_EQ(Rational(2, 3).pow(2), Rational(4, 9));
 }
