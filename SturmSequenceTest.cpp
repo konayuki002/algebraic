@@ -14,7 +14,7 @@
 void SturmSequenceTest()
 {
   using namespace alias::extended::rational;
-  using namespace alias::monomial::x;
+  using namespace alias::monomial::rational::x;
 
   {
     // Test output stream operator '<<'
