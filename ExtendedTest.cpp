@@ -46,14 +46,14 @@ void ExtendedTest()
 
   // Test calculating when finite
   Extended<Rational> e(1_r / 2);
-  assert(e + e == 1_r);
-  assert(e - e == 0_r);
+  assert(e + e == 1);
+  assert(e - e == 0);
   assert(e * e == 1_r / 4);
-  assert(e / e == 1_r);
+  assert(e / e == 1);
 
   // Test calculating when infinity
   Extended<Rational> ep(Infinity::PositiveInfinity);
-  assert((ep + ep > Extended<Rational>() && !(ep + ep).is_finite()));
+  assert((ep + ep > 0 && !(ep + ep).is_finite()));
 
   try
   {
@@ -65,7 +65,7 @@ void ExtendedTest()
     assert(e.what());
   }
 
-  assert((ep * ep > Extended<Rational>() && !(ep * ep).is_finite()));
+  assert((ep * ep > 0 && !(ep * ep).is_finite()));
 
   try
   {
@@ -78,15 +78,15 @@ void ExtendedTest()
   }
 
   // Test finite and infinity number culculation
-  assert((ep + e) > Extended<Rational>() && !(ep + e).is_finite());
-  assert((ep - e) > Extended<Rational>() && !(ep - e).is_finite());
-  assert((ep * e) > Extended<Rational>() && !(ep * e).is_finite());
-  assert((ep / e) > Extended<Rational>() && !(ep / e).is_finite());
+  assert((ep + e) > 0 && !(ep + e).is_finite());
+  assert((ep - e) > 0 && !(ep - e).is_finite());
+  assert((ep * e) > 0 && !(ep * e).is_finite());
+  assert((ep / e) > 0 && !(ep / e).is_finite());
 
-  assert((e + ep) > Extended<Rational>() && !(ep + e).is_finite());
-  assert((e - ep) < Extended<Rational>() && !(ep - e).is_finite());
-  assert((e * ep) > Extended<Rational>() && !(ep * e).is_finite());
-  assert((e / ep) == Extended<Rational>());
+  assert((e + ep) > 0 && !(ep + e).is_finite());
+  assert((e - ep) < 0 && !(ep - e).is_finite());
+  assert((e * ep) > 0 && !(ep * e).is_finite());
+  assert((e / ep) == 0);
 
   // Test equality of finite numbers
   assert(Extended<Rational>(1_r / 2) == Extended<Rational>(1_r / 2));

@@ -6,9 +6,9 @@ void AliasExtendedTest()
 
   assert(0_exr == Extended<Rational>());
 
-  assert(+oo > 0_exr);
+  assert(+oo > 0);
   assert(!(+oo).is_finite());
 
-  assert(-oo < 0_exr);
+  assert(-oo < 0);
   assert(!(-oo).is_finite());
 }

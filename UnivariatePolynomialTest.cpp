@@ -116,7 +116,7 @@ void UnivariatePolynomialTest()
 
   // Test sign_at()
   using namespace alias::extended::rational;
-  assert(UnivariatePolynomial<Rational>({1, 0, 1, -1}).sign_at_extended(-1_exr) == 1);
+  assert(UnivariatePolynomial<Rational>({1, 0, 1, -1}).sign_at_extended(-1) == 1);
   assert(UnivariatePolynomial<Rational>({1, 0, 1, -1}).sign_at_extended(+oo) == -1);
   assert(UnivariatePolynomial<Rational>({1, 0, 1, -1}).sign_at_extended(-oo) == 1);
 

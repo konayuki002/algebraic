@@ -40,6 +40,7 @@ public:
   std::vector<K> a; // Coefficient array corresponding a[0] + a[1] x + a[2] x^2 + ... a[n] x^n
 
   UnivariatePolynomial(){};                                                                      // Zero polynomial
+  UnivariatePolynomial(const int c) : a(1, c) { remove_higher_degree_zero(); }                   // Constructor from integer
   UnivariatePolynomial(const K c) : a(1, c) { remove_higher_degree_zero(); }                     // Constructor for one with only constant term
   UnivariatePolynomial(const std::initializer_list<K> a) : a(a) { remove_higher_degree_zero(); } // It can be write like "UnivariatePolynomial({0, 0, 1})" then you get x^2
   UnivariatePolynomial(const std::vector<K> a) : a(a) { remove_higher_degree_zero(); }           // Make polynomial from vector as it is array of coefficient
@@ -87,7 +88,7 @@ public:
   }
 
   UnivariatePolynomial operator+() const { return UnivariatePolynomial<K>(*this); }
-  UnivariatePolynomial operator-() const { return UnivariatePolynomial<K>(*this) *= UnivariatePolynomial<K>(-1); }
+  UnivariatePolynomial operator-() const { return UnivariatePolynomial<K>(*this) *= -1; }
 
   UnivariatePolynomial &operator+=(const UnivariatePolynomial &p)
   {
@@ -269,7 +270,7 @@ public:
     {
       return sign_at(e.get_finite_number());
     }
-    else if (e > 0_exr) // when PositiveInfinity
+    else if (e > 0) // when PositiveInfinity
     {
       return leading_coefficient().sign();
     }
