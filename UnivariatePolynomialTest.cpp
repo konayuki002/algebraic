@@ -50,7 +50,7 @@ void UnivariatePolynomialTest()
   assert(univariate_polynomial_compound_divide == UnivariatePolynomial<Rational>({1, 1}));
 
   UnivariatePolynomial<Rational> univariate_polynomial_compound_scalar_divide{2, 3, 4};
-  univariate_polynomial_compound_scalar_divide /= 2;
+  univariate_polynomial_compound_scalar_divide /= UnivariatePolynomial<Rational>(2);
   assert(univariate_polynomial_compound_scalar_divide == UnivariatePolynomial<Rational>({1, {3, 2}, 2}));
 
   UnivariatePolynomial<Rational> univariate_polynomial_compound_scalar_reminder{3, 2, 1};
@@ -78,7 +78,7 @@ void UnivariatePolynomialTest()
   // Test divide by zero
   try
   {
-    UnivariatePolynomial<Rational>{1, 1} /= 0;
+    UnivariatePolynomial<Rational>{1, 1} /= UnivariatePolynomial<Rational>(0);
 
     // Make sure an error has occured
     assert(false);

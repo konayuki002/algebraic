@@ -41,7 +41,6 @@ public:
 
   UnivariatePolynomial(){};                                                                      // Zero polynomial
   UnivariatePolynomial(const K c) : a(1, c) { remove_higher_degree_zero(); }                     // Constructor for one with only constant term
-  UnivariatePolynomial(const int c) : a(1, c) { remove_higher_degree_zero(); }                   // Constructor for one with only constant term representated by integer
   UnivariatePolynomial(const std::initializer_list<K> a) : a(a) { remove_higher_degree_zero(); } // It can be write like "UnivariatePolynomial({0, 0, 1})" then you get x^2
   UnivariatePolynomial(const std::vector<K> a) : a(a) { remove_higher_degree_zero(); }           // Make polynomial from vector as it is array of coefficient
 
@@ -88,7 +87,7 @@ public:
   }
 
   UnivariatePolynomial operator+() const { return UnivariatePolynomial<K>(*this); }
-  UnivariatePolynomial operator-() const { return UnivariatePolynomial<K>(*this) *= -1; }
+  UnivariatePolynomial operator-() const { return UnivariatePolynomial<K>(*this) *= UnivariatePolynomial<K>(-1); }
 
   UnivariatePolynomial &operator+=(const UnivariatePolynomial &p)
   {
@@ -238,7 +237,7 @@ public:
     UnivariatePolynomial<K> reminder(quotient);
     reminder *= p2;
     reminder -= *this;
-    reminder *= -1;
+    reminder *= UnivariatePolynomial<K>(-1);
 
     auto [lower_degree_quotient, last_reminder] = reminder.euclidean_division(p2);
 
@@ -309,13 +308,13 @@ public:
   */
   std::pair<UnivariatePolynomial, UnivariatePolynomial> pseudo_division(const UnivariatePolynomial &divisor) const
   {
-    if (divisor == 0)
+    if (divisor == UnivariatePolynomial())
       throw std::domain_error("Divide by zero");
 
     if (this->degree() < divisor.degree())
-      return {0, *this};
+      return {UnivariatePolynomial(), *this};
 
-    return do_pseudo_division(this->degree(), 0, divisor);
+    return do_pseudo_division(this->degree(), UnivariatePolynomial<K>(), divisor);
   }
 
   // The quotient of pseudo division

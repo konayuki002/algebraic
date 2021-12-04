@@ -34,7 +34,7 @@ private:
 
     reminder.to_monic();
 
-    auto tail = negative_polynomial_reminder_sequence_with_to_monic(p_new, -reminder * sign); // Loop is better (fast & understandable)?
+    auto tail = negative_polynomial_reminder_sequence_with_to_monic(p_new, -reminder * UnivariatePolynomial<Rational>(sign)); // Loop is better (fast & understandable)?
 
     tail.insert(tail.begin(), p_old); // push_front() of std::list is faster than std::vector ?
 

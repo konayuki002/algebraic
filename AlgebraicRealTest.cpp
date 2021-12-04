@@ -38,7 +38,7 @@ void AlgebraicRealTest()
   {
     // Test polynomial constructor with root zero
 
-    AlgebraicReal algebraic_real(x * (x - 2), {-1, 1});
+    AlgebraicReal algebraic_real(x * (x - 2_up), {-1, 1});
     assert(algebraic_real.get_from_rational() == true);
     assert(algebraic_real.rational() == 0);
     assert(algebraic_real.defining_polynomial() == x);
@@ -58,9 +58,9 @@ void AlgebraicRealTest()
   {
     // Test polynomal constructor giving irrational root
 
-    AlgebraicReal algebraic_real(x2 - 2, {1, 2});
+    AlgebraicReal algebraic_real(x2 - 2_up, {1, 2});
     assert(algebraic_real.get_from_rational() == false);
-    assert(algebraic_real.defining_polynomial() == x2 - 2);
+    assert(algebraic_real.defining_polynomial() == x2 - 2_up);
     assert(algebraic_real.get_interval().first == 1);
     assert(algebraic_real.get_interval().second == 2);
   }
@@ -68,18 +68,18 @@ void AlgebraicRealTest()
   {
     // Test compare operator
     assert(AlgebraicReal(1) < AlgebraicReal(2));
-    assert(AlgebraicReal(1) < AlgebraicReal(x2 - 2, {1, 2}));
-    assert(AlgebraicReal(x2 - 2, {1, 2}) < AlgebraicReal(2));
-    assert(AlgebraicReal(x2 - 2, {1, 2}) < AlgebraicReal(x2 - 3, {1, 2}));
+    assert(AlgebraicReal(1) < AlgebraicReal(x2 - 2_up, {1, 2}));
+    assert(AlgebraicReal(x2 - 2_up, {1, 2}) < AlgebraicReal(2));
+    assert(AlgebraicReal(x2 - 2_up, {1, 2}) < AlgebraicReal(x2 - 3_up, {1, 2}));
 
     assert(AlgebraicReal(2) > AlgebraicReal(1));
     assert(AlgebraicReal(1) <= AlgebraicReal(2));
     assert(AlgebraicReal(2) >= AlgebraicReal(1));
 
     assert(AlgebraicReal(1) == AlgebraicReal(1));
-    assert(AlgebraicReal(1) == AlgebraicReal(x2 - 1, {0, 2}));
-    assert(AlgebraicReal(x2 - 1, {0, 2}) == AlgebraicReal(1));
-    assert(AlgebraicReal(x2 - 1, {0, 2}) == AlgebraicReal(x2 + x - 2, {0, 2}));
+    assert(AlgebraicReal(1) == AlgebraicReal(x2 - 1_up, {0, 2}));
+    assert(AlgebraicReal(x2 - 1_up, {0, 2}) == AlgebraicReal(1));
+    assert(AlgebraicReal(x2 - 1_up, {0, 2}) == AlgebraicReal(x2 + x - 2_up, {0, 2}));
 
     assert(AlgebraicReal(1) != AlgebraicReal(2));
   }
@@ -95,14 +95,14 @@ void AlgebraicRealTest()
   {
     std::ostringstream oss;
 
-    oss << AlgebraicReal(x2 - 2, {1, 2});
+    oss << AlgebraicReal(x2 - 2_up, {1, 2});
     assert(oss.str() == "AlgReal [-2/1 0/1 1/1] | (1/1 2/1]");
   }
 
   {
     // Test sturm_sequence()
-    SturmSequence sturm_sequence = AlgebraicReal(x2 - x + 1, {0, 1}).sturm_sequence();
-    SturmSequence sturm_sequence_reference = SturmSequence(x2 - x + 1);
+    SturmSequence sturm_sequence = AlgebraicReal(x2 - x + 1_up, {0, 1}).sturm_sequence();
+    SturmSequence sturm_sequence_reference = SturmSequence(x2 - x + 1_up);
     assert(sturm_sequence.first_term() == sturm_sequence_reference.first_term());
   }
 
@@ -113,13 +113,13 @@ void AlgebraicRealTest()
 
   {
     // Test next_interval() when not rational
-    assert(AlgebraicReal(x2 - 1, {0, 4}).next_interval({0, 4}).first == 0);
-    assert(AlgebraicReal(x2 - 1, {0, 4}).next_interval({0, 4}).second == 2);
+    assert(AlgebraicReal(x2 - 1_up, {0, 4}).next_interval({0, 4}).first == 0);
+    assert(AlgebraicReal(x2 - 1_up, {0, 4}).next_interval({0, 4}).second == 2);
   }
 
   {
     // Test real_roots_between()
-    std::vector<AlgebraicReal> roots = AlgebraicReal::real_roots_between((x - 2) * (x - 6) * (x - 10), 4_r, 12_r);
+    std::vector<AlgebraicReal> roots = AlgebraicReal::real_roots_between((x - 2_up) * (x - 6_up) * (x - 10_up), 4_r, 12_r);
 
     assert(roots.size() == 2);
 
@@ -135,7 +135,7 @@ void AlgebraicRealTest()
 
   {
     // Test real_roots()
-    std::vector<AlgebraicReal> roots = AlgebraicReal::real_roots(x2 - 2);
+    std::vector<AlgebraicReal> roots = AlgebraicReal::real_roots(x2 - 2_up);
 
     assert(roots.size() == 2);
 

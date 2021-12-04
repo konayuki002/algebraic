@@ -1,3 +1,5 @@
+#include <boost/multiprecision/cpp_int.hpp>
+
 #include "AliasMonomial.h"
 #include "IntegerUtils.h"
 #include "Rational.h"
@@ -31,6 +33,7 @@ public:
   static Rational resultant(const UnivariatePolynomial<Rational> &f, const UnivariatePolynomial<Rational> &g)
   {
     using namespace alias::monomial::rational::x;
+
     if (f == 0_up && g.degree() == 0 || f.degree() == 0 && g == 0_up)
       return 1;
 
@@ -41,5 +44,34 @@ public:
       return f.leading_coefficient().pow(g.degree());
 
     return do_resultant(1, f, g);
+  }
+
+  static boost::multiprecision::cpp_int resultant(const UnivariatePolynomial<boost::multiprecision::cpp_int> &f, const UnivariatePolynomial<boost::multiprecision::cpp_int> &g)
+  {
+    using namespace alias::monomial::integer::x;
+
+    if (f == 0_up && g.degree() == 0 || f.degree() == 0 && g == 0_up)
+      return 1;
+
+    if (f.degree() == 0)
+      return IntegerUtils::pow(f.leading_coefficient(), g.degree());
+
+    if (g.degree() == 0)
+      return IntegerUtils::pow(g.leading_coefficient(), f.degree());
+
+    auto remainder = f.pseudo_mod(g);
+
+    if (remainder == 0_up)
+      return 0;
+
+    auto index_leading_coefficient_g = f.degree() - remainder.degree() - (f.degree() - g.degree() + 1) * g.degree();
+
+    if (f.degree() >= g.degree() && index_leading_coefficient_g >= 0)
+      return IntegerUtils::minus_one_power(f.degree() * g.degree()) * IntegerUtils::pow(g.leading_coefficient(), index_leading_coefficient_g) * resultant(g, remainder);
+
+    if (f.degree() >= g.degree() && index_leading_coefficient_g < 0)
+      return IntegerUtils::minus_one_power(f.degree() * g.degree()) * resultant(g, remainder) / IntegerUtils::pow(g.leading_coefficient(), -index_leading_coefficient_g);
+
+    return IntegerUtils::minus_one_power(f.degree() * g.degree()) * resultant(g, f);
   }
 };
