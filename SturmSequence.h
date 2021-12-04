@@ -25,7 +25,7 @@ private:
   */
   static std::vector<UnivariatePolynomial<K>> negative_polynomial_reminder_sequence_with_to_monic(const UnivariatePolynomial<K> p_old, const UnivariatePolynomial<K> p_new)
   {
-    if (p_new.is_zero())
+    if (p_new == 0)
       return {p_old};
 
     auto reminder = p_old % p_new;

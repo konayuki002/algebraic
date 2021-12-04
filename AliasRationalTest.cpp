@@ -1,12 +1,11 @@
+#include <gtest/gtest.h>
+
 #include "AliasRational.h"
 
-void AliasRationalTest()
+TEST(AliasRationalTest, FromInteger)
 {
   using namespace alias::rational;
 
-  // Test integer
-  assert(0_r == Rational(0, 1));
-
-  // Test divide
-  assert(1_r / 2 == Rational(1, 2));
+  EXPECT_EQ(0_r, Rational(0, 1));
+  EXPECT_EQ(1_r / 2, Rational(1, 2));
 }

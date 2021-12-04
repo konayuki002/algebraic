@@ -15,28 +15,10 @@
 /*
   Test all module
 
-  Excute with g++ --std=c++1z AlgebraicTest.cpp AlgebraicReal.cpp SturmSequence.cpp UnivariatePolynomial.cpp && ./a.out
+  Excute with g++ --std=c++1z AlgebraicTest.cpp AlgebraicReal.cpp -lgtest_main -lgtest -lpthread && ./a.out --gtest_shuffle
 */
 int main(int argc, char **argv)
 {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
-}
-
-void AllTest()
-{
-  EXPECT_EQ(2 + 2, 4);
-
-  AlgebraicRealTest();
-  ExtendedTest();
-  AliasExtendedTest();
-  AliasMonomialTest();
-  AliasRationalTest();
-  IntegerUtilsTest();
-  //RationalTest();
-  SturmSequenceTest();
-  SylvesterMatrixTest();
-  UnivariatePolynomialTest();
-
-  std::cout << "succeeded " << 10 << " tests" << std::endl;
 }

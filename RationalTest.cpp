@@ -1,4 +1,3 @@
-#include <cassert>
 #include <gtest/gtest.h>
 
 #include "Rational.h"
@@ -120,32 +119,32 @@ TEST(RationalTest, Subtraction)
 
 TEST(RationalTest, LessThan)
 {
-  EXPECT_EQ(Rational(1, 2) < Rational(2, 3), true);
+  EXPECT_TRUE(Rational(1, 2) < Rational(2, 3));
 }
 
 TEST(RationalTest, GreaterThan)
 {
-  EXPECT_EQ(Rational(1, 3) > Rational(1, 6), true);
+  EXPECT_TRUE(Rational(1, 3) > Rational(1, 6));
 }
 
 TEST(RationalTest, LessThanOrEqualTo)
 {
-  EXPECT_EQ(Rational(4, 5) <= Rational(8, 9), true);
+  EXPECT_TRUE(Rational(4, 5) <= Rational(8, 9));
 }
 
 TEST(RationalTest, GreaterThanOrEqualTo)
 {
-  EXPECT_EQ(Rational(3, 5) >= Rational(1, 2), true);
+  EXPECT_TRUE(Rational(3, 5) >= Rational(1, 2));
 }
 
 TEST(RationalTest, Equality)
 {
-  EXPECT_EQ(Rational(5, 6) == Rational(5, 6), true);
+  EXPECT_TRUE(Rational(5, 6) == Rational(5, 6));
 }
 
 TEST(RationalTest, Inequality)
 {
-  EXPECT_EQ(Rational(1, 3) != Rational(1, 6), true);
+  EXPECT_TRUE(Rational(1, 3) != Rational(1, 6));
 }
 
 TEST(RationalTest, DivideByZero)

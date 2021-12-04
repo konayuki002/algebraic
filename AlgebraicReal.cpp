@@ -261,7 +261,7 @@ std::vector<AlgebraicReal> AlgebraicReal::real_roots(const UnivariatePolynomial<
 
 std::vector<AlgebraicReal> AlgebraicReal::real_roots_between(const UnivariatePolynomial<Rational> &p, const Extended<Rational> &e1, const Extended<Rational> &e2)
 {
-  if (p.is_zero())
+  if (p == 0)
     throw std::domain_error("Zero polynomial doesn't have root");
 
   if (p.degree() == 0)

@@ -221,7 +221,7 @@ public:
   */
   std::pair<UnivariatePolynomial, UnivariatePolynomial> euclidean_division(const UnivariatePolynomial &p2) const
   {
-    if (p2.is_zero())
+    if (p2 == 0)
       throw std::domain_error("Zero division numerator error");
     if (this->degree() < p2.degree())
       return {0, *this};
@@ -285,7 +285,7 @@ public:
   */
   K root_bound() const
   {
-    if (is_zero())
+    if (*this == 0)
       throw std::domain_error("Zero polynomial doesn't have root bound");
 
     auto absolute_leading_coefficient = leading_coefficient() * leading_coefficient().sign();
@@ -331,7 +331,7 @@ template <class K>
 UnivariatePolynomial<K> gcd(const UnivariatePolynomial<K> &p1, const UnivariatePolynomial<K> &p2)
 {
   UnivariatePolynomial<K> p_a = p1, p_b = p2;
-  while (!p_b.is_zero())
+  while (p_b != 0)
   {
     UnivariatePolynomial<K> tmp_p_a = p_a;
     p_a = p_b;
