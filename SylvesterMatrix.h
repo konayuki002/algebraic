@@ -74,4 +74,43 @@ public:
 
     return IntegerUtils::minus_one_power(f.degree() * g.degree()) * resultant(g, f);
   }
+
+  template <class K>
+  static UnivariatePolynomial<K> resultant(const UnivariatePolynomial<UnivariatePolynomial<K>> &f, const UnivariatePolynomial<UnivariatePolynomial<K>> &g)
+  {
+    if (f == 0 && g.degree() == 0 || g == 0 && f.degree() == 0)
+      return 1;
+
+    if (f == 0 || g == 0)
+      return 0;
+
+    if (f.degree() == 0)
+      return f.leading_coefficient().pow(g.degree());
+
+    if (g.degree() == 0)
+      return g.leading_coefficient().pow(f.degree());
+
+    auto remainder = f.pseudo_mod(g);
+
+    if (remainder == 0)
+      return 0;
+
+    int index = f.degree() - remainder.degree() - (f.degree() - g.degree() + 1) * g.degree();
+
+    if (f.degree() >= g.degree())
+    {
+      if (index >= 0)
+      {
+        return IntegerUtils::minus_one_power(f.degree() * g.degree()) * g.leading_coefficient() * resultant(g, remainder);
+      }
+      else
+      {
+        return IntegerUtils::minus_one_power(f.degree() * g.degree()) * resultant(g, remainder) / g.leading_coefficient().pow(-index);
+      }
+    }
+    else
+    {
+      return IntegerUtils::minus_one_power(f.degree() * g.degree()) * resultant(g, f);
+    }
+  }
 };

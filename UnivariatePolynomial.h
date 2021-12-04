@@ -46,7 +46,6 @@ public:
   UnivariatePolynomial(const std::vector<K> a) : a(a) { remove_higher_degree_zero(); }           // Make polynomial from vector as it is array of coefficient
 
   std::vector<K> coefficient() const { return a; } // Coefficients of polynomial arranged in acending orders of their degree
-  bool is_zero() const { return a.size() == 0; }   // Return is this a zero polynomial. A zero polynomial is not a zero degree polynomial.
   int degree() const { return a.size() - 1; }      // Return polynomial degree. Return -1 when zero polynomial.
 
   // Return a coefficient of the largest degree
@@ -115,6 +114,12 @@ public:
 
   UnivariatePolynomial &operator*=(const UnivariatePolynomial &p)
   {
+    if (this->degree() == -1 || p.degree() == -1)
+    {
+      a = {};
+      return *this;
+    }
+
     std::vector<K> new_a(this->degree() + p.degree() + 1, 0);
     for (int a_i = 0; a_i < a.size(); a_i++)
     {
