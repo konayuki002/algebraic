@@ -50,12 +50,12 @@ void UnivariatePolynomialTest()
   assert(univariate_polynomial_compound_divide == UnivariatePolynomial<Rational>({1, 1}));
 
   UnivariatePolynomial<Rational> univariate_polynomial_compound_scalar_divide{2, 3, 4};
-  univariate_polynomial_compound_scalar_divide /= UnivariatePolynomial<Rational>(2);
+  univariate_polynomial_compound_scalar_divide /= 2;
   assert(univariate_polynomial_compound_scalar_divide == UnivariatePolynomial<Rational>({1, {3, 2}, 2}));
 
   UnivariatePolynomial<Rational> univariate_polynomial_compound_scalar_reminder{3, 2, 1};
   univariate_polynomial_compound_scalar_reminder %= UnivariatePolynomial<Rational>{1, 1};
-  assert(univariate_polynomial_compound_scalar_reminder == UnivariatePolynomial<Rational>(2));
+  assert(univariate_polynomial_compound_scalar_reminder == 2);
 
   // Test power()
   UnivariatePolynomial<Rational> univariate_polynomial_power{1, 1};
@@ -78,7 +78,7 @@ void UnivariatePolynomialTest()
   // Test divide by zero
   try
   {
-    UnivariatePolynomial<Rational>{1, 1} /= UnivariatePolynomial<Rational>(0);
+    UnivariatePolynomial<Rational>{1, 1} /= 0;
 
     // Make sure an error has occured
     assert(false);
@@ -90,7 +90,7 @@ void UnivariatePolynomialTest()
 
   auto [quotient, reminder] = UnivariatePolynomial<Rational>({-4, 3, 2}).euclidean_division({1, 1});
   assert(quotient == UnivariatePolynomial<Rational>({1, 2}));
-  assert(reminder == UnivariatePolynomial<Rational>(-5));
+  assert(reminder == -5);
 
   // Test differential()
   assert(UnivariatePolynomial<Rational>({1, 2, 3}).differential() == UnivariatePolynomial<Rational>({2, 6}));
@@ -100,13 +100,13 @@ void UnivariatePolynomialTest()
   assert(UnivariatePolynomial<Rational>({2, 5, 5, 3}) / UnivariatePolynomial<Rational>({2, 3}) == UnivariatePolynomial<Rational>({1, 1, 1}));
   assert(UnivariatePolynomial<Rational>({1, 1, 1}) + UnivariatePolynomial<Rational>({2, 3}) == UnivariatePolynomial<Rational>({3, 4, 1}));
   assert(UnivariatePolynomial<Rational>({1, 1, 1}) - UnivariatePolynomial<Rational>({2, 3}) == UnivariatePolynomial<Rational>({-1, -2, 1}));
-  assert(UnivariatePolynomial<Rational>({3, 5, 5, 3}) % UnivariatePolynomial<Rational>({2, 3}) == UnivariatePolynomial<Rational>(1));
+  assert(UnivariatePolynomial<Rational>({3, 5, 5, 3}) % UnivariatePolynomial<Rational>({2, 3}) == 1);
 
   // Test gcd
   assert(gcd(UnivariatePolynomial<Rational>({-1, 3, -3, 1}), UnivariatePolynomial<Rational>({4, -5, 1})) == UnivariatePolynomial<Rational>({-1, 1}));
 
   // Test coefficient growth
-  assert(gcd(UnivariatePolynomial<Rational>({4, -2, 0, 3, 1}), UnivariatePolynomial<Rational>({-1, 1, -7, 1})) == UnivariatePolynomial<Rational>(1));
+  assert(gcd(UnivariatePolynomial<Rational>({4, -2, 0, 3, 1}), UnivariatePolynomial<Rational>({-1, 1, -7, 1})) == 1);
 
   // Test square_free()
   assert(square_free(UnivariatePolynomial<Rational>({1, 1}) * UnivariatePolynomial<Rational>({1, 1}) * UnivariatePolynomial<Rational>({1, 2, 3})) == UnivariatePolynomial<Rational>({1, 1}) * UnivariatePolynomial<Rational>({1, 2, 3}));
@@ -125,5 +125,5 @@ void UnivariatePolynomialTest()
 
   // Test pseudo_division()
   assert(UnivariatePolynomial<Rational>({1, 3, 1}).pseudo_divide(UnivariatePolynomial<Rational>({1, 2})) == UnivariatePolynomial<Rational>({5, 2}));
-  assert(UnivariatePolynomial<Rational>({1, 3, 1}).pseudo_mod(UnivariatePolynomial<Rational>({1, 2})) == UnivariatePolynomial<Rational>(-1));
+  assert(UnivariatePolynomial<Rational>({1, 3, 1}).pseudo_mod(UnivariatePolynomial<Rational>({1, 2})) == -1);
 }

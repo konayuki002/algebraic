@@ -19,7 +19,7 @@ private:
 
     auto remainder = f % g;
 
-    if (remainder == UnivariatePolynomial<Rational>(0))
+    if (remainder == 0)
       return 0;
 
     // Recursion with tail call
@@ -34,10 +34,10 @@ public:
   {
     using namespace alias::monomial::rational::x;
 
-    if (f == 0_up && g.degree() == 0 || f.degree() == 0 && g == 0_up)
+    if (f == 0 && g.degree() == 0 || f.degree() == 0 && g == 0)
       return 1;
 
-    if (f == 0_up || g == 0_up)
+    if (f == 0 || g == 0)
       return 0;
 
     if (f.degree() == 0)
@@ -50,7 +50,7 @@ public:
   {
     using namespace alias::monomial::integer::x;
 
-    if (f == 0_up && g.degree() == 0 || f.degree() == 0 && g == 0_up)
+    if (f == 0 && g.degree() == 0 || f.degree() == 0 && g == 0)
       return 1;
 
     if (f.degree() == 0)
@@ -61,7 +61,7 @@ public:
 
     auto remainder = f.pseudo_mod(g);
 
-    if (remainder == 0_up)
+    if (remainder == 0)
       return 0;
 
     auto index_leading_coefficient_g = f.degree() - remainder.degree() - (f.degree() - g.degree() + 1) * g.degree();
