@@ -77,7 +77,7 @@ public:
     if (index < 0)
       throw std::domain_error("Negative power of polynomial error");
 
-    UnivariatePolynomial<K> accumulator(1);
+    UnivariatePolynomial accumulator(1);
 
     for (int power_i = 0; power_i < index; power_i++)
     {
@@ -111,7 +111,7 @@ public:
     return *this;
   }
 
-  UnivariatePolynomial &operator-=(const UnivariatePolynomial &p) { return *this += (-p); }
+  UnivariatePolynomial &operator-=(const UnivariatePolynomial &p) { return *this += -p; }
 
   UnivariatePolynomial &operator*=(const UnivariatePolynomial &p)
   {
@@ -194,7 +194,7 @@ public:
   {
     using namespace alias::rational;
 
-    return std::accumulate(a.rbegin(), a.rend(), 0_r, [r](K acc, K each_a)
+    return std::accumulate(a.rbegin(), a.rend(), K(), [r](K acc, K each_a)
                            { return acc * r + each_a; });
   }
 
@@ -202,7 +202,7 @@ public:
   UnivariatePolynomial composition(const UnivariatePolynomial p2) const
   {
     // Fix intial value
-    UnivariatePolynomial<K> composit_polynomial;
+    UnivariatePolynomial composit_polynomial;
 
     for (auto &each_a : a)
     {
@@ -224,7 +224,7 @@ public:
     if (p2.is_zero())
       throw std::domain_error("Zero division numerator error");
     if (this->degree() < p2.degree())
-      return std::pair<UnivariatePolynomial<K>, UnivariatePolynomial<K>>{UnivariatePolynomial<K>(), *this};
+      return {0, *this};
 
     int quotient_degree = this->degree() - p2.degree();
     K quotient_coefficient = this->leading_coefficient() / p2.leading_coefficient();
@@ -238,7 +238,7 @@ public:
     UnivariatePolynomial<K> reminder(quotient);
     reminder *= p2;
     reminder -= *this;
-    reminder *= UnivariatePolynomial<K>(-1);
+    reminder *= -1;
 
     auto [lower_degree_quotient, last_reminder] = reminder.euclidean_division(p2);
 
@@ -255,9 +255,7 @@ public:
       new_a[a_i] *= a_i;
     }
     new_a.erase(new_a.begin());
-    UnivariatePolynomial<K> new_p;
-    new_p.a = new_a;
-    return new_p;
+    return UnivariatePolynomial(new_a);
   }
 
   // Return sign at certain number r.
@@ -287,17 +285,15 @@ public:
   */
   K root_bound() const
   {
-    using namespace alias::rational;
-
     if (is_zero())
       throw std::domain_error("Zero polynomial doesn't have root bound");
 
     auto absolute_leading_coefficient = leading_coefficient() * leading_coefficient().sign();
 
-    auto absolute_coefficient_sum = std::accumulate(a.begin(), a.end() - 1, 0_r, [absolute_leading_coefficient](const K &acc, const K &r)
-                                                    { return acc + r * r.sign() / absolute_leading_coefficient; });
+    K absolute_coefficient_sum = std::accumulate(a.begin(), a.end() - 1, K(), [absolute_leading_coefficient](const K &acc, const K &r)
+                                                 { return acc + r * r.sign() / absolute_leading_coefficient; });
 
-    return std::max(absolute_coefficient_sum, 1_r);
+    return std::max(absolute_coefficient_sum, K(1));
   }
 
   /*
@@ -309,13 +305,13 @@ public:
   */
   std::pair<UnivariatePolynomial, UnivariatePolynomial> pseudo_division(const UnivariatePolynomial &divisor) const
   {
-    if (divisor == UnivariatePolynomial())
+    if (divisor == 0)
       throw std::domain_error("Divide by zero");
 
     if (this->degree() < divisor.degree())
-      return {UnivariatePolynomial(), *this};
+      return {0, *this};
 
-    return do_pseudo_division(this->degree(), UnivariatePolynomial<K>(), divisor);
+    return do_pseudo_division(this->degree(), 0, divisor);
   }
 
   // The quotient of pseudo division
