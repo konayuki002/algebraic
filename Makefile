@@ -1,4 +1,4 @@
-SRCS=AlgebraicTest.cpp AliasExtendedTest.cpp
+SRCS=$(wildcard */*.cpp)
 OBJS=$(SRC:%.cpp=%.o)
 TESTS=$(OBJS:%.o=%)
 
@@ -11,12 +11,12 @@ build/test.out: include/*.h lib/*.cpp test/*.cpp
 
 %Test: build/test/%Test.o
 	mkdir -p build/bin
-	g++ $< -o build/bin/$@ -lgtest_main -lgtest -lpthread
+	g++ $< -o build/bin/$@ build/lib/AlgebraicReal.o -lgtest_main -lgtest -lpthread
 	build/bin/$@ --gtest_shuffle
 
-build/test/%.o: test/%.cpp
+build/%.o: %.cpp
 	mkdir -p build/test
-	g++ --std=c++1z -c $< lib/ -I include -o $@ 
+	g++ --std=c++1z -c $< lib/ -I include -o $@
 
 clean:
 	rm -r build
