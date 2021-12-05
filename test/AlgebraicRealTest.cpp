@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "AlgebraicReal.h"
-#include "AliasMonomial.h"
-#include "AliasRational.h"
+#include <AlgebraicReal.h>
+#include <AliasMonomial.h>
+#include <AliasRational.h>
 
 /*
   Test module for AlgebraicReal.cpp

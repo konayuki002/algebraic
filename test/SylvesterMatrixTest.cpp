@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
-#include "AliasMonomial.h"
-#include "SylvesterMatrix.h"
+#include <AliasMonomial.h>
+#include <SylvesterMatrix.h>
 
-#include "AlgebraicReal.h"
+#include <AlgebraicReal.h>
 
 TEST(SylvesterMatrixTest, FieldPolynomialResultant)
 {

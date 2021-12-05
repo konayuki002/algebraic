@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "AliasExtended.h"
+#include <AliasExtended.h>
 
 TEST(AliasExtendedTest, UserLiteral)
 {

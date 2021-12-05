@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "Infinity.cpp"
+#include <Infinity.h>
 
 /*
   Class for Number with positive/negative infinity

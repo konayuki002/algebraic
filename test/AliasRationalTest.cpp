@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "AliasRational.h"
+#include <AliasRational.h>
 
 TEST(AliasRationalTest, FromInteger)
 {

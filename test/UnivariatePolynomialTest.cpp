@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "AliasExtended.h"
-#include "AliasRational.h"
-#include "UnivariatePolynomial.h"
+#include <AliasExtended.h>
+#include <AliasRational.h>
+#include <UnivariatePolynomial.h>
 
 /*
   Test module for UnivariatePolynomial.cpp

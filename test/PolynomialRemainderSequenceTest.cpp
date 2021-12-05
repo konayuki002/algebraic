@@ -2,8 +2,8 @@
 
 #include <boost/multiprecision/cpp_int.hpp>
 
-#include "AliasMonomial.h"
-#include "PolynomialRemainderSequence.h"
+#include <AliasMonomial.h>
+#include <PolynomialRemainderSequence.h>
 
 TEST(PolynomialRemainderSequenceTest, PseudoEuclidPolynomialRemainderSequence)
 {

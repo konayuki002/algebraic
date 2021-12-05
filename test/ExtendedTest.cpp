@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "AliasRational.h"
-#include "Extended.h"
-#include "Rational.h"
+#include <AliasRational.h>
+#include <Extended.h>
+#include <Rational.h>
 
 /*
   Test module for Extended.cpp

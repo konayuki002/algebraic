@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Rational.h"
+#include <Rational.h>
 
 namespace alias::rational
 {

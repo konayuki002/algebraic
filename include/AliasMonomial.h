@@ -2,7 +2,7 @@
 
 #include <boost/multiprecision/cpp_int.hpp>
 
-#include "UnivariatePolynomial.h"
+#include <UnivariatePolynomial.h>
 
 namespace alias::monomial::rational::x
 {

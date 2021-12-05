@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "Rational.h"
+#include <Rational.h>
 
 /*
   Test module for Rational.h

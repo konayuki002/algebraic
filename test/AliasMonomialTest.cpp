@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "AliasMonomial.h"
+#include <AliasMonomial.h>
 
 TEST(AliasMonomialTest, UnitVariableWithRationalCoefficient)
 {

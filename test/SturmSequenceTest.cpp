@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
-#include "AliasExtended.h"
-#include "AliasMonomial.h"
-#include "AliasRational.h"
-#include "SturmSequence.h"
+#include <AliasExtended.h>
+#include <AliasMonomial.h>
+#include <AliasRational.h>
+#include <SturmSequence.h>
 
 /*
   Test module for SturmSequence.cpp

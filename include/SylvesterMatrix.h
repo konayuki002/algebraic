@@ -1,9 +1,9 @@
 #include <boost/multiprecision/cpp_int.hpp>
 
-#include "AliasMonomial.h"
-#include "IntegerUtils.h"
-#include "Rational.h"
-#include "UnivariatePolynomial.h"
+#include <AliasMonomial.h>
+#include <IntegerUtils.h>
+#include <Rational.h>
+#include <UnivariatePolynomial.h>
 
 /*
  * Class for calculateresultant (Determinant of SylvesterMatrix

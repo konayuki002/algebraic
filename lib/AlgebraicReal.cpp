@@ -1,10 +1,10 @@
 #include <stdexcept>
 
-#include "AliasMonomial.h"
-#include "AliasExtended.h"
-#include "AlgebraicReal.h"
-#include "SturmSequence.h"
-#include "UnivariatePolynomial.h"
+#include <AliasMonomial.h>
+#include <AliasExtended.h>
+#include <AlgebraicReal.h>
+#include <SturmSequence.h>
+#include <UnivariatePolynomial.h>
 
 bool AlgebraicReal::is_overlapping(const std::pair<Rational, Rational> i1, const std::pair<Rational, Rational> i2)
 {
