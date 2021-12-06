@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "Infinity.cpp"
+#include <Infinity.h>
 
 /*
   Class for Number with positive/negative infinity
@@ -26,13 +26,15 @@ private:
     }
     else
     {
-      return Extended();
+      return 0;
     }
   }
 
 public:
   // Constructor for zero
   Extended() : a(){};
+
+  Extended(const int a) : a(a){};
 
   // Constructor for finite number
   Extended(const Number &a) : a(a){};

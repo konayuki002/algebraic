@@ -2,9 +2,9 @@
 
 #include <stdexcept>
 
-#include "Rational.h"
-#include "SturmSequence.h"
-#include "UnivariatePolynomial.h"
+#include <Rational.h>
+#include <SturmSequence.h>
+#include <UnivariatePolynomial.h>
 
 /*
   Class for algebraic real number:

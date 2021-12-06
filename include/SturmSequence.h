@@ -3,7 +3,7 @@
 #include <vector>
 #include <iostream>
 
-#include "UnivariatePolynomial.h"
+#include <UnivariatePolynomial.h>
 
 /*
 *  Class for Sturm Sequence of an univariate polynomial based on reference:
@@ -25,7 +25,7 @@ private:
   */
   static std::vector<UnivariatePolynomial<K>> negative_polynomial_reminder_sequence_with_to_monic(const UnivariatePolynomial<K> p_old, const UnivariatePolynomial<K> p_new)
   {
-    if (p_new.is_zero())
+    if (p_new == 0)
       return {p_old};
 
     auto reminder = p_old % p_new;
@@ -34,7 +34,7 @@ private:
 
     reminder.to_monic();
 
-    auto tail = negative_polynomial_reminder_sequence_with_to_monic(p_new, -reminder * sign); // Loop is better (fast & understandable)?
+    auto tail = negative_polynomial_reminder_sequence_with_to_monic(p_new, -reminder * UnivariatePolynomial<Rational>(sign)); // Loop is better (fast & understandable)?
 
     tail.insert(tail.begin(), p_old); // push_front() of std::list is faster than std::vector ?
 
@@ -86,8 +86,7 @@ public:
   int count_sign_change_at(const K r) const
   {
     std::vector<int> signs(sequence_terms.size());
-    std::transform(sequence_terms.begin(), sequence_terms.end(), signs.begin(), [r](UnivariatePolynomial<K> p)
-                   { return p.sign_at(r); });
+    std::transform(sequence_terms.begin(), sequence_terms.end(), signs.begin(), [r](UnivariatePolynomial<K> p) { return p.sign_at(r); });
     return count_sign_change(signs);
   }
 
@@ -95,8 +94,7 @@ public:
   int count_sign_change_at_extended(const Extended<K> e) const
   {
     std::vector<int> signs(sequence_terms.size());
-    std::transform(sequence_terms.begin(), sequence_terms.end(), signs.begin(), [e](UnivariatePolynomial<K> p)
-                   { return p.sign_at_extended(e); });
+    std::transform(sequence_terms.begin(), sequence_terms.end(), signs.begin(), [e](UnivariatePolynomial<K> p) { return p.sign_at_extended(e); });
     return count_sign_change(signs);
   }
 

@@ -1,10 +1,10 @@
 #include <stdexcept>
 
-#include "AliasMonomial.h"
-#include "AliasExtended.h"
-#include "AlgebraicReal.h"
-#include "SturmSequence.h"
-#include "UnivariatePolynomial.h"
+#include <AliasMonomial.h>
+#include <AliasExtended.h>
+#include <AlgebraicReal.h>
+#include <SturmSequence.h>
+#include <UnivariatePolynomial.h>
 
 bool AlgebraicReal::is_overlapping(const std::pair<Rational, Rational> i1, const std::pair<Rational, Rational> i2)
 {
@@ -261,7 +261,7 @@ std::vector<AlgebraicReal> AlgebraicReal::real_roots(const UnivariatePolynomial<
 
 std::vector<AlgebraicReal> AlgebraicReal::real_roots_between(const UnivariatePolynomial<Rational> &p, const Extended<Rational> &e1, const Extended<Rational> &e2)
 {
-  if (p.is_zero())
+  if (p == 0)
     throw std::domain_error("Zero polynomial doesn't have root");
 
   if (p.degree() == 0)

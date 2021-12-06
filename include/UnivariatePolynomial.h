@@ -4,11 +4,11 @@
 #include <string>
 #include <vector>
 
-#include "AliasExtended.h"
-#include "AliasRational.h"
-#include "Extended.h"
-#include "IntegerUtils.h"
-#include "Rational.h"
+#include <AliasExtended.h>
+#include <AliasRational.h>
+#include <Extended.h>
+#include <IntegerUtils.h>
+#include <Rational.h>
 
 template <class K>
 class UnivariatePolynomial : private boost::euclidean_ring_operators<UnivariatePolynomial<K>>, private boost::equality_comparable<UnivariatePolynomial<K>>
@@ -40,13 +40,12 @@ public:
   std::vector<K> a; // Coefficient array corresponding a[0] + a[1] x + a[2] x^2 + ... a[n] x^n
 
   UnivariatePolynomial(){};                                                                      // Zero polynomial
+  UnivariatePolynomial(const int c) : a(1, c) { remove_higher_degree_zero(); }                   // Constructor from integer
   UnivariatePolynomial(const K c) : a(1, c) { remove_higher_degree_zero(); }                     // Constructor for one with only constant term
-  UnivariatePolynomial(const int c) : a(1, c) { remove_higher_degree_zero(); }                   // Constructor for one with only constant term representated by integer
   UnivariatePolynomial(const std::initializer_list<K> a) : a(a) { remove_higher_degree_zero(); } // It can be write like "UnivariatePolynomial({0, 0, 1})" then you get x^2
   UnivariatePolynomial(const std::vector<K> a) : a(a) { remove_higher_degree_zero(); }           // Make polynomial from vector as it is array of coefficient
 
   std::vector<K> coefficient() const { return a; } // Coefficients of polynomial arranged in acending orders of their degree
-  bool is_zero() const { return a.size() == 0; }   // Return is this a zero polynomial. A zero polynomial is not a zero degree polynomial.
   int degree() const { return a.size() - 1; }      // Return polynomial degree. Return -1 when zero polynomial.
 
   // Return a coefficient of the largest degree
@@ -77,7 +76,7 @@ public:
     if (index < 0)
       throw std::domain_error("Negative power of polynomial error");
 
-    UnivariatePolynomial<K> accumulator(1);
+    UnivariatePolynomial accumulator(1);
 
     for (int power_i = 0; power_i < index; power_i++)
     {
@@ -111,10 +110,16 @@ public:
     return *this;
   }
 
-  UnivariatePolynomial &operator-=(const UnivariatePolynomial &p) { return *this += (-p); }
+  UnivariatePolynomial &operator-=(const UnivariatePolynomial &p) { return *this += -p; }
 
   UnivariatePolynomial &operator*=(const UnivariatePolynomial &p)
   {
+    if (this->degree() == -1 || p.degree() == -1)
+    {
+      a = {};
+      return *this;
+    }
+
     std::vector<K> new_a(this->degree() + p.degree() + 1, 0);
     for (int a_i = 0; a_i < a.size(); a_i++)
     {
@@ -194,15 +199,14 @@ public:
   {
     using namespace alias::rational;
 
-    return std::accumulate(a.rbegin(), a.rend(), 0_r, [r](K acc, K each_a)
-                           { return acc * r + each_a; });
+    return std::accumulate(a.rbegin(), a.rend(), K(), [r](K acc, K each_a) { return acc * r + each_a; });
   }
 
   // f \\circ g so that (f \\circ g)(x) gives f(g(x))
   UnivariatePolynomial composition(const UnivariatePolynomial p2) const
   {
     // Fix intial value
-    UnivariatePolynomial<K> composit_polynomial;
+    UnivariatePolynomial composit_polynomial;
 
     for (auto &each_a : a)
     {
@@ -221,10 +225,10 @@ public:
   */
   std::pair<UnivariatePolynomial, UnivariatePolynomial> euclidean_division(const UnivariatePolynomial &p2) const
   {
-    if (p2.is_zero())
+    if (p2 == 0)
       throw std::domain_error("Zero division numerator error");
     if (this->degree() < p2.degree())
-      return std::pair<UnivariatePolynomial<K>, UnivariatePolynomial<K>>{UnivariatePolynomial<K>(), *this};
+      return {0, *this};
 
     int quotient_degree = this->degree() - p2.degree();
     K quotient_coefficient = this->leading_coefficient() / p2.leading_coefficient();
@@ -255,9 +259,7 @@ public:
       new_a[a_i] *= a_i;
     }
     new_a.erase(new_a.begin());
-    UnivariatePolynomial<K> new_p;
-    new_p.a = new_a;
-    return new_p;
+    return UnivariatePolynomial(new_a);
   }
 
   // Return sign at certain number r.
@@ -270,7 +272,7 @@ public:
     {
       return sign_at(e.get_finite_number());
     }
-    else if (e > 0_exr) // when PositiveInfinity
+    else if (e > 0) // when PositiveInfinity
     {
       return leading_coefficient().sign();
     }
@@ -287,17 +289,14 @@ public:
   */
   K root_bound() const
   {
-    using namespace alias::rational;
-
-    if (is_zero())
+    if (*this == 0)
       throw std::domain_error("Zero polynomial doesn't have root bound");
 
     auto absolute_leading_coefficient = leading_coefficient() * leading_coefficient().sign();
 
-    auto absolute_coefficient_sum = std::accumulate(a.begin(), a.end() - 1, 0_r, [absolute_leading_coefficient](const K &acc, const K &r)
-                                                    { return acc + r * r.sign() / absolute_leading_coefficient; });
+    K absolute_coefficient_sum = std::accumulate(a.begin(), a.end() - 1, K(), [absolute_leading_coefficient](const K &acc, const K &r) { return acc + r * r.sign() / absolute_leading_coefficient; });
 
-    return std::max(absolute_coefficient_sum, 1_r);
+    return std::max(absolute_coefficient_sum, K(1));
   }
 
   /*
@@ -335,7 +334,7 @@ template <class K>
 UnivariatePolynomial<K> gcd(const UnivariatePolynomial<K> &p1, const UnivariatePolynomial<K> &p2)
 {
   UnivariatePolynomial<K> p_a = p1, p_b = p2;
-  while (!p_b.is_zero())
+  while (p_b != 0)
   {
     UnivariatePolynomial<K> tmp_p_a = p_a;
     p_a = p_b;
