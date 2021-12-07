@@ -12,22 +12,8 @@ public:
   MaybeOrdering() : is_determined(false){};
   MaybeOrdering(const bool ordering) : is_determined(true), ordering(ordering){};
 
-  bool determined() const
-  {
-    return is_determined;
-  }
-
-  bool order()
-  {
-    if (is_determined)
-    {
-      return ordering;
-    }
-    else
-    {
-      throw std::domain_error("Indetermined ordering error");
-    }
-  }
+  bool determined() const;
+  bool order() const;
 
   /* 
   *  This cast funciton is deleted.
@@ -35,15 +21,5 @@ public:
   */
   explicit operator bool() const = delete;
 
-  MaybeOrdering operator!() const
-  {
-    if (is_determined)
-    {
-      return MaybeOrdering(!ordering);
-    }
-    else
-    {
-      return MaybeOrdering(*this);
-    }
-  }
+  MaybeOrdering operator!() const;
 };

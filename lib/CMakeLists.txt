@@ -2,6 +2,7 @@ add_library(algebraic
   STATIC 
     AlgebraicReal.cpp
     IntervalRational.cpp
+    MaybeOrdering.cpp
   )
 
 target_include_directories(algebraic 
