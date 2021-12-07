@@ -1,4 +1,4 @@
-#include <MaybeOrdering.h>
+#include <MaybeBool.h>
 #include <Rational.h>
 
 class IntervalRational : private boost::field_operators<IntervalRational>
@@ -34,10 +34,10 @@ public:
 
   IntervalRational sign() const;
 
-  friend MaybeOrdering operator==(const IntervalRational &ivr1, const IntervalRational &ivr2);
-  friend MaybeOrdering operator!=(const IntervalRational &ivr1, const IntervalRational &ivr2);
-  friend MaybeOrdering operator<(const IntervalRational &ivr1, const IntervalRational &ivr2);
-  friend MaybeOrdering operator>(const IntervalRational &ivr1, const IntervalRational &ivr2);
-  friend MaybeOrdering operator<=(const IntervalRational &ivr1, const IntervalRational &ivr2);
-  friend MaybeOrdering operator>=(const IntervalRational &ivr1, const IntervalRational &ivr2);
+  friend MaybeBool operator==(const IntervalRational &ivr1, const IntervalRational &ivr2);
+  friend MaybeBool operator!=(const IntervalRational &ivr1, const IntervalRational &ivr2);
+  friend MaybeBool operator<(const IntervalRational &ivr1, const IntervalRational &ivr2);
+  friend MaybeBool operator>(const IntervalRational &ivr1, const IntervalRational &ivr2);
+  friend MaybeBool operator<=(const IntervalRational &ivr1, const IntervalRational &ivr2);
+  friend MaybeBool operator>=(const IntervalRational &ivr1, const IntervalRational &ivr2);
 };

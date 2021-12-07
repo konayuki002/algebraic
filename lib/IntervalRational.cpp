@@ -52,14 +52,14 @@ IntervalRational IntervalRational::sign() const
   return IntervalRational(a.sign(), b.sign());
 }
 
-MaybeOrdering operator==(const IntervalRational &ivr1, const IntervalRational &ivr2)
+MaybeBool operator==(const IntervalRational &ivr1, const IntervalRational &ivr2)
 {
   if (ivr1.width() == 0 && ivr2.width() == 0 && ivr1.a == ivr2.a)
     return true;
 
   if (ivr1.is_overlapping(ivr2))
   {
-    return MaybeOrdering();
+    return MaybeBool();
   }
   else
   {
@@ -67,12 +67,12 @@ MaybeOrdering operator==(const IntervalRational &ivr1, const IntervalRational &i
   }
 }
 
-MaybeOrdering operator!=(const IntervalRational &ivr1, const IntervalRational &ivr2)
+MaybeBool operator!=(const IntervalRational &ivr1, const IntervalRational &ivr2)
 {
   return !(ivr1 == ivr2);
 }
 
-MaybeOrdering operator<(const IntervalRational &ivr1, const IntervalRational &ivr2)
+MaybeBool operator<(const IntervalRational &ivr1, const IntervalRational &ivr2)
 {
   if (ivr1.b < ivr2.a)
   {
@@ -84,16 +84,16 @@ MaybeOrdering operator<(const IntervalRational &ivr1, const IntervalRational &iv
   }
   else
   {
-    return MaybeOrdering();
+    return MaybeBool();
   }
 }
 
-MaybeOrdering operator>(const IntervalRational &ivr1, const IntervalRational &ivr2)
+MaybeBool operator>(const IntervalRational &ivr1, const IntervalRational &ivr2)
 {
   return ivr2 < ivr1;
 }
 
-MaybeOrdering operator<=(const IntervalRational &ivr1, const IntervalRational &ivr2)
+MaybeBool operator<=(const IntervalRational &ivr1, const IntervalRational &ivr2)
 {
   if (ivr1.b <= ivr2.a)
   {
@@ -105,11 +105,11 @@ MaybeOrdering operator<=(const IntervalRational &ivr1, const IntervalRational &i
   }
   else
   {
-    return MaybeOrdering();
+    return MaybeBool();
   }
 }
 
-MaybeOrdering operator>=(const IntervalRational &ivr1, const IntervalRational &ivr2)
+MaybeBool operator>=(const IntervalRational &ivr1, const IntervalRational &ivr2)
 {
   return ivr2 <= ivr1;
 }
