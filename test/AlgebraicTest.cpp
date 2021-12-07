@@ -7,6 +7,8 @@
 #include "AliasRationalTest.cpp"
 #include "ExtendedTest.cpp"
 #include "IntegerUtilsTest.cpp"
+#include "IntervalRationalTest.cpp"
+#include "MaybeBoolTest.cpp"
 #include "PolynomialRemainderSequenceTest.cpp"
 #include "RationalTest.cpp"
 #include "SturmSequenceTest.cpp"

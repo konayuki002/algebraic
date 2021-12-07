@@ -1,6 +1,8 @@
 add_library(algebraic
   STATIC 
     AlgebraicReal.cpp
+    IntervalRational.cpp
+    MaybeBool.cpp
   )
 
 target_include_directories(algebraic 
