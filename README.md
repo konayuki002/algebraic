@@ -41,3 +41,8 @@
   ```
     ctest -j8
   ```
+
+  Output detail of failure or error if one or more of them exist
+  ```
+    ctest --output-on-failure
+  ```

@@ -5,6 +5,11 @@ bool IntervalRational::is_overlapping(const IntervalRational &ivr) const
   return !(b < ivr.a || ivr.b < a);
 }
 
+Rational IntervalRational::width() const
+{
+  return b - a;
+}
+
 std::pair<Rational, Rational> IntervalRational::to_pair() const
 {
   return {a, b};
@@ -47,18 +52,64 @@ IntervalRational IntervalRational::sign() const
   return IntervalRational(a.sign(), b.sign());
 }
 
-MaybeOrdering equal_to(const IntervalRational &ivr1, const IntervalRational &ivr2)
+MaybeOrdering operator==(const IntervalRational &ivr1, const IntervalRational &ivr2)
 {
-  if (ivr1.is_overlapping(ivr2))
-    return MaybeOrdering();
+  if (ivr1.width() == 0 && ivr2.width() == 0 && ivr1.a == ivr2.a)
+    return true;
 
-  return Ordering(ivr1.a == ivr2.a && ivr1.b == ivr2.b);
+  if (ivr1.is_overlapping(ivr2))
+  {
+    return MaybeOrdering();
+  }
+  else
+  {
+    return false;
+  }
 }
 
-MaybeOrdering not_equal_to(const IntervalRational &ivr1, const IntervalRational &ivr2)
+MaybeOrdering operator!=(const IntervalRational &ivr1, const IntervalRational &ivr2)
 {
-  if (ivr1.is_overlapping(ivr2))
-    return MaybeOrdering();
+  return !(ivr1 == ivr2);
+}
 
-  return Ordering(ivr1.a == ivr2.a && ivr1.b == ivr2.b);
+MaybeOrdering operator<(const IntervalRational &ivr1, const IntervalRational &ivr2)
+{
+  if (ivr1.b < ivr2.a)
+  {
+    return true;
+  }
+  else if (ivr2.b <= ivr1.a)
+  {
+    return false;
+  }
+  else
+  {
+    return MaybeOrdering();
+  }
+}
+
+MaybeOrdering operator>(const IntervalRational &ivr1, const IntervalRational &ivr2)
+{
+  return ivr2 < ivr1;
+}
+
+MaybeOrdering operator<=(const IntervalRational &ivr1, const IntervalRational &ivr2)
+{
+  if (ivr1.b <= ivr2.a)
+  {
+    return true;
+  }
+  else if (ivr2.b < ivr1.a)
+  {
+    return false;
+  }
+  else
+  {
+    return MaybeOrdering();
+  }
+}
+
+MaybeOrdering operator>=(const IntervalRational &ivr1, const IntervalRational &ivr2)
+{
+  return ivr2 <= ivr1;
 }

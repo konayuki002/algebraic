@@ -101,3 +101,73 @@ TEST(IntervalRationalTest, Sign)
   EXPECT_TRUE(equal_pair(IntervalRational(-4, 0).sign(), {-1, 0}));
   EXPECT_TRUE(equal_pair(IntervalRational(-5, 2).sign(), {-1, 1}));
 }
+
+TEST(IntervalRationalTest, Equality)
+{
+  IntervalRational ivr0(0), ivr1(1), ivr0_1(0, 1);
+
+  EXPECT_TRUE((ivr0 == ivr0).determined());
+  EXPECT_TRUE((ivr0 == ivr0).order());
+
+  EXPECT_TRUE((ivr0 == ivr1).determined());
+  EXPECT_FALSE((ivr0 == ivr1).order());
+
+  EXPECT_FALSE((ivr0_1 == ivr1).determined());
+}
+
+TEST(IntervalRationalTest, LessThan)
+{
+  IntervalRational ivr0(0), ivr1(1), ivr0_1(0, 1), ivr_1_1(-1, 1);
+  IntervalRational ivr_1(-1);
+
+  EXPECT_TRUE((ivr0 < ivr1).determined());
+  EXPECT_TRUE((ivr0 < ivr1).order());
+
+  EXPECT_TRUE((ivr1 < ivr1).determined());
+  EXPECT_FALSE((ivr1 < ivr1).order());
+
+  EXPECT_TRUE((ivr1 < ivr0).determined());
+  EXPECT_FALSE((ivr1 < ivr0).order());
+
+  EXPECT_FALSE((ivr0 < ivr0_1).determined());
+
+  EXPECT_FALSE((ivr0 < ivr_1_1).determined());
+
+  EXPECT_TRUE((ivr_1 < ivr0_1).determined());
+  EXPECT_TRUE((ivr_1 < ivr0_1).order());
+
+  EXPECT_TRUE((ivr0_1 < ivr_1).determined());
+  EXPECT_FALSE((ivr0_1 < ivr_1).order());
+}
+
+TEST(IntervalRationalTest, GreaterThan)
+{
+  EXPECT_TRUE((IntervalRational(-1, 0) < IntervalRational(1, 2)).determined());
+  EXPECT_TRUE((IntervalRational(-1, 0) < IntervalRational(1, 2)).order());
+}
+
+TEST(IntervalRationalTest, LessThanOrEqualTo)
+{
+  IntervalRational ivr0(0), ivr1(1), ivr0_1(0, 1), ivr_1_1(-1, 1);
+  IntervalRational ivr_1(-1);
+
+  EXPECT_TRUE((ivr0 <= ivr1).determined());
+  EXPECT_TRUE((ivr0 <= ivr1).order());
+
+  EXPECT_TRUE((ivr1 <= ivr1).determined());
+  EXPECT_TRUE((ivr1 <= ivr1).order());
+
+  EXPECT_TRUE((ivr1 <= ivr0).determined());
+  EXPECT_FALSE((ivr1 <= ivr0).order());
+
+  EXPECT_TRUE((ivr0 <= ivr0_1).determined());
+  EXPECT_TRUE((ivr0 <= ivr0_1).order());
+
+  EXPECT_FALSE((ivr0 <= ivr_1_1).determined());
+
+  EXPECT_TRUE((ivr_1 <= ivr0_1).determined());
+  EXPECT_TRUE((ivr0 <= ivr0_1).order());
+
+  EXPECT_TRUE((ivr0_1 <= ivr_1).determined());
+  EXPECT_FALSE((ivr0_1 <= ivr_1).order());
+}

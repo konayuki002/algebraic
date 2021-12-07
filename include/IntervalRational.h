@@ -18,6 +18,8 @@ private:
 
   bool is_overlapping(const IntervalRational &ivr) const;
 
+  Rational width() const;
+
 public:
   IntervalRational(const Rational &a, const Rational &b) : a(a), b(b){};
   IntervalRational(const Rational &a) : a(a), b(a){};
@@ -32,10 +34,10 @@ public:
 
   IntervalRational sign() const;
 
-  friend MaybeOrdering equal_to(const IntervalRational &ivr1, const IntervalRational &ivr2);
-  friend MaybeOrdering not_equal_to(const IntervalRational &ivr1, const IntervalRational &ivr2);
-  friend MaybeOrdering less_than(const IntervalRational &ivr1, const IntervalRational &ivr2);
-  friend MaybeOrdering greater_than(const IntervalRational &ivr1, const IntervalRational &ivr2);
-  friend MaybeOrdering less_than_or_equal(const IntervalRational &ivr1, const IntervalRational &ivr2);
-  friend MaybeOrdering greater_than_or_equal(const IntervalRational &ivr1, const IntervalRational &ivr2);
+  friend MaybeOrdering operator==(const IntervalRational &ivr1, const IntervalRational &ivr2);
+  friend MaybeOrdering operator!=(const IntervalRational &ivr1, const IntervalRational &ivr2);
+  friend MaybeOrdering operator<(const IntervalRational &ivr1, const IntervalRational &ivr2);
+  friend MaybeOrdering operator>(const IntervalRational &ivr1, const IntervalRational &ivr2);
+  friend MaybeOrdering operator<=(const IntervalRational &ivr1, const IntervalRational &ivr2);
+  friend MaybeOrdering operator>=(const IntervalRational &ivr1, const IntervalRational &ivr2);
 };
