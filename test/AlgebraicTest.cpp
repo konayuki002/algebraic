@@ -8,6 +8,7 @@
 #include "ExtendedTest.cpp"
 #include "IntegerUtilsTest.cpp"
 #include "IntervalRationalTest.cpp"
+#include "MaybeOrderingTest.cpp"
 #include "PolynomialRemainderSequenceTest.cpp"
 #include "RationalTest.cpp"
 #include "SturmSequenceTest.cpp"
