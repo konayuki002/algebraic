@@ -40,4 +40,6 @@ public:
   friend MaybeBool operator>(const IntervalRational &ivr1, const IntervalRational &ivr2);
   friend MaybeBool operator<=(const IntervalRational &ivr1, const IntervalRational &ivr2);
   friend MaybeBool operator>=(const IntervalRational &ivr1, const IntervalRational &ivr2);
+
+  friend std::ostream &operator<<(std::ostream &os, const IntervalRational &ivr);
 };
