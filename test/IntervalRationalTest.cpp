@@ -171,3 +171,14 @@ TEST(IntervalRationalTest, LessThanOrEqualTo)
   EXPECT_TRUE((ivr0_1 <= ivr_1).determined());
   EXPECT_FALSE((ivr0_1 <= ivr_1).get_value());
 }
+
+TEST(IntervalRationalTest, OutputStream)
+{
+  using namespace alias::rational;
+
+  std::ostringstream oss;
+
+  oss << IntervalRational(1_r / 2, 3_r / 2);
+
+  EXPECT_EQ(oss.str(), "[1/2, 3/2]");
+}

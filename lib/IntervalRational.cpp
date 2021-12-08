@@ -113,3 +113,10 @@ MaybeBool operator>=(const IntervalRational &ivr1, const IntervalRational &ivr2)
 {
   return ivr2 <= ivr1;
 }
+
+std::ostream &operator<<(std::ostream &os, const IntervalRational &ivr)
+{
+  os << "[" << ivr.a << ", " << ivr.b << "]";
+
+  return os;
+}
