@@ -1,6 +1,7 @@
 add_library(algebraic
   STATIC 
     AlgebraicReal.cpp
+    ComputableReal.cpp
     IntervalRational.cpp
     MaybeBool.cpp
   )
