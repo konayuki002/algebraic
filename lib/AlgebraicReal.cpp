@@ -251,6 +251,24 @@ std::pair<Rational, Rational> AlgebraicReal::next_interval(const std::pair<Ratio
   }
 }
 
+IntervalRational AlgebraicReal::next_interval_with_sign(const int derivative_sign, const IntervalRational &ivr) const
+{
+  auto [a, b] = ivr.to_pair();
+  auto middle = a + b / 2;
+  if (defining_polynomial().sign_at(middle) == 0)
+  {
+    return IntervalRational(middle);
+  }
+  else if (derivative_sign * defining_polynomial().sign_at(middle) < 0)
+  {
+    return IntervalRational(middle, b);
+  }
+  else
+  {
+    return IntervalRational(a, middle);
+  }
+}
+
 // move to AlgebraicReal
 std::vector<AlgebraicReal> AlgebraicReal::real_roots(const UnivariatePolynomial<Rational> &p)
 {

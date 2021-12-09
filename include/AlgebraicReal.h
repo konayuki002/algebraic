@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 
+#include <IntervalRational.h>
 #include <Rational.h>
 #include <SturmSequence.h>
 #include <UnivariatePolynomial.h>
@@ -51,9 +52,14 @@ public:
   UnivariatePolynomial<Rational> defining_polynomial() const;
   std::pair<Rational, Rational> get_interval() const;
   SturmSequence<Rational> sturm_sequence() const;
-  // name differ from source (interval())
-  // update interval or recreate interval?
+  /*
+  * Diminish interval by using Sturm sequence
+  * name differ from source (interval())
+  * update interval or recreate interval?
+  */
   std::pair<Rational, Rational> next_interval(const std::pair<Rational, Rational> old_interval) const;
+  // Diminish interval without Sturm sequence but derivative sign
+  IntervalRational next_interval_with_sign(const int derivative_sign, const IntervalRational &ivr) const;
 
   static std::vector<AlgebraicReal> real_roots(const UnivariatePolynomial<Rational> &p);
   static std::vector<AlgebraicReal> real_roots_between(const UnivariatePolynomial<Rational> &p, const Extended<Rational> &e1, const Extended<Rational> &e2);
