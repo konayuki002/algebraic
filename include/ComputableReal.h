@@ -18,6 +18,5 @@ public:
   IntervalRational interval() const;
   void diminish_until(const std::function<bool(const IntervalRational &)> &condition);
 
-  ComputableReal &operator+=(const ComputableReal &cr);
   friend std::ostream &operator<<(std::ostream &os, const ComputableReal &cr);
 };
