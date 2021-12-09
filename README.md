@@ -46,3 +46,8 @@
   ```
     ctest --output-on-failure
   ```
+
+  Output debag info
+  ```
+    ctest --verbose
+  ```

@@ -16,6 +16,7 @@ AlgebraicReal::AlgebraicReal() : AlgebraicReal(0){};
 AlgebraicReal::AlgebraicReal(const Rational &r)
     : from_rational(true),
       r(r),
+      sign_at_upper(r.sign()),
       defining_polynomial_sturm_sequence(SturmSequence(UnivariatePolynomial<Rational>({-r, 1}))),
       interval({r, r}){};
 
@@ -36,17 +37,13 @@ AlgebraicReal::AlgebraicReal(const UnivariatePolynomial<Rational> &defining_poly
   if (lower_bound < 0 && 0 <= upper_bound && defining_polynomial.value_at(0) == 0)
   {
     // 0 must be representate by rational
-    from_rational = true;
-    r = 0;
-    this->interval = {0, 0};
+    *this = AlgebraicReal(0);
   }
   else if (defining_polynomial.value_at(upper_bound) == 0)
   {
     // close interval boundary upper_bound must not be zero
     // for 0 must not be contained
-    from_rational = true;
-    r = upper_bound;
-    this->interval = {r, r};
+    *this = AlgebraicReal(upper_bound);
   }
   else
   {
@@ -64,6 +61,8 @@ AlgebraicReal::AlgebraicReal(const UnivariatePolynomial<Rational> &defining_poly
 
     const SturmSequence sturm_sequence_without_zero = SturmSequence(defining_polynomial_without_zero);
 
+    this->defining_polynomial_sturm_sequence = sturm_sequence_without_zero;
+
     // Converge interval until not contain zero
     while (lower_bound < 0 && 0 < upper_bound)
     {
@@ -74,7 +73,19 @@ AlgebraicReal::AlgebraicReal(const UnivariatePolynomial<Rational> &defining_poly
     }
 
     this->interval = interval;
-    this->defining_polynomial_sturm_sequence = sturm_sequence_without_zero;
+
+    if (defining_polynomial_without_zero.sign_at(upper_bound) > 0)
+    {
+      this->sign_at_upper = 1;
+    }
+    else if (defining_polynomial_without_zero.sign_at(upper_bound) < 0)
+    {
+      this->sign_at_upper = -1;
+    }
+    else
+    {
+      this->sign_at_upper = defining_polynomial_without_zero.differential().sign_at(upper_bound);
+    }
   }
 }
 
@@ -247,24 +258,31 @@ std::pair<Rational, Rational> AlgebraicReal::next_interval(const std::pair<Ratio
   }
   else
   {
-    return defining_polynomial_sturm_sequence.next_interval(old_interval);
+    return next_interval_with_sign(IntervalRational(old_interval.first, old_interval.second)).to_pair();
   }
 }
 
-IntervalRational AlgebraicReal::next_interval_with_sign(const int derivative_sign, const IntervalRational &ivr) const
+IntervalRational AlgebraicReal::next_interval_with_sign(const IntervalRational &ivr) const
 {
   auto [a, b] = ivr.to_pair();
-  auto middle = a + b / 2;
+  auto middle = (a + b) / 2;
+
   if (defining_polynomial().sign_at(middle) == 0)
   {
+    std::cout << middle << std::endl;
+
     return IntervalRational(middle);
   }
-  else if (derivative_sign * defining_polynomial().sign_at(middle) < 0)
+  else if (sign_at_upper * defining_polynomial().sign_at(middle) < 0)
   {
+    std::cout << middle << std::endl;
+
     return IntervalRational(middle, b);
   }
-  else
+  else if (sign_at_upper * defining_polynomial().sign_at(middle) > 0)
   {
+    std::cout << middle << std::endl;
+
     return IntervalRational(a, middle);
   }
 }

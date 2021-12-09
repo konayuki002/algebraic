@@ -19,6 +19,8 @@ private:
 
   Rational r;
 
+  int sign_at_upper;
+
   SturmSequence<Rational> defining_polynomial_sturm_sequence;
 
   // (r1, r2]
@@ -59,7 +61,7 @@ public:
   */
   std::pair<Rational, Rational> next_interval(const std::pair<Rational, Rational> old_interval) const;
   // Diminish interval without Sturm sequence but derivative sign
-  IntervalRational next_interval_with_sign(const int derivative_sign, const IntervalRational &ivr) const;
+  IntervalRational next_interval_with_sign(const IntervalRational &ivr) const;
 
   static std::vector<AlgebraicReal> real_roots(const UnivariatePolynomial<Rational> &p);
   static std::vector<AlgebraicReal> real_roots_between(const UnivariatePolynomial<Rational> &p, const Extended<Rational> &e1, const Extended<Rational> &e2);

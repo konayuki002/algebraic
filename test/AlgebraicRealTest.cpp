@@ -158,10 +158,10 @@ TEST(AlgebraicRealTest, NextIntervalWithSign)
 {
   using namespace alias::monomial::rational::x;
 
-  EXPECT_EQ(AlgebraicReal(0).next_interval_with_sign(0, {0, 0}).to_pair(), AlgebraicReal(0).get_interval());
+  EXPECT_EQ(AlgebraicReal(0).next_interval_with_sign({0, 0}).to_pair(), AlgebraicReal(0).get_interval());
 
-  EXPECT_EQ(AlgebraicReal(x2 - 1, {0, 4}).next_interval_with_sign(1, {0, 4}).to_pair().first, 0);
-  EXPECT_EQ(AlgebraicReal(x2 - 1, {0, 4}).next_interval_with_sign(1, {0, 4}).to_pair().second, 2);
+  EXPECT_EQ(AlgebraicReal(x2 - 1, {0, 4}).next_interval_with_sign({0, 4}).to_pair().first, 0);
+  EXPECT_EQ(AlgebraicReal(x2 - 1, {0, 4}).next_interval_with_sign({0, 4}).to_pair().second, 2);
 }
 
 TEST(AlgebraicRealTest, RealRootsBetween)
