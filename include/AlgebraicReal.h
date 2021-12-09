@@ -59,7 +59,7 @@ public:
   * name differ from source (interval())
   * update interval or recreate interval?
   */
-  std::pair<Rational, Rational> next_interval(const std::pair<Rational, Rational> old_interval) const;
+  IntervalRational next_interval(const IntervalRational old_interval) const;
   // Diminish interval without Sturm sequence but derivative sign
   IntervalRational next_interval_with_sign(const IntervalRational &ivr) const;
 

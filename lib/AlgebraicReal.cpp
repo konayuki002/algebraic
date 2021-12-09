@@ -150,13 +150,15 @@ bool operator<(const AlgebraicReal &a, const AlgebraicReal &b)
   else
   {
     // not equal and intervals overlap
-    while (AlgebraicReal::is_overlapping(a_interval, b_interval))
+    auto a_interval_rational = IntervalRational(a_interval.first, a_interval.second);
+    auto b_interval_rational = IntervalRational(b_interval.first, b_interval.second);
+    while (AlgebraicReal::is_overlapping(a_interval_rational.to_pair(), b_interval_rational.to_pair()))
     {
       // converge intervals until overlap resolves
-      a_interval = a.next_interval(a_interval);
-      b_interval = b.next_interval(b_interval);
+      a_interval_rational = a.next_interval(a_interval_rational);
+      b_interval_rational = b.next_interval(b_interval_rational);
     }
-    return a_interval.second <= b_interval.first;
+    return a_interval_rational.second() <= b_interval_rational.first();
   }
 }
 
@@ -250,15 +252,15 @@ SturmSequence<Rational> AlgebraicReal::sturm_sequence() const
 }
 
 // name differ from source (interval())
-std::pair<Rational, Rational> AlgebraicReal::next_interval(const std::pair<Rational, Rational> old_interval) const
+IntervalRational AlgebraicReal::next_interval(const IntervalRational old_interval) const
 {
   if (from_rational)
   {
-    return interval;
+    return IntervalRational(interval.first, interval.second);
   }
   else
   {
-    return next_interval_with_sign(IntervalRational(old_interval.first, old_interval.second)).to_pair();
+    return next_interval_with_sign(old_interval);
   }
 }
 
@@ -268,20 +270,14 @@ IntervalRational AlgebraicReal::next_interval_with_sign(const IntervalRational &
 
   if (defining_polynomial().sign_at(middle) == 0)
   {
-    std::cout << middle << std::endl;
-
     return IntervalRational(middle);
   }
   else if (sign_at_upper * defining_polynomial().sign_at(middle) < 0)
   {
-    std::cout << middle << std::endl;
-
     return IntervalRational(middle, ivr.second());
   }
   else if (sign_at_upper * defining_polynomial().sign_at(middle) > 0)
   {
-    std::cout << middle << std::endl;
-
     return IntervalRational(ivr.first(), middle);
   }
 }

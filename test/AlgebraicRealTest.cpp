@@ -143,15 +143,15 @@ TEST(AlgebraicRealTest, FetchSturmSequence)
 
 TEST(AlgebraicRealTest, NextIntervalWithRational)
 {
-  EXPECT_EQ(AlgebraicReal(0).next_interval({0, 0}), AlgebraicReal(0).get_interval());
+  EXPECT_EQ(AlgebraicReal(0).next_interval(IntervalRational(0)).to_pair(), AlgebraicReal(0).get_interval());
 }
 
 TEST(AlgebraicRealTest, NextIntervalWithIrrational)
 {
   using namespace alias::monomial::rational::x;
 
-  EXPECT_EQ(AlgebraicReal(x2 - 1, {0, 4}).next_interval({0, 4}).first, 0);
-  EXPECT_EQ(AlgebraicReal(x2 - 1, {0, 4}).next_interval({0, 4}).second, 2);
+  EXPECT_EQ(AlgebraicReal(x2 - 1, {0, 4}).next_interval(IntervalRational(0, 4)).first(), 0);
+  EXPECT_EQ(AlgebraicReal(x2 - 1, {0, 4}).next_interval(IntervalRational(0, 4)).second(), 2);
 }
 
 TEST(AlgebraicRealTest, NextIntervalWithSign)
@@ -179,8 +179,8 @@ TEST(AlgebraicRealTest, RealRootsBetween)
   EXPECT_EQ(roots.at(1).get_interval().first, 8);
   EXPECT_EQ(roots.at(1).get_interval().second, 12);
 
-  EXPECT_EQ(roots.at(0).next_interval({5, 9}).first, 5);
-  EXPECT_EQ(roots.at(0).next_interval({5, 9}).first, 5);
+  EXPECT_EQ(roots.at(0).next_interval(IntervalRational(5, 9)).first(), 5);
+  EXPECT_EQ(roots.at(0).next_interval(IntervalRational(5, 9)).second(), 7);
 }
 
 TEST(AlgebraicRealTest, RealRoots)
@@ -197,6 +197,6 @@ TEST(AlgebraicRealTest, RealRoots)
   EXPECT_EQ(roots.at(1).get_interval().first, 0);
   EXPECT_EQ(roots.at(1).get_interval().second, 2);
 
-  EXPECT_EQ(roots.at(0).next_interval({-2, 0}).first, -2);
-  EXPECT_EQ(roots.at(0).next_interval({-2, 0}).second, -1);
+  EXPECT_EQ(roots.at(0).next_interval(IntervalRational(-2, 0)).first(), -2);
+  EXPECT_EQ(roots.at(0).next_interval(IntervalRational(-2, 0)).second(), -1);
 }

@@ -6,6 +6,7 @@
 
 bool equal_pair(const IntervalRational &ivr, const std::pair<Rational, Rational> pair)
 {
+  auto ivr_pair = ivr.to_pair();
   return ivr.to_pair() == pair;
 }
 
