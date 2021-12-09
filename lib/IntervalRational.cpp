@@ -15,6 +15,16 @@ std::pair<Rational, Rational> IntervalRational::to_pair() const
   return {a, b};
 }
 
+Rational IntervalRational::first() const
+{
+  return a;
+}
+
+Rational IntervalRational::second() const
+{
+  return b;
+}
+
 IntervalRational &IntervalRational::operator+=(const IntervalRational &ivr)
 {
   a += ivr.a;

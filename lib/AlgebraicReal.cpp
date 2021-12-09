@@ -264,8 +264,7 @@ std::pair<Rational, Rational> AlgebraicReal::next_interval(const std::pair<Ratio
 
 IntervalRational AlgebraicReal::next_interval_with_sign(const IntervalRational &ivr) const
 {
-  auto [a, b] = ivr.to_pair();
-  auto middle = (a + b) / 2;
+  auto middle = (ivr.first() + ivr.second()) / 2;
 
   if (defining_polynomial().sign_at(middle) == 0)
   {
@@ -277,13 +276,13 @@ IntervalRational AlgebraicReal::next_interval_with_sign(const IntervalRational &
   {
     std::cout << middle << std::endl;
 
-    return IntervalRational(middle, b);
+    return IntervalRational(middle, ivr.second());
   }
   else if (sign_at_upper * defining_polynomial().sign_at(middle) > 0)
   {
     std::cout << middle << std::endl;
 
-    return IntervalRational(a, middle);
+    return IntervalRational(ivr.first(), middle);
   }
 }
 
