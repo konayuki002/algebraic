@@ -85,16 +85,6 @@ AlgebraicReal::AlgebraicReal(const UnivariatePolynomial<Rational> &defining_poly
   }
 }
 
-UnivariatePolynomial<Rational> AlgebraicReal::defining_polynomial() const
-{
-  if (from_rational)
-  {
-    using namespace alias::monomial::rational::x;
-    return x - r;
-  }
-  return defining_polynomial_sturm_sequence.first_term();
-}
-
 bool operator<(const AlgebraicReal &a, const AlgebraicReal &b)
 {
   if (a.from_rational && b.from_rational)
@@ -229,6 +219,16 @@ Rational AlgebraicReal::rational() const
   if (from_rational)
     return r;
   throw std::domain_error("Not a rational number");
+}
+
+UnivariatePolynomial<Rational> AlgebraicReal::defining_polynomial() const
+{
+  if (from_rational)
+  {
+    using namespace alias::monomial::rational::x;
+    return x - r;
+  }
+  return defining_polynomial_sturm_sequence.first_term();
 }
 
 std::pair<Rational, Rational> AlgebraicReal::get_interval() const
