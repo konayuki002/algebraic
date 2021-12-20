@@ -3,7 +3,6 @@
 #include <AliasMonomial.h>
 #include <AliasExtended.h>
 #include <AlgebraicReal.h>
-#include <ComputableReal.h>
 #include <SturmSequence.h>
 #include <UnivariatePolynomial.h>
 
@@ -154,10 +153,13 @@ bool operator<(const AlgebraicReal &a, const AlgebraicReal &b)
     auto a_interval_rational = IntervalRational(a_interval.first, a_interval.second);
     auto b_interval_rational = IntervalRational(b_interval.first, b_interval.second);
 
-    auto cr_a = ComputableReal(a_interval_rational, std::bind(&AlgebraicReal::next_interval, a, std::placeholders::_1));
-    auto cr_b = ComputableReal(b_interval_rational, std::bind(&AlgebraicReal::next_interval, b, std::placeholders::_1));
+    while (!(a_interval_rational < b_interval_rational).determined())
+    {
+      a_interval_rational = a.next_interval(a_interval_rational);
+      b_interval_rational = b.next_interval(b_interval_rational);
+    }
 
-    return unsafe_less_than(cr_a, cr_b);
+    return (a_interval_rational < b_interval_rational).get_value();
   }
 }
 
