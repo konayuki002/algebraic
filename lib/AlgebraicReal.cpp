@@ -104,6 +104,18 @@ AlgebraicReal AlgebraicReal::operator-() const
   }
 }
 
+AlgebraicReal AlgebraicReal::operator+=(const AlgebraicReal &a)
+{
+  if (from_rational && a.get_from_rational())
+  {
+    r += a.rational();
+    return *this;
+  }
+  else if (from_rational)
+  {
+  }
+}
+
 bool operator<(const AlgebraicReal &a, const AlgebraicReal &b)
 {
   if (a.from_rational && b.from_rational)
