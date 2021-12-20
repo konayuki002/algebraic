@@ -199,22 +199,15 @@ public:
   {
     using namespace alias::rational;
 
-    return std::accumulate(a.rbegin(), a.rend(), K(), [r](K acc, K each_a) { return acc * r + each_a; });
+    return std::accumulate(a.rbegin(), a.rend(), K(), [r](K acc, K each_a)
+                           { return acc * r + each_a; });
   }
 
   // f \\circ g so that (f \\circ g)(x) gives f(g(x))
   UnivariatePolynomial composition(const UnivariatePolynomial p2) const
   {
-    // Fix intial value
-    UnivariatePolynomial composit_polynomial;
-
-    for (auto &each_a : a)
-    {
-      composit_polynomial *= p2;
-      composit_polynomial += each_a;
-    }
-
-    return composit_polynomial;
+    return std::accumulate(a.rbegin(), a.rend(), UnivariatePolynomial(), [p2](UnivariatePolynomial acc, UnivariatePolynomial each_a)
+                           { return acc * p2 + each_a; });
   }
 
   /*   Calculate the quotient and remainder of euclidean division, dividing method of integer.
@@ -294,7 +287,8 @@ public:
 
     auto absolute_leading_coefficient = leading_coefficient() * leading_coefficient().sign();
 
-    K absolute_coefficient_sum = std::accumulate(a.begin(), a.end() - 1, K(), [absolute_leading_coefficient](const K &acc, const K &r) { return acc + r * r.sign() / absolute_leading_coefficient; });
+    K absolute_coefficient_sum = std::accumulate(a.begin(), a.end() - 1, K(), [absolute_leading_coefficient](const K &acc, const K &r)
+                                                 { return acc + r * r.sign() / absolute_leading_coefficient; });
 
     return std::max(absolute_coefficient_sum, K(1));
   }

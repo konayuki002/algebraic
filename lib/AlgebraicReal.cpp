@@ -85,6 +85,25 @@ AlgebraicReal::AlgebraicReal(const UnivariatePolynomial<Rational> &defining_poly
   }
 }
 
+AlgebraicReal AlgebraicReal::operator+() const
+{
+  return AlgebraicReal(*this);
+}
+
+AlgebraicReal AlgebraicReal::operator-() const
+{
+  using namespace alias::monomial::rational::x;
+
+  if (from_rational)
+  {
+    return AlgebraicReal(-r);
+  }
+  else
+  {
+    return AlgebraicReal(defining_polynomial().composition(-x), {-interval.second, -interval.first});
+  }
+}
+
 bool operator<(const AlgebraicReal &a, const AlgebraicReal &b)
 {
   if (a.from_rational && b.from_rational)

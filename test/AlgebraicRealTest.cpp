@@ -72,6 +72,22 @@ TEST(AlgebraicRealTest, ConstructorWithRootIrrational)
   EXPECT_EQ(a.get_interval().second, 2);
 }
 
+TEST(AlgebraicRealTest, UnaryPlus)
+{
+  using namespace alias::monomial::rational::x;
+
+  EXPECT_EQ(+AlgebraicReal(0), AlgebraicReal(0));
+  EXPECT_EQ(+AlgebraicReal(x2 - 2, {1, 2}), AlgebraicReal(x2 - 2, {1, 2}));
+}
+
+TEST(AlgebraicRealTest, UnaryNegate)
+{
+  using namespace alias::monomial::rational::x;
+
+  EXPECT_EQ(-AlgebraicReal(1), AlgebraicReal(-1));
+  EXPECT_EQ(-AlgebraicReal(x2 - 2, {1, 2}), AlgebraicReal(x2 - 2, {-2, -1}));
+}
+
 TEST(AlgebraicRealTest, LessThan)
 {
   using namespace alias::monomial::rational::x;
