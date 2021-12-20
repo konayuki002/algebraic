@@ -74,13 +74,9 @@ AlgebraicReal::AlgebraicReal(const UnivariatePolynomial<Rational> &defining_poly
 
     this->interval = interval;
 
-    if (defining_polynomial_without_zero.sign_at(upper_bound) > 0)
+    if (int sign_at_upper = defining_polynomial_without_zero.sign_at(upper_bound); sign_at_upper != 0)
     {
-      this->sign_at_upper = 1;
-    }
-    else if (defining_polynomial_without_zero.sign_at(upper_bound) < 0)
-    {
-      this->sign_at_upper = -1;
+      this->sign_at_upper = sign_at_upper;
     }
     else
     {
