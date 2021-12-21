@@ -4,6 +4,7 @@
 #include <AliasExtended.h>
 #include <AlgebraicReal.h>
 #include <SturmSequence.h>
+#include <SylvesterMatrix.h>
 #include <UnivariatePolynomial.h>
 
 bool AlgebraicReal::is_overlapping(const std::pair<Rational, Rational> i1, const std::pair<Rational, Rational> i2)
@@ -109,11 +110,52 @@ AlgebraicReal AlgebraicReal::operator+=(const AlgebraicReal &a)
   if (from_rational && a.get_from_rational())
   {
     r += a.rational();
-    return *this;
   }
   else if (from_rational)
   {
+    using namespace alias::monomial::rational::x;
+
+    *this = AlgebraicReal(a.defining_polynomial().composition(x - r), {a.interval.first + r, a.interval.second + r});
   }
+  else if (a.get_from_rational())
+  {
+    using namespace alias::monomial::rational::x;
+
+    *this = AlgebraicReal(defining_polynomial().composition(x - a.r), {interval.first + a.r, interval.second + a.r});
+  }
+  else
+  {
+    using namespace alias::monomial::rational::x;
+    typedef UnivariatePolynomial<Rational> RX;
+
+    auto y = UnivariatePolynomial<RX>({0, 1});
+
+    std::vector<Rational>
+
+        auto f = std::transform(defining_polynomial().coefficient().begin(), defining_polynomial().coefficient().end(),
+                                [](const Rational &coefficient) -> std::vector<Rational> {
+                                  return {coefficient};
+                                });
+
+    auto g = UnivariatePolynomial<RX>(a.defining_polynomial().coefficient());
+
+    std::cout << f << " " << g << std::endl;
+
+    auto ivr = IntervalRational(interval.first, interval.second);
+    auto a_ivr = IntervalRational(a.interval.first, a.interval.second);
+
+    auto new_defining_polynomial = square_free(SylvesterMatrix::resultant(f.composition(x - y), g));
+
+    while (SturmSequence(new_defining_polynomial).count_real_roots_between(ivr.first() + a_ivr.first(), ivr.second() + a_ivr.second()) >= 2)
+    {
+      ivr = next_interval(ivr);
+      a_ivr = a.next_interval(a_ivr);
+    }
+
+    *this = AlgebraicReal(new_defining_polynomial, (ivr + a_ivr).to_pair());
+  }
+
+  return *this;
 }
 
 bool operator<(const AlgebraicReal &a, const AlgebraicReal &b)

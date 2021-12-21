@@ -88,6 +88,17 @@ TEST(AlgebraicRealTest, UnaryNegate)
   EXPECT_EQ(-AlgebraicReal(x2 - 2, {1, 2}), AlgebraicReal(x2 - 2, {-2, -1}));
 }
 
+TEST(AlgebraicRealTest, AdditionAssignment)
+{
+  using namespace alias::monomial::rational::x;
+
+  auto one = AlgebraicReal(1);
+  auto sqrt_two = AlgebraicReal(x2 - 2, {1, 2});
+
+  EXPECT_EQ(one + one, AlgebraicReal(2));
+  EXPECT_EQ(sqrt_two + sqrt_two, AlgebraicReal(x2 - 8, {2, 3}));
+}
+
 TEST(AlgebraicRealTest, LessThan)
 {
   using namespace alias::monomial::rational::x;
