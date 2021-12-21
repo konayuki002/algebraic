@@ -130,21 +130,11 @@ AlgebraicReal AlgebraicReal::operator+=(const AlgebraicReal &a)
 
     auto y = UnivariatePolynomial<RX>({0, 1});
 
-    std::vector<Rational>
-
-        auto f = std::transform(defining_polynomial().coefficient().begin(), defining_polynomial().coefficient().end(),
-                                [](const Rational &coefficient) -> std::vector<Rational> {
-                                  return {coefficient};
-                                });
-
-    auto g = UnivariatePolynomial<RX>(a.defining_polynomial().coefficient());
-
-    std::cout << f << " " << g << std::endl;
-
     auto ivr = IntervalRational(interval.first, interval.second);
     auto a_ivr = IntervalRational(a.interval.first, a.interval.second);
 
-    auto new_defining_polynomial = square_free(SylvesterMatrix::resultant(f.composition(x - y), g));
+    auto new_defining_polynomial = square_free(SylvesterMatrix::resultant(map_coefficient_into_nested_polynomial().composition(x - y),
+                                                                          a.map_coefficient_into_nested_polynomial()));
 
     while (SturmSequence(new_defining_polynomial).count_real_roots_between(ivr.first() + a_ivr.first(), ivr.second() + a_ivr.second()) >= 2)
     {
@@ -156,6 +146,34 @@ AlgebraicReal AlgebraicReal::operator+=(const AlgebraicReal &a)
   }
 
   return *this;
+}
+
+UnivariatePolynomial<UnivariatePolynomial<Rational>> AlgebraicReal::map_coefficient_into_nested_polynomial() const
+{
+  typedef UnivariatePolynomial<Rational> RX;
+
+  std::vector<RX> nested_coeff(defining_polynomial().coefficient().size());
+
+  std::cout << defining_polynomial().coefficient().size() << std::endl;
+
+  /*
+  for (int i = 0; i < defining_polynomial().coefficient().size(); i++)
+  {
+    nested_coeff.at(i) = RX(defining_polynomial().coefficient().at(i));
+  }
+
+  segfault below
+  */
+
+  std::transform(defining_polynomial().coefficient().begin(),
+                 defining_polynomial().coefficient().end(),
+                 nested_coeff.begin(),
+                 [](auto &r)
+                 { return RX(r); });
+
+  std::cout << "a" << std::endl;
+
+  return UnivariatePolynomial<RX>(nested_coeff);
 }
 
 bool operator<(const AlgebraicReal &a, const AlgebraicReal &b)

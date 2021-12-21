@@ -28,6 +28,8 @@ private:
 
   static bool is_overlapping(const std::pair<Rational, Rational> i1, const std::pair<Rational, Rational> i2);
 
+  UnivariatePolynomial<UnivariatePolynomial<Rational>> map_coefficient_into_nested_polynomial() const;
+
 public:
   // Zero
   AlgebraicReal();
