@@ -20,6 +20,22 @@ TEST(RationalTest, Constructor)
   EXPECT_EQ(Rational({1, 2}), Rational(1, 2));
 }
 
+TEST(RationalTest, GetNumerator)
+{
+  EXPECT_EQ(Rational().get_numerator(), 0);
+  EXPECT_EQ(Rational(2).get_numerator(), 2);
+  EXPECT_EQ(Rational(1, 2).get_numerator(), 1);
+  EXPECT_EQ(Rational(10, 33).get_numerator(), 10);
+}
+
+TEST(RationalTest, GetDenominator)
+{
+  EXPECT_EQ(Rational().get_denominator(), 1);
+  EXPECT_EQ(Rational(2).get_denominator(), 1);
+  EXPECT_EQ(Rational(1, 2).get_denominator(), 2);
+  EXPECT_EQ(Rational(10, 33).get_denominator(), 33);
+}
+
 TEST(RationalTest, Sign)
 {
   EXPECT_EQ(Rational(1, 2).sign(), 1);

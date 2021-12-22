@@ -571,7 +571,7 @@ int AlgebraicReal::sign() const
   }
 }
 
-AlgebraicReal AlgebraicReal::pow(int index) const
+AlgebraicReal AlgebraicReal::pow(const boost::multiprecision::cpp_int index) const
 {
   if (index == 0)
     return 1;
@@ -596,6 +596,16 @@ AlgebraicReal AlgebraicReal::pow(int index) const
   auto wrapped_mod = UnivariatePolynomial<AlgebraicReal>(wrapped_mod_coefficient);
 
   return wrapped_mod.value_at(*this);
+}
+
+AlgebraicReal AlgebraicReal::pow(const int index) const
+{
+  return this->pow(boost::multiprecision::cpp_int(index));
+}
+
+AlgebraicReal AlgebraicReal::pow(const Rational index) const
+{
+  return this->pow(index.get_numerator()).nth_root(index.get_denominator());
 }
 
 AlgebraicReal AlgebraicReal::sqrt() const
@@ -631,7 +641,7 @@ AlgebraicReal AlgebraicReal::sqrt() const
   }
 }
 
-AlgebraicReal AlgebraicReal::nth_root(const int n) const
+AlgebraicReal AlgebraicReal::nth_root(const boost::multiprecision::cpp_int n) const
 {
   if (n == 0)
     throw std::domain_error("0th root");
@@ -700,7 +710,7 @@ AlgebraicReal AlgebraicReal::nth_root(const int n) const
   }
 }
 
-AlgebraicReal AlgebraicReal::filter_roots(const std::vector<AlgebraicReal> roots, const int n) const
+AlgebraicReal AlgebraicReal::filter_roots(const std::vector<AlgebraicReal> roots, const boost::multiprecision::cpp_int n) const
 {
   std::vector<AlgebraicReal> filtered_roots;
 

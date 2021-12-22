@@ -30,7 +30,7 @@ private:
 
   UnivariatePolynomial<UnivariatePolynomial<Rational>> map_coefficient_into_nested_polynomial() const;
 
-  AlgebraicReal filter_roots(const std::vector<AlgebraicReal> roots, const int n) const;
+  AlgebraicReal filter_roots(const std::vector<AlgebraicReal> roots, const boost::multiprecision::cpp_int n) const;
 
   AlgebraicReal just_one_root(const std::vector<AlgebraicReal> roots) const;
 
@@ -77,10 +77,12 @@ public:
 
   int sign() const;
 
+  AlgebraicReal pow(const boost::multiprecision::cpp_int index) const;
   AlgebraicReal pow(const int index) const;
+  AlgebraicReal pow(const Rational index) const;
 
   AlgebraicReal sqrt() const;
-  AlgebraicReal nth_root(const int n) const;
+  AlgebraicReal nth_root(const boost::multiprecision::cpp_int n) const;
 
   AlgebraicReal value_of(const UnivariatePolynomial<Rational> p) const;
 };

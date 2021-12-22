@@ -294,10 +294,14 @@ TEST(AlgebraicRealTest, Sign)
 TEST(AlgebraicRealTest, Pow)
 {
   using namespace alias::monomial::rational::x;
+  using namespace alias::rational;
 
   EXPECT_EQ(AlgebraicReal(2).pow(2), 4);
   EXPECT_EQ(AlgebraicReal(x2 - 2, {1, 2}).pow(2), 2);
   EXPECT_EQ(AlgebraicReal(x4 - 2, {1, 2}).pow(2), AlgebraicReal(x2 - 2, {1, 2}));
+
+  EXPECT_EQ(AlgebraicReal(8).pow(2_r / 3), 4);
+  EXPECT_EQ(AlgebraicReal(x2 - 2, {1, 2}).pow(3_r / 2), AlgebraicReal(x4 - 8, {1, 2}));
 }
 
 TEST(AlgebraicRealTest, Sqrt)

@@ -70,7 +70,7 @@ public:
   }
 
   // Interger (>= 0) power of the polynomial.
-  UnivariatePolynomial pow(const int index) const
+  UnivariatePolynomial pow(const boost::multiprecision::cpp_int index) const
   {
 
     if (index < 0)
@@ -78,7 +78,7 @@ public:
 
     UnivariatePolynomial accumulator(1);
 
-    for (int power_i = 0; power_i < index; power_i++)
+    for (boost::multiprecision::cpp_int power_i = 0; power_i < index; power_i++)
     {
       accumulator *= *this;
     }
