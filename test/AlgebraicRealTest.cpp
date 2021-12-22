@@ -290,3 +290,35 @@ TEST(AlgebraicRealTest, Sign)
   EXPECT_EQ(AlgebraicReal(x2 - 2, {1, 2}).sign(), 1);
   EXPECT_EQ(AlgebraicReal(x2 - 3, {-2, -1}).sign(), -1);
 }
+
+TEST(AlgebraicRealTest, Pow)
+{
+  using namespace alias::monomial::rational::x;
+
+  EXPECT_EQ(AlgebraicReal(2).pow(2), 4);
+  EXPECT_EQ(AlgebraicReal(x2 - 2, {1, 2}).pow(2), 2);
+  EXPECT_EQ(AlgebraicReal(x4 - 2, {1, 2}).pow(2), AlgebraicReal(x2 - 2, {1, 2}));
+}
+
+TEST(AlgebraicRealTest, Sqrt)
+{
+  using namespace alias::monomial::rational::x;
+
+  EXPECT_EQ(AlgebraicReal(2).sqrt(), AlgebraicReal(x2 - 2, {1, 2}));
+  EXPECT_EQ(AlgebraicReal(4).sqrt(), 2);
+  EXPECT_EQ(AlgebraicReal(x2 - 2, {1, 2}).sqrt(), AlgebraicReal(x4 - 2, {1, 2}));
+  EXPECT_THROW(AlgebraicReal(-1).sqrt(), std::domain_error);
+}
+
+TEST(AlgebraicRealTest, NthRoot)
+{
+  using namespace alias::monomial::rational::x;
+  using namespace alias::rational;
+
+  EXPECT_EQ(AlgebraicReal(2).nth_root(3), AlgebraicReal(x3 - 2, {1, 2}));
+  EXPECT_EQ(AlgebraicReal(8).nth_root(3), 2);
+  EXPECT_EQ(AlgebraicReal(x3 - 2, {1, 2}).nth_root(3), AlgebraicReal(x.pow(9) - 2, {1, 2}));
+  EXPECT_EQ(AlgebraicReal(1).nth_root(3), 1);
+  EXPECT_THROW(AlgebraicReal(-1).nth_root(2), std::domain_error);
+  EXPECT_EQ(AlgebraicReal(2).nth_root(-1), 1_r / 2);
+}

@@ -570,3 +570,148 @@ int AlgebraicReal::sign() const
     return -1;
   }
 }
+
+AlgebraicReal AlgebraicReal::pow(int index) const
+{
+  if (index < 0)
+    throw std::domain_error("Negative power of algebraic real");
+
+  AlgebraicReal accumulator(1);
+
+  for (int i = 0; i < index; i++)
+  {
+    accumulator *= *this;
+  }
+
+  return accumulator;
+}
+
+AlgebraicReal AlgebraicReal::sqrt() const
+{
+  if (from_rational)
+  {
+    if (r == 0)
+    {
+      return 0;
+    }
+    else if (r < 0)
+    {
+      throw std::domain_error("Negative number has no square root");
+    }
+    if (r > 0)
+    {
+      using namespace alias::monomial::rational::x;
+      using namespace alias::extended::rational;
+
+      auto roots = AlgebraicReal::real_roots_between(x2 - r, 0, +oo);
+
+      return just_one_root(roots);
+    }
+  }
+  else
+  {
+    using namespace alias::monomial::rational::x;
+    using namespace alias::extended::rational;
+
+    auto roots = AlgebraicReal::real_roots_between(defining_polynomial().composition(x2), 0, +oo);
+
+    return filter_roots(roots, 2);
+  }
+}
+
+AlgebraicReal AlgebraicReal::nth_root(const int n) const
+{
+  if (n == 0)
+    throw std::domain_error("0th root");
+
+  if (n < 0)
+    return (1 / *this).nth_root(-n);
+
+  if (from_rational)
+  {
+    if (r == 0)
+      return 0;
+
+    if (r > 0)
+    {
+      using namespace alias::monomial::rational::x;
+      using namespace alias::extended::rational;
+
+      auto roots = AlgebraicReal::real_roots_between(x.pow(n) - r, 0, +oo);
+
+      return just_one_root(roots);
+    }
+    else
+    {
+      if (n % 2 == 1)
+      {
+        using namespace alias::monomial::rational::x;
+        using namespace alias::extended::rational;
+
+        auto roots = AlgebraicReal::real_roots_between(x.pow(n) - r, -oo, 0);
+
+        return just_one_root(roots);
+      }
+      else
+      {
+        throw std::domain_error("Negative number has no even-th root");
+      }
+    }
+  }
+  else
+  {
+    if (*this > 0)
+    {
+      using namespace alias::monomial::rational::x;
+      using namespace alias::extended::rational;
+
+      auto roots = AlgebraicReal::real_roots_between(defining_polynomial().composition(x.pow(n)), 0, +oo);
+
+      return filter_roots(roots, n);
+    }
+    else
+    {
+      if (n % 2 == 1)
+      {
+        using namespace alias::monomial::rational::x;
+        using namespace alias::extended::rational;
+
+        auto roots = AlgebraicReal::real_roots_between(defining_polynomial().composition(x.pow(n)), -oo, 0);
+
+        return filter_roots(roots, n);
+      }
+      else
+      {
+        throw std::domain_error("Negative number has no even-th root");
+      }
+    }
+  }
+}
+
+AlgebraicReal AlgebraicReal::filter_roots(const std::vector<AlgebraicReal> roots, const int n) const
+{
+  std::vector<AlgebraicReal> filtered_roots;
+
+  for (auto root : roots)
+  {
+    auto n_power = root.pow(n);
+    if (interval.first < n_power && n_power <= interval.second)
+    {
+      filtered_roots.push_back(root);
+    }
+  }
+
+  return just_one_root(roots);
+}
+
+AlgebraicReal AlgebraicReal::just_one_root(const std::vector<AlgebraicReal> roots) const
+{
+  if (roots.size() == 1)
+  {
+    return roots.at(0);
+  }
+  else
+  {
+    std::domain_error("None or multiple roots");
+  }
+}

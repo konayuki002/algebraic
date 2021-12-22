@@ -30,6 +30,10 @@ private:
 
   UnivariatePolynomial<UnivariatePolynomial<Rational>> map_coefficient_into_nested_polynomial() const;
 
+  AlgebraicReal filter_roots(const std::vector<AlgebraicReal> roots, const int n) const;
+
+  AlgebraicReal just_one_root(const std::vector<AlgebraicReal> roots) const;
+
 public:
   // Zero
   AlgebraicReal();
@@ -72,4 +76,9 @@ public:
   static std::vector<AlgebraicReal> bisect_roots(const SturmSequence<Rational> &sturm_sequence, const std::pair<Rational, Rational> interval, const std::pair<int, int> interval_sign_change);
 
   int sign() const;
+
+  AlgebraicReal pow(const int index) const;
+
+  AlgebraicReal sqrt() const;
+  AlgebraicReal nth_root(const int n) const;
 };
