@@ -71,7 +71,7 @@ AlgebraicReal::AlgebraicReal(const UnivariatePolynomial<Rational> &defining_poly
     while (lower_bound < 0 && 0 < upper_bound)
     {
       // TODO: make sure interval have just 1 root
-      const std::pair<Rational, Rational> next_interval = sturm_sequence_without_zero.next_interval(interval);
+      auto next_interval = sturm_sequence_without_zero.next_interval({lower_bound, upper_bound});
       lower_bound = next_interval.first;
       upper_bound = next_interval.second;
     }
@@ -573,17 +573,29 @@ int AlgebraicReal::sign() const
 
 AlgebraicReal AlgebraicReal::pow(int index) const
 {
+  if (index == 0)
+    return 1;
+
   if (index < 0)
-    throw std::domain_error("Negative power of algebraic real");
+    return (1 / *this).pow(-index);
 
-  AlgebraicReal accumulator(1);
+  if (from_rational)
+    return r.pow(index);
 
-  for (int i = 0; i < index; i++)
+  using namespace alias::monomial::rational::x;
+
+  auto mod = x.pow(index) % defining_polynomial();
+
+  std::vector<AlgebraicReal> wrapped_mod_coefficient(mod.coefficient().size());
+
+  for (int i = 0; i < mod.coefficient().size(); i++)
   {
-    accumulator *= *this;
+    wrapped_mod_coefficient.at(i) = AlgebraicReal(mod.coefficient().at(i));
   }
 
-  return accumulator;
+  auto wrapped_mod = UnivariatePolynomial<AlgebraicReal>(wrapped_mod_coefficient);
+
+  return wrapped_mod.value_at(*this);
 }
 
 AlgebraicReal AlgebraicReal::sqrt() const

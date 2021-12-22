@@ -41,8 +41,9 @@ IntervalRational &IntervalRational::operator-=(const IntervalRational &ivr)
 
 IntervalRational &IntervalRational::operator*=(const IntervalRational &ivr)
 {
-  a = std::min({a * ivr.a, a * ivr.b, b * ivr.a, b * ivr.b});
+  auto new_a = std::min({a * ivr.a, a * ivr.b, b * ivr.a, b * ivr.b});
   b = std::max({a * ivr.a, a * ivr.b, b * ivr.a, b * ivr.b});
+  a = new_a;
   return *this;
 }
 
@@ -51,8 +52,9 @@ IntervalRational &IntervalRational::operator/=(const IntervalRational &ivr)
   if (ivr.a <= 0 && 0 <= ivr.b)
     throw std::domain_error("Divide by interval including zero");
 
-  a = std::min({a / ivr.a, a / ivr.b, b / ivr.a, b / ivr.b});
+  auto new_a = std::min({a / ivr.a, a / ivr.b, b / ivr.a, b / ivr.b});
   b = std::max({a / ivr.a, a / ivr.b, b / ivr.a, b / ivr.b});
+  a = new_a;
 
   return *this;
 }
