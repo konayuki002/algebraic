@@ -57,16 +57,18 @@ public:
   }
 
   // Make the coefficient of the largest degree 1 by dividing all coefficients by the same number
-  UnivariatePolynomial &to_monic()
+  UnivariatePolynomial to_monic() const
   {
     K divisor = leading_coefficient();
 
-    for (auto &each_a : a)
+    auto new_a = this->coefficient();
+
+    for (auto &each_a : new_a)
     {
       each_a /= divisor;
     }
 
-    return *this;
+    return UnivariatePolynomial(new_a);
   }
 
   // Interger (>= 0) power of the polynomial.
