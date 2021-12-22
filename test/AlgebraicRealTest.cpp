@@ -101,11 +101,13 @@ TEST(AlgebraicRealTest, Addition)
   EXPECT_EQ(sqrt_two + sqrt_two, AlgebraicReal(x2 - 8, {2, 3}));
   EXPECT_EQ(sqrt_two + (-sqrt_two), 0);
 
-  auto roots = AlgebraicReal::real_roots((x - 4) * (x - 3) * (x - 2) * (x - 1) + 1);
-  for (auto root : roots)
-  {
-    std::cout << root << std::endl;
-  }
+  auto roots = AlgebraicReal::real_roots((x - 4) * (x - 3) * (x - 2) * (x + 3) + 1);
+
+  auto grown_coefficient = (roots.at(0) + roots.at(1)).defining_polynomial();
+
+  // Expect to_monic() used in opeartor+=() reduces coefficient growth
+  EXPECT_EQ((roots.at(0) + roots.at(1)).defining_polynomial(),
+            (roots.at(0) + roots.at(1)).defining_polynomial().to_monic());
 }
 
 TEST(AlgebraicRealTest, Subtraction)

@@ -137,8 +137,11 @@ AlgebraicReal AlgebraicReal::operator+=(const AlgebraicReal &a)
     auto a_ivr = IntervalRational(a.interval.first, a.interval.second);
     auto new_ivr = ivr + a_ivr;
 
-    auto new_defining_polynomial = square_free(SylvesterMatrix::resultant(map_coefficient_into_nested_polynomial().composition(x - y),
-                                                                          a.map_coefficient_into_nested_polynomial()));
+    auto new_defining_polynomial = square_free(
+                                       SylvesterMatrix::resultant(map_coefficient_into_nested_polynomial().composition(x - y),
+                                                                  a.map_coefficient_into_nested_polynomial())
+                                           .to_monic())
+                                       .to_monic();
 
     while (SturmSequence(new_defining_polynomial).count_real_roots_between(new_ivr.first(), new_ivr.second()) >= 2)
     {
@@ -183,7 +186,9 @@ AlgebraicReal AlgebraicReal::operator-=(const AlgebraicReal &a)
     auto new_ivr = ivr - a_ivr;
 
     auto new_defining_polynomial = square_free(SylvesterMatrix::resultant(map_coefficient_into_nested_polynomial().composition(x + y),
-                                                                          a.map_coefficient_into_nested_polynomial()));
+                                                                          a.map_coefficient_into_nested_polynomial())
+                                                   .to_monic())
+                                       .to_monic();
 
     while (SturmSequence(new_defining_polynomial).count_real_roots_between(new_ivr.first(), new_ivr.second()) >= 2)
     {
@@ -259,7 +264,9 @@ AlgebraicReal AlgebraicReal::operator*=(const AlgebraicReal &a)
     }
 
     auto new_defining_polynomial = square_free(SylvesterMatrix::resultant(UnivariatePolynomial<RX>(homogeneous_polynomial_coefficient),
-                                                                          a.map_coefficient_into_nested_polynomial()));
+                                                                          a.map_coefficient_into_nested_polynomial())
+                                                   .to_monic())
+                                       .to_monic();
 
     while (SturmSequence(new_defining_polynomial).count_real_roots_between(new_ivr.first(), new_ivr.second()) >= 2)
     {
