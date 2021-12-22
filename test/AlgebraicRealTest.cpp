@@ -100,6 +100,12 @@ TEST(AlgebraicRealTest, Addition)
   EXPECT_EQ(sqrt_two + one, AlgebraicReal(x2 - 2_x - 1, {2, 3}));
   EXPECT_EQ(sqrt_two + sqrt_two, AlgebraicReal(x2 - 8, {2, 3}));
   EXPECT_EQ(sqrt_two + (-sqrt_two), 0);
+
+  auto roots = AlgebraicReal::real_roots((x - 4) * (x - 3) * (x - 2) * (x - 1) + 1);
+  for (auto root : roots)
+  {
+    std::cout << root << std::endl;
+  }
 }
 
 TEST(AlgebraicRealTest, Subtraction)
