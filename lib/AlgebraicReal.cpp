@@ -727,3 +727,28 @@ AlgebraicReal AlgebraicReal::just_one_root(const std::vector<AlgebraicReal> root
     std::domain_error("None or multiple roots");
   }
 }
+
+AlgebraicReal AlgebraicReal::value_of(const UnivariatePolynomial<Rational> p) const
+{
+  if (from_rational)
+  {
+    return p.value_at(r);
+  }
+  else
+  {
+    using namespace alias::monomial::rational::x;
+
+    auto mod = p % defining_polynomial();
+
+    std::vector<AlgebraicReal> wrapped_mod_coefficient(mod.coefficient().size());
+
+    for (int i = 0; i < mod.coefficient().size(); i++)
+    {
+      wrapped_mod_coefficient.at(i) = AlgebraicReal(mod.coefficient().at(i));
+    }
+
+    auto wrapped_mod = UnivariatePolynomial<AlgebraicReal>(wrapped_mod_coefficient);
+
+    return wrapped_mod.value_at(*this);
+  }
+}

@@ -322,3 +322,12 @@ TEST(AlgebraicRealTest, NthRoot)
   EXPECT_THROW(AlgebraicReal(-1).nth_root(2), std::domain_error);
   EXPECT_EQ(AlgebraicReal(2).nth_root(-1), 1_r / 2);
 }
+
+TEST(AlgebraicRealTest, ValueOf)
+{
+  using namespace alias::monomial::rational::x;
+  using namespace alias::rational;
+
+  EXPECT_EQ(AlgebraicReal(2).value_of(x2 - x + 1), 3);
+  EXPECT_EQ(AlgebraicReal(x2 - 2, {1, 2}).value_of(x2 - x + 1), 3 - AlgebraicReal(2).sqrt());
+}

@@ -81,4 +81,6 @@ public:
 
   AlgebraicReal sqrt() const;
   AlgebraicReal nth_root(const int n) const;
+
+  AlgebraicReal value_of(const UnivariatePolynomial<Rational> p) const;
 };
