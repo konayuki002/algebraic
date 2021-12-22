@@ -318,7 +318,7 @@ UnivariatePolynomial<UnivariatePolynomial<Rational>> AlgebraicReal::map_coeffici
 
   std::vector<RX> nested_coeff(defining_polynomial().coefficient().size());
 
-  for (int i = 0; i < defining_polynomial().coefficient().size(); i++)
+  for (size_t i = 0; i < defining_polynomial().coefficient().size(); i++)
   {
     nested_coeff.at(i) = RX(defining_polynomial().coefficient().at(i));
   }
@@ -595,7 +595,7 @@ AlgebraicReal AlgebraicReal::pow(const boost::multiprecision::cpp_int index) con
 
   std::vector<AlgebraicReal> wrapped_mod_coefficient(mod.coefficient().size());
 
-  for (int i = 0; i < mod.coefficient().size(); i++)
+  for (size_t i = 0; i < mod.coefficient().size(); i++)
   {
     wrapped_mod_coefficient.at(i) = AlgebraicReal(mod.coefficient().at(i));
   }
@@ -759,7 +759,7 @@ AlgebraicReal AlgebraicReal::value_of(const UnivariatePolynomial<Rational> p) co
 
     std::vector<AlgebraicReal> wrapped_mod_coefficient(mod.coefficient().size());
 
-    for (int i = 0; i < mod.coefficient().size(); i++)
+    for (size_t i = 0; i < mod.coefficient().size(); i++)
     {
       wrapped_mod_coefficient.at(i) = AlgebraicReal(mod.coefficient().at(i));
     }

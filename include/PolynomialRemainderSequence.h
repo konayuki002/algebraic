@@ -10,7 +10,7 @@ private:
   {
     boost::multiprecision::cpp_int coefficient_gcd = f.a.at(0);
 
-    for (int i = 1; i < f.a.size(); i++)
+    for (size_t i = 1; i < f.a.size(); i++)
     {
       coefficient_gcd = gcd(coefficient_gcd, f.a.at(i));
 
@@ -66,7 +66,7 @@ private:
 
     std::vector<boost::multiprecision::cpp_int> mapped_remainder_coefficients(remainder.coefficient().size());
 
-    for (int i = 0; i < remainder.coefficient().size(); i++)
+    for (size_t i = 0; i < remainder.coefficient().size(); i++)
     {
       mapped_remainder_coefficients.at(i) = remainder.coefficient().at(i) / beta;
     }
@@ -105,7 +105,7 @@ private:
 
     std::vector<boost::multiprecision::cpp_int> s_coefficient(remainder.coefficient().size());
 
-    for (int i = 0; i < remainder.coefficient().size(); i++)
+    for (size_t i = 0; i < remainder.coefficient().size(); i++)
     {
       s_coefficient.at(i) = remainder.coefficient().at(i) / beta;
     }

@@ -34,7 +34,7 @@ public:
   {
     using namespace alias::monomial::rational::x;
 
-    if (f == 0 && g.degree() == 0 || f.degree() == 0 && g == 0)
+    if ((f == 0 && g.degree() == 0) || (f.degree() == 0 && g == 0))
       return 1;
 
     if (f == 0 || g == 0)
@@ -50,7 +50,7 @@ public:
   {
     using namespace alias::monomial::integer::x;
 
-    if (f == 0 && g.degree() == 0 || f.degree() == 0 && g == 0)
+    if ((f == 0 && g.degree() == 0) || (f.degree() == 0 && g == 0))
       return 1;
 
     if (f.degree() == 0)
@@ -78,7 +78,7 @@ public:
   template <class K>
   static UnivariatePolynomial<K> resultant(const UnivariatePolynomial<UnivariatePolynomial<K>> &f, const UnivariatePolynomial<UnivariatePolynomial<K>> &g)
   {
-    if (f == 0 && g.degree() == 0 || g == 0 && f.degree() == 0)
+    if ((f == 0 && g.degree() == 0) || (g == 0 && f.degree() == 0))
       return 1;
 
     if (f == 0 || g == 0)

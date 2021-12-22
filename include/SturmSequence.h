@@ -47,7 +47,7 @@ private:
   {
     int count = 0;
 
-    for (int i = 0; i < sign.size() - 1; i++)
+    for (size_t i = 0; i < sign.size() - 1; i++)
     {
       if ((sign[i] == 1 && sign[i + 1] <= 0) || (sign[i] < 0 && sign[i + 1] >= 0))
         count++;
