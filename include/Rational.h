@@ -77,6 +77,16 @@ public:
 
   Rational(const int integer) : numerator(integer), denominator(1){};
 
+  boost::multiprecision::cpp_int get_numerator() const
+  {
+    return numerator;
+  }
+
+  boost::multiprecision::cpp_int get_denominator() const
+  {
+    return denominator;
+  }
+
   Rational operator+() const { return Rational(*this); }
   Rational operator-() const { return Rational(-numerator, denominator); }
 
@@ -128,14 +138,14 @@ public:
     }
   }
 
-  Rational pow(int index) const
+  Rational pow(boost::multiprecision::cpp_int index) const
   {
     if (index < 0)
       throw std::domain_error("Negative power of polynomial error");
 
     Rational accumulator(1);
 
-    for (int i = 0; i < index; i++)
+    for (boost::multiprecision::cpp_int i = 0; i < index; i++)
     {
       accumulator *= *this;
     }

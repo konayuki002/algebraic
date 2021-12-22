@@ -1,3 +1,5 @@
+#pragma once
+
 #include <MaybeBool.h>
 #include <Rational.h>
 
@@ -26,6 +28,8 @@ public:
   IntervalRational(const int &a) : a(a), b(a){};
 
   std::pair<Rational, Rational> to_pair() const;
+  Rational first() const;
+  Rational second() const;
 
   IntervalRational &operator+=(const IntervalRational &ivr);
   IntervalRational &operator-=(const IntervalRational &ivr);

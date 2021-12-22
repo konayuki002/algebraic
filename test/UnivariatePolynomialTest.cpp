@@ -116,6 +116,8 @@ TEST(UnivariatePolynomialTest, Composition)
   using namespace alias::rational;
 
   EXPECT_EQ(UnivariatePolynomial<Rational>({1, 3, 1}).composition(UnivariatePolynomial<Rational>({1, 2, 1})), UnivariatePolynomial<Rational>({5, 10, 9, 4, 1}));
+
+  EXPECT_EQ(UnivariatePolynomial<Rational>({-2, 0, 1}).composition(UnivariatePolynomial<Rational>({0, -1})), UnivariatePolynomial<Rational>({-2, 0, 1}));
 }
 
 TEST(UnivariatePolynomialTest, EuclideanDivision)

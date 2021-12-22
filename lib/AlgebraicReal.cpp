@@ -1,9 +1,11 @@
+#include <algorithm>
 #include <stdexcept>
 
 #include <AliasMonomial.h>
 #include <AliasExtended.h>
 #include <AlgebraicReal.h>
 #include <SturmSequence.h>
+#include <SylvesterMatrix.h>
 #include <UnivariatePolynomial.h>
 
 bool AlgebraicReal::is_overlapping(const std::pair<Rational, Rational> i1, const std::pair<Rational, Rational> i2)
@@ -13,9 +15,12 @@ bool AlgebraicReal::is_overlapping(const std::pair<Rational, Rational> i1, const
 
 AlgebraicReal::AlgebraicReal() : AlgebraicReal(0){};
 
+AlgebraicReal::AlgebraicReal(const int n) : AlgebraicReal(Rational(n)){};
+
 AlgebraicReal::AlgebraicReal(const Rational &r)
     : from_rational(true),
       r(r),
+      sign_at_upper(r.sign()),
       defining_polynomial_sturm_sequence(SturmSequence(UnivariatePolynomial<Rational>({-r, 1}))),
       interval({r, r}){};
 
@@ -36,17 +41,13 @@ AlgebraicReal::AlgebraicReal(const UnivariatePolynomial<Rational> &defining_poly
   if (lower_bound < 0 && 0 <= upper_bound && defining_polynomial.value_at(0) == 0)
   {
     // 0 must be representate by rational
-    from_rational = true;
-    r = 0;
-    this->interval = {0, 0};
+    *this = AlgebraicReal(0);
   }
   else if (defining_polynomial.value_at(upper_bound) == 0)
   {
     // close interval boundary upper_bound must not be zero
     // for 0 must not be contained
-    from_rational = true;
-    r = upper_bound;
-    this->interval = {r, r};
+    *this = AlgebraicReal(upper_bound);
   }
   else
   {
@@ -64,28 +65,265 @@ AlgebraicReal::AlgebraicReal(const UnivariatePolynomial<Rational> &defining_poly
 
     const SturmSequence sturm_sequence_without_zero = SturmSequence(defining_polynomial_without_zero);
 
+    this->defining_polynomial_sturm_sequence = sturm_sequence_without_zero;
+
     // Converge interval until not contain zero
     while (lower_bound < 0 && 0 < upper_bound)
     {
       // TODO: make sure interval have just 1 root
-      const std::pair<Rational, Rational> next_interval = sturm_sequence_without_zero.next_interval(interval);
+      auto next_interval = sturm_sequence_without_zero.next_interval({lower_bound, upper_bound});
       lower_bound = next_interval.first;
       upper_bound = next_interval.second;
     }
 
     this->interval = interval;
-    this->defining_polynomial_sturm_sequence = sturm_sequence_without_zero;
+
+    if (int sign_at_upper = defining_polynomial_without_zero.sign_at(upper_bound); sign_at_upper != 0)
+    {
+      this->sign_at_upper = sign_at_upper;
+    }
+    else
+    {
+      this->sign_at_upper = defining_polynomial_without_zero.differential().sign_at(upper_bound);
+    }
   }
 }
 
-UnivariatePolynomial<Rational> AlgebraicReal::defining_polynomial() const
+AlgebraicReal AlgebraicReal::operator+() const
 {
+  return AlgebraicReal(*this);
+}
+
+AlgebraicReal AlgebraicReal::operator-() const
+{
+  using namespace alias::monomial::rational::x;
+
   if (from_rational)
   {
-    using namespace alias::monomial::rational::x;
-    return x - r;
+    return AlgebraicReal(-r);
   }
-  return defining_polynomial_sturm_sequence.first_term();
+  else
+  {
+    return AlgebraicReal(defining_polynomial().composition(-x), {-interval.second, -interval.first});
+  }
+}
+
+AlgebraicReal AlgebraicReal::operator+=(const AlgebraicReal &a)
+{
+  if (from_rational && a.get_from_rational())
+  {
+    r += a.rational();
+  }
+  else if (from_rational)
+  {
+    using namespace alias::monomial::rational::x;
+
+    *this = AlgebraicReal(a.defining_polynomial().composition(x - r), {a.interval.first + r, a.interval.second + r});
+  }
+  else if (a.get_from_rational())
+  {
+    using namespace alias::monomial::rational::x;
+
+    *this = AlgebraicReal(defining_polynomial().composition(x - a.r), {interval.first + a.r, interval.second + a.r});
+  }
+  else
+  {
+    using namespace alias::monomial::rational::x;
+    typedef UnivariatePolynomial<Rational> RX;
+
+    auto y = UnivariatePolynomial<RX>({0, 1});
+
+    auto ivr = IntervalRational(interval.first, interval.second);
+    auto a_ivr = IntervalRational(a.interval.first, a.interval.second);
+    auto new_ivr = ivr + a_ivr;
+
+    auto new_defining_polynomial = square_free(
+                                       SylvesterMatrix::resultant(map_coefficient_into_nested_polynomial().composition(x - y),
+                                                                  a.map_coefficient_into_nested_polynomial())
+                                           .to_monic())
+                                       .to_monic();
+
+    while (SturmSequence(new_defining_polynomial).count_real_roots_between(new_ivr.first(), new_ivr.second()) >= 2)
+    {
+      ivr = next_interval(ivr);
+      a_ivr = a.next_interval(a_ivr);
+      new_ivr = ivr + a_ivr;
+    }
+
+    *this = AlgebraicReal(new_defining_polynomial, new_ivr.to_pair());
+  }
+
+  return *this;
+}
+
+AlgebraicReal AlgebraicReal::operator-=(const AlgebraicReal &a)
+{
+  if (from_rational && a.get_from_rational())
+  {
+    r -= a.rational();
+  }
+  else if (from_rational)
+  {
+    using namespace alias::monomial::rational::x;
+
+    *this = AlgebraicReal(a.defining_polynomial().composition(r - x), {r - a.interval.second, r - a.interval.first});
+  }
+  else if (a.get_from_rational())
+  {
+    using namespace alias::monomial::rational::x;
+
+    *this = AlgebraicReal(defining_polynomial().composition(x + a.r), {interval.first - a.r, interval.second - a.r});
+  }
+  else
+  {
+    using namespace alias::monomial::rational::x;
+    typedef UnivariatePolynomial<Rational> RX;
+
+    auto y = UnivariatePolynomial<RX>({0, 1});
+
+    auto ivr = IntervalRational(interval.first, interval.second);
+    auto a_ivr = IntervalRational(a.interval.first, a.interval.second);
+    auto new_ivr = ivr - a_ivr;
+
+    auto new_defining_polynomial = square_free(SylvesterMatrix::resultant(map_coefficient_into_nested_polynomial().composition(x + y),
+                                                                          a.map_coefficient_into_nested_polynomial())
+                                                   .to_monic())
+                                       .to_monic();
+
+    while (SturmSequence(new_defining_polynomial).count_real_roots_between(new_ivr.first(), new_ivr.second()) >= 2)
+    {
+      ivr = next_interval(ivr);
+      a_ivr = a.next_interval(a_ivr);
+      new_ivr = ivr - a_ivr;
+    }
+
+    *this = AlgebraicReal(new_defining_polynomial, new_ivr.to_pair());
+  }
+
+  return *this;
+}
+
+AlgebraicReal AlgebraicReal::operator*=(const AlgebraicReal &a)
+{
+  if (from_rational && a.get_from_rational())
+  {
+    r *= a.rational();
+  }
+  else if (from_rational)
+  {
+    using namespace alias::monomial::rational::x;
+
+    if (r == 0)
+    {
+      *this = 0;
+    }
+    else if (r > 0)
+    {
+      *this = AlgebraicReal(a.defining_polynomial().composition(x / r), {r * a.interval.first, r * a.interval.second});
+    }
+    else if (r < 0)
+    {
+      *this = AlgebraicReal(a.defining_polynomial().composition(x / r), {r * a.interval.second, r * a.interval.first});
+    }
+  }
+  else if (a.get_from_rational())
+  {
+    using namespace alias::monomial::rational::x;
+
+    if (a.r == 0)
+    {
+      *this = 0;
+    }
+    else if (a.r > 0)
+    {
+      *this = AlgebraicReal(defining_polynomial().composition(x / a.r), {interval.first * a.r, interval.second * a.r});
+    }
+    else if (a.r < 0)
+    {
+      *this = AlgebraicReal(defining_polynomial().composition(x / a.r), {interval.second * a.r, interval.first * a.r});
+    }
+  }
+  else
+  {
+    using namespace alias::monomial::rational::x;
+    typedef UnivariatePolynomial<Rational> RX;
+
+    auto y = UnivariatePolynomial<RX>({0, 1});
+
+    auto ivr = IntervalRational(interval.first, interval.second);
+    auto a_ivr = IntervalRational(a.interval.first, a.interval.second);
+    auto new_ivr = ivr * a_ivr;
+
+    int size_coefficient = defining_polynomial().coefficient().size();
+
+    std::vector<RX> homogeneous_polynomial_coefficient(size_coefficient);
+
+    for (int i = 0; i < size_coefficient; i++)
+    {
+      homogeneous_polynomial_coefficient.at(i) = defining_polynomial().coefficient().at(size_coefficient - i - 1) * x.pow(size_coefficient - i - 1);
+    }
+
+    auto new_defining_polynomial = square_free(SylvesterMatrix::resultant(UnivariatePolynomial<RX>(homogeneous_polynomial_coefficient),
+                                                                          a.map_coefficient_into_nested_polynomial())
+                                                   .to_monic())
+                                       .to_monic();
+
+    while (SturmSequence(new_defining_polynomial).count_real_roots_between(new_ivr.first(), new_ivr.second()) >= 2)
+    {
+      ivr = next_interval(ivr);
+      a_ivr = a.next_interval(a_ivr);
+      new_ivr = ivr * a_ivr;
+    }
+
+    *this = AlgebraicReal(new_defining_polynomial, new_ivr.to_pair());
+  }
+
+  return *this;
+}
+
+AlgebraicReal AlgebraicReal::operator/=(const AlgebraicReal &a)
+{
+  // Calculate inverse of 2nd operand and then multiply it to 1st one
+  AlgebraicReal a_inverse;
+
+  if (a.get_from_rational())
+  {
+    a_inverse = 1 / a.r;
+  }
+  else
+  {
+    using namespace alias::monomial::rational::x;
+    typedef UnivariatePolynomial<Rational> RX;
+
+    auto y = UnivariatePolynomial<RX>({0, 1});
+
+    auto a_ivr = IntervalRational(a.interval.first, a.interval.second);
+    auto inverse_ivr = 1 / a_ivr;
+
+    auto coefficient = a.defining_polynomial().coefficient();
+
+    std::vector<Rational> inverse_coefficient(coefficient.rbegin(), coefficient.rend());
+
+    a_inverse = AlgebraicReal(RX(inverse_coefficient), inverse_ivr.to_pair());
+  }
+
+  *this *= a_inverse;
+
+  return *this;
+}
+
+UnivariatePolynomial<UnivariatePolynomial<Rational>> AlgebraicReal::map_coefficient_into_nested_polynomial() const
+{
+  typedef UnivariatePolynomial<Rational> RX;
+
+  std::vector<RX> nested_coeff(defining_polynomial().coefficient().size());
+
+  for (int i = 0; i < defining_polynomial().coefficient().size(); i++)
+  {
+    nested_coeff.at(i) = RX(defining_polynomial().coefficient().at(i));
+  }
+
+  return UnivariatePolynomial<RX>(nested_coeff);
 }
 
 bool operator<(const AlgebraicReal &a, const AlgebraicReal &b)
@@ -139,13 +377,16 @@ bool operator<(const AlgebraicReal &a, const AlgebraicReal &b)
   else
   {
     // not equal and intervals overlap
-    while (AlgebraicReal::is_overlapping(a_interval, b_interval))
+    auto a_interval_rational = IntervalRational(a_interval.first, a_interval.second);
+    auto b_interval_rational = IntervalRational(b_interval.first, b_interval.second);
+
+    while (!(a_interval_rational < b_interval_rational).determined())
     {
-      // converge intervals until overlap resolves
-      a_interval = a.next_interval(a_interval);
-      b_interval = b.next_interval(b_interval);
+      a_interval_rational = a.next_interval(a_interval_rational);
+      b_interval_rational = b.next_interval(b_interval_rational);
     }
-    return a_interval.second <= b_interval.first;
+
+    return (a_interval_rational < b_interval_rational).get_value();
   }
 }
 
@@ -163,21 +404,12 @@ bool operator==(const AlgebraicReal &a, const AlgebraicReal &b)
     }
     else
     {
-      return a.defining_polynomial().value_at(a.r) == 0;
+      return b.defining_polynomial().value_at(a.r) == 0;
     }
   }
 
   if (b.from_rational)
-  {
-    if (b.r <= a.interval.first || a.interval.second < b.r)
-    { // same above difference
-      return false;
-    }
-    else
-    {
-      return a.defining_polynomial().value_at(b.r) == 0;
-    }
-  }
+    return b == a;
 
   // both are not rational
   if (!AlgebraicReal::is_overlapping(a.interval, b.interval)) // intervals not overlap
@@ -221,6 +453,16 @@ Rational AlgebraicReal::rational() const
   throw std::domain_error("Not a rational number");
 }
 
+UnivariatePolynomial<Rational> AlgebraicReal::defining_polynomial() const
+{
+  if (from_rational)
+  {
+    using namespace alias::monomial::rational::x;
+    return x - r;
+  }
+  return defining_polynomial_sturm_sequence.first_term();
+}
+
 std::pair<Rational, Rational> AlgebraicReal::get_interval() const
 {
   if (from_rational)
@@ -239,15 +481,33 @@ SturmSequence<Rational> AlgebraicReal::sturm_sequence() const
 }
 
 // name differ from source (interval())
-std::pair<Rational, Rational> AlgebraicReal::next_interval(const std::pair<Rational, Rational> old_interval) const
+IntervalRational AlgebraicReal::next_interval(const IntervalRational old_interval) const
 {
   if (from_rational)
   {
-    return interval;
+    return IntervalRational(interval.first, interval.second);
   }
   else
   {
-    return defining_polynomial_sturm_sequence.next_interval(old_interval);
+    return next_interval_with_sign(old_interval);
+  }
+}
+
+IntervalRational AlgebraicReal::next_interval_with_sign(const IntervalRational &ivr) const
+{
+  auto middle = (ivr.first() + ivr.second()) / 2;
+
+  if (defining_polynomial().sign_at(middle) == 0)
+  {
+    return IntervalRational(middle);
+  }
+  else if (sign_at_upper * defining_polynomial().sign_at(middle) < 0)
+  {
+    return IntervalRational(middle, ivr.second());
+  }
+  else if (sign_at_upper * defining_polynomial().sign_at(middle) > 0)
+  {
+    return IntervalRational(ivr.first(), middle);
   }
 }
 
@@ -300,4 +560,212 @@ std::vector<AlgebraicReal> AlgebraicReal::bisect_roots(const SturmSequence<Ratio
   first_half_roots.insert(first_half_roots.end(), last_half_roots.begin(), last_half_roots.end());
 
   return first_half_roots;
+}
+
+int AlgebraicReal::sign() const
+{
+  if (*this == 0)
+  {
+    return 0;
+  }
+  else if (*this > 0)
+  {
+    return 1;
+  }
+  else
+  {
+    return -1;
+  }
+}
+
+AlgebraicReal AlgebraicReal::pow(const boost::multiprecision::cpp_int index) const
+{
+  if (index == 0)
+    return 1;
+
+  if (index < 0)
+    return (1 / *this).pow(-index);
+
+  if (from_rational)
+    return r.pow(index);
+
+  using namespace alias::monomial::rational::x;
+
+  auto mod = x.pow(index) % defining_polynomial();
+
+  std::vector<AlgebraicReal> wrapped_mod_coefficient(mod.coefficient().size());
+
+  for (int i = 0; i < mod.coefficient().size(); i++)
+  {
+    wrapped_mod_coefficient.at(i) = AlgebraicReal(mod.coefficient().at(i));
+  }
+
+  auto wrapped_mod = UnivariatePolynomial<AlgebraicReal>(wrapped_mod_coefficient);
+
+  return wrapped_mod.value_at(*this);
+}
+
+AlgebraicReal AlgebraicReal::pow(const int index) const
+{
+  return this->pow(boost::multiprecision::cpp_int(index));
+}
+
+AlgebraicReal AlgebraicReal::pow(const Rational index) const
+{
+  return this->pow(index.get_numerator()).nth_root(index.get_denominator());
+}
+
+AlgebraicReal AlgebraicReal::sqrt() const
+{
+  if (from_rational)
+  {
+    if (r == 0)
+    {
+      return 0;
+    }
+    else if (r < 0)
+    {
+      throw std::domain_error("Negative number has no square root");
+    }
+    if (r > 0)
+    {
+      using namespace alias::monomial::rational::x;
+      using namespace alias::extended::rational;
+
+      auto roots = AlgebraicReal::real_roots_between(x2 - r, 0, +oo);
+
+      return just_one_root(roots);
+    }
+  }
+  else
+  {
+    using namespace alias::monomial::rational::x;
+    using namespace alias::extended::rational;
+
+    auto roots = AlgebraicReal::real_roots_between(defining_polynomial().composition(x2), 0, +oo);
+
+    return filter_roots(roots, 2);
+  }
+}
+
+AlgebraicReal AlgebraicReal::nth_root(const boost::multiprecision::cpp_int n) const
+{
+  if (n == 0)
+    throw std::domain_error("0th root");
+
+  if (n < 0)
+    return (1 / *this).nth_root(-n);
+
+  if (from_rational)
+  {
+    if (r == 0)
+      return 0;
+
+    if (r > 0)
+    {
+      using namespace alias::monomial::rational::x;
+      using namespace alias::extended::rational;
+
+      auto roots = AlgebraicReal::real_roots_between(x.pow(n) - r, 0, +oo);
+
+      return just_one_root(roots);
+    }
+    else
+    {
+      if (n % 2 == 1)
+      {
+        using namespace alias::monomial::rational::x;
+        using namespace alias::extended::rational;
+
+        auto roots = AlgebraicReal::real_roots_between(x.pow(n) - r, -oo, 0);
+
+        return just_one_root(roots);
+      }
+      else
+      {
+        throw std::domain_error("Negative number has no even-th root");
+      }
+    }
+  }
+  else
+  {
+    if (*this > 0)
+    {
+      using namespace alias::monomial::rational::x;
+      using namespace alias::extended::rational;
+
+      auto roots = AlgebraicReal::real_roots_between(defining_polynomial().composition(x.pow(n)), 0, +oo);
+
+      return filter_roots(roots, n);
+    }
+    else
+    {
+      if (n % 2 == 1)
+      {
+        using namespace alias::monomial::rational::x;
+        using namespace alias::extended::rational;
+
+        auto roots = AlgebraicReal::real_roots_between(defining_polynomial().composition(x.pow(n)), -oo, 0);
+
+        return filter_roots(roots, n);
+      }
+      else
+      {
+        throw std::domain_error("Negative number has no even-th root");
+      }
+    }
+  }
+}
+
+AlgebraicReal AlgebraicReal::filter_roots(const std::vector<AlgebraicReal> roots, const boost::multiprecision::cpp_int n) const
+{
+  std::vector<AlgebraicReal> filtered_roots;
+
+  for (auto root : roots)
+  {
+    auto n_power = root.pow(n);
+    if (interval.first < n_power && n_power <= interval.second)
+    {
+      filtered_roots.push_back(root);
+    }
+  }
+
+  return just_one_root(roots);
+}
+
+AlgebraicReal AlgebraicReal::just_one_root(const std::vector<AlgebraicReal> roots) const
+{
+  if (roots.size() == 1)
+  {
+    return roots.at(0);
+  }
+  else
+  {
+    std::domain_error("None or multiple roots");
+  }
+}
+
+AlgebraicReal AlgebraicReal::value_of(const UnivariatePolynomial<Rational> p) const
+{
+  if (from_rational)
+  {
+    return p.value_at(r);
+  }
+  else
+  {
+    using namespace alias::monomial::rational::x;
+
+    auto mod = p % defining_polynomial();
+
+    std::vector<AlgebraicReal> wrapped_mod_coefficient(mod.coefficient().size());
+
+    for (int i = 0; i < mod.coefficient().size(); i++)
+    {
+      wrapped_mod_coefficient.at(i) = AlgebraicReal(mod.coefficient().at(i));
+    }
+
+    auto wrapped_mod = UnivariatePolynomial<AlgebraicReal>(wrapped_mod_coefficient);
+
+    return wrapped_mod.value_at(*this);
+  }
 }
