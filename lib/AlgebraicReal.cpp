@@ -505,7 +505,7 @@ IntervalRational AlgebraicReal::next_interval_with_sign(const IntervalRational &
   {
     return IntervalRational(middle, ivr.second());
   }
-  else if (sign_at_upper * defining_polynomial().sign_at(middle) > 0)
+  else
   {
     return IntervalRational(ivr.first(), middle);
   }
@@ -627,7 +627,7 @@ AlgebraicReal AlgebraicReal::sqrt() const
     {
       throw std::domain_error("Negative number has no square root");
     }
-    if (r > 0)
+    else
     {
       using namespace alias::monomial::rational::x;
       using namespace alias::extended::rational;
@@ -741,7 +741,7 @@ AlgebraicReal AlgebraicReal::just_one_root(const std::vector<AlgebraicReal> root
   }
   else
   {
-    std::domain_error("None or multiple roots");
+    throw std::domain_error("None or multiple roots");
   }
 }
 
