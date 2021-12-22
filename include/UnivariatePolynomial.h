@@ -334,8 +334,7 @@ UnivariatePolynomial<K> gcd(const UnivariatePolynomial<K> &p1, const UnivariateP
   {
     UnivariatePolynomial<K> tmp_p_a = p_a;
     p_a = p_b;
-    p_b = tmp_p_a % p_b;
-    p_a.to_monic();
+    p_b = (tmp_p_a % p_b).to_monic();
   }
   return p_a;
 }
