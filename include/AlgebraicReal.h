@@ -33,6 +33,8 @@ private:
 public:
   // Zero
   AlgebraicReal();
+  // Integer
+  AlgebraicReal(const int n);
   // Rational
   AlgebraicReal(const Rational &r);
   // Define by univariate polynomial and interval

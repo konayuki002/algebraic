@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <stdexcept>
 
 #include <AliasMonomial.h>
@@ -13,6 +14,8 @@ bool AlgebraicReal::is_overlapping(const std::pair<Rational, Rational> i1, const
 }
 
 AlgebraicReal::AlgebraicReal() : AlgebraicReal(0){};
+
+AlgebraicReal::AlgebraicReal(const int n) : AlgebraicReal(Rational(n)){};
 
 AlgebraicReal::AlgebraicReal(const Rational &r)
     : from_rational(true),
@@ -132,18 +135,172 @@ AlgebraicReal AlgebraicReal::operator+=(const AlgebraicReal &a)
 
     auto ivr = IntervalRational(interval.first, interval.second);
     auto a_ivr = IntervalRational(a.interval.first, a.interval.second);
+    auto new_ivr = ivr + a_ivr;
 
     auto new_defining_polynomial = square_free(SylvesterMatrix::resultant(map_coefficient_into_nested_polynomial().composition(x - y),
                                                                           a.map_coefficient_into_nested_polynomial()));
 
-    while (SturmSequence(new_defining_polynomial).count_real_roots_between(ivr.first() + a_ivr.first(), ivr.second() + a_ivr.second()) >= 2)
+    while (SturmSequence(new_defining_polynomial).count_real_roots_between(new_ivr.first(), new_ivr.second()) >= 2)
     {
       ivr = next_interval(ivr);
       a_ivr = a.next_interval(a_ivr);
+      new_ivr = ivr + a_ivr;
     }
 
-    *this = AlgebraicReal(new_defining_polynomial, (ivr + a_ivr).to_pair());
+    *this = AlgebraicReal(new_defining_polynomial, new_ivr.to_pair());
   }
+
+  return *this;
+}
+
+AlgebraicReal AlgebraicReal::operator-=(const AlgebraicReal &a)
+{
+  if (from_rational && a.get_from_rational())
+  {
+    r -= a.rational();
+  }
+  else if (from_rational)
+  {
+    using namespace alias::monomial::rational::x;
+
+    *this = AlgebraicReal(a.defining_polynomial().composition(r - x), {r - a.interval.second, r - a.interval.first});
+  }
+  else if (a.get_from_rational())
+  {
+    using namespace alias::monomial::rational::x;
+
+    *this = AlgebraicReal(defining_polynomial().composition(x + a.r), {interval.first - a.r, interval.second - a.r});
+  }
+  else
+  {
+    using namespace alias::monomial::rational::x;
+    typedef UnivariatePolynomial<Rational> RX;
+
+    auto y = UnivariatePolynomial<RX>({0, 1});
+
+    auto ivr = IntervalRational(interval.first, interval.second);
+    auto a_ivr = IntervalRational(a.interval.first, a.interval.second);
+    auto new_ivr = ivr - a_ivr;
+
+    auto new_defining_polynomial = square_free(SylvesterMatrix::resultant(map_coefficient_into_nested_polynomial().composition(x + y),
+                                                                          a.map_coefficient_into_nested_polynomial()));
+
+    while (SturmSequence(new_defining_polynomial).count_real_roots_between(new_ivr.first(), new_ivr.second()) >= 2)
+    {
+      ivr = next_interval(ivr);
+      a_ivr = a.next_interval(a_ivr);
+      new_ivr = ivr - a_ivr;
+    }
+
+    *this = AlgebraicReal(new_defining_polynomial, new_ivr.to_pair());
+  }
+
+  return *this;
+}
+
+AlgebraicReal AlgebraicReal::operator*=(const AlgebraicReal &a)
+{
+  if (from_rational && a.get_from_rational())
+  {
+    r *= a.rational();
+  }
+  else if (from_rational)
+  {
+    using namespace alias::monomial::rational::x;
+
+    if (r == 0)
+    {
+      *this = 0;
+    }
+    else if (r > 0)
+    {
+      *this = AlgebraicReal(a.defining_polynomial().composition(x / r), {r * a.interval.first, r * a.interval.second});
+    }
+    else if (r < 0)
+    {
+      *this = AlgebraicReal(a.defining_polynomial().composition(x / r), {r * a.interval.second, r * a.interval.first});
+    }
+  }
+  else if (a.get_from_rational())
+  {
+    using namespace alias::monomial::rational::x;
+
+    if (a.r == 0)
+    {
+      *this = 0;
+    }
+    else if (a.r > 0)
+    {
+      *this = AlgebraicReal(defining_polynomial().composition(x / a.r), {interval.first * a.r, interval.second * a.r});
+    }
+    else if (a.r < 0)
+    {
+      *this = AlgebraicReal(defining_polynomial().composition(x / a.r), {interval.second * a.r, interval.first * a.r});
+    }
+  }
+  else
+  {
+    using namespace alias::monomial::rational::x;
+    typedef UnivariatePolynomial<Rational> RX;
+
+    auto y = UnivariatePolynomial<RX>({0, 1});
+
+    auto ivr = IntervalRational(interval.first, interval.second);
+    auto a_ivr = IntervalRational(a.interval.first, a.interval.second);
+    auto new_ivr = ivr * a_ivr;
+
+    int size_coefficient = defining_polynomial().coefficient().size();
+
+    std::vector<RX> homogeneous_polynomial_coefficient(size_coefficient);
+
+    for (int i = 0; i < size_coefficient; i++)
+    {
+      homogeneous_polynomial_coefficient.at(i) = defining_polynomial().coefficient().at(size_coefficient - i - 1) * x.pow(size_coefficient - i - 1);
+    }
+
+    auto new_defining_polynomial = square_free(SylvesterMatrix::resultant(UnivariatePolynomial<RX>(homogeneous_polynomial_coefficient),
+                                                                          a.map_coefficient_into_nested_polynomial()));
+
+    while (SturmSequence(new_defining_polynomial).count_real_roots_between(new_ivr.first(), new_ivr.second()) >= 2)
+    {
+      ivr = next_interval(ivr);
+      a_ivr = a.next_interval(a_ivr);
+      new_ivr = ivr * a_ivr;
+    }
+
+    *this = AlgebraicReal(new_defining_polynomial, new_ivr.to_pair());
+  }
+
+  return *this;
+}
+
+AlgebraicReal AlgebraicReal::operator/=(const AlgebraicReal &a)
+{
+  // Calculate inverse of 2nd operand and then multiply it to 1st one
+  AlgebraicReal a_inverse;
+
+  if (a.get_from_rational())
+  {
+    a_inverse = 1 / a.r;
+  }
+  else
+  {
+    using namespace alias::monomial::rational::x;
+    typedef UnivariatePolynomial<Rational> RX;
+
+    auto y = UnivariatePolynomial<RX>({0, 1});
+
+    auto a_ivr = IntervalRational(a.interval.first, a.interval.second);
+    auto inverse_ivr = 1 / a_ivr;
+
+    auto coefficient = a.defining_polynomial().coefficient();
+
+    std::vector<Rational> inverse_coefficient(coefficient.rbegin(), coefficient.rend());
+
+    a_inverse = AlgebraicReal(RX(inverse_coefficient), inverse_ivr.to_pair());
+  }
+
+  *this *= a_inverse;
 
   return *this;
 }
@@ -154,24 +311,10 @@ UnivariatePolynomial<UnivariatePolynomial<Rational>> AlgebraicReal::map_coeffici
 
   std::vector<RX> nested_coeff(defining_polynomial().coefficient().size());
 
-  std::cout << defining_polynomial().coefficient().size() << std::endl;
-
-  /*
   for (int i = 0; i < defining_polynomial().coefficient().size(); i++)
   {
     nested_coeff.at(i) = RX(defining_polynomial().coefficient().at(i));
   }
-
-  segfault below
-  */
-
-  std::transform(defining_polynomial().coefficient().begin(),
-                 defining_polynomial().coefficient().end(),
-                 nested_coeff.begin(),
-                 [](auto &r)
-                 { return RX(r); });
-
-  std::cout << "a" << std::endl;
 
   return UnivariatePolynomial<RX>(nested_coeff);
 }
@@ -254,21 +397,12 @@ bool operator==(const AlgebraicReal &a, const AlgebraicReal &b)
     }
     else
     {
-      return a.defining_polynomial().value_at(a.r) == 0;
+      return b.defining_polynomial().value_at(a.r) == 0;
     }
   }
 
   if (b.from_rational)
-  {
-    if (b.r <= a.interval.first || a.interval.second < b.r)
-    { // same above difference
-      return false;
-    }
-    else
-    {
-      return a.defining_polynomial().value_at(b.r) == 0;
-    }
-  }
+    return b == a;
 
   // both are not rational
   if (!AlgebraicReal::is_overlapping(a.interval, b.interval)) // intervals not overlap

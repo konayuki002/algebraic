@@ -88,7 +88,7 @@ TEST(AlgebraicRealTest, UnaryNegate)
   EXPECT_EQ(-AlgebraicReal(x2 - 2, {1, 2}), AlgebraicReal(x2 - 2, {-2, -1}));
 }
 
-TEST(AlgebraicRealTest, AdditionAssignment)
+TEST(AlgebraicRealTest, Addition)
 {
   using namespace alias::monomial::rational::x;
 
@@ -96,7 +96,53 @@ TEST(AlgebraicRealTest, AdditionAssignment)
   auto sqrt_two = AlgebraicReal(x2 - 2, {1, 2});
 
   EXPECT_EQ(one + one, AlgebraicReal(2));
+  EXPECT_EQ(one + sqrt_two, AlgebraicReal(x2 - 2_x - 1, {2, 3}));
+  EXPECT_EQ(sqrt_two + one, AlgebraicReal(x2 - 2_x - 1, {2, 3}));
   EXPECT_EQ(sqrt_two + sqrt_two, AlgebraicReal(x2 - 8, {2, 3}));
+  EXPECT_EQ(sqrt_two + (-sqrt_two), 0);
+}
+
+TEST(AlgebraicRealTest, Subtraction)
+{
+  using namespace alias::monomial::rational::x;
+
+  auto one = AlgebraicReal(1);
+  auto sqrt_two = AlgebraicReal(x2 - 2, {1, 2});
+  auto sqrt_three = AlgebraicReal(x2 - 3, {1, 2});
+
+  EXPECT_EQ(AlgebraicReal(2) - one, one);
+  EXPECT_EQ(one - sqrt_two, AlgebraicReal(x2 - 2_x - 1, {-1, 0}));
+  EXPECT_EQ(sqrt_two - one, AlgebraicReal(x2 + 2_x - 1, {0, 1}));
+  EXPECT_EQ(sqrt_three - sqrt_two, AlgebraicReal(2_x4 - 20_x2 + 2, {0, 1}));
+  EXPECT_EQ(sqrt_three - sqrt_three, 0);
+}
+
+TEST(AlgebraicRealTest, Multiplication)
+{
+  using namespace alias::monomial::rational::x;
+
+  auto one = AlgebraicReal(1);
+  auto sqrt_two = AlgebraicReal(x2 - 2, {1, 2});
+  auto sqrt_three = AlgebraicReal(x2 - 3, {1, 2});
+
+  EXPECT_EQ(one * one, one);
+  EXPECT_EQ(one * sqrt_two, sqrt_two);
+  EXPECT_EQ(sqrt_two * one, sqrt_two);
+  EXPECT_EQ(sqrt_three * sqrt_two, AlgebraicReal(x2 - 6, {2, 3}));
+}
+
+TEST(AlgebraicRealTest, Division)
+{
+  using namespace alias::monomial::rational::x;
+
+  auto one = AlgebraicReal(1);
+  auto sqrt_two = AlgebraicReal(x2 - 2, {1, 2});
+  auto sqrt_three = AlgebraicReal(x2 - 3, {1, 2});
+
+  EXPECT_EQ(one / one, one);
+  EXPECT_EQ(one / sqrt_two, AlgebraicReal(2_x2 - 1, {0, 1}));
+  EXPECT_EQ(sqrt_two / one, sqrt_two);
+  EXPECT_EQ(sqrt_three / sqrt_two, AlgebraicReal(2_x2 - 3, {1, 2}));
 }
 
 TEST(AlgebraicRealTest, LessThan)
@@ -136,7 +182,12 @@ TEST(AlgebraicRealTest, Equality)
 
 TEST(AlgebraicRealTest, Inequality)
 {
+  using namespace alias::monomial::rational::x;
+
   EXPECT_TRUE(AlgebraicReal(1) != AlgebraicReal(2));
+  EXPECT_TRUE(AlgebraicReal(1) != AlgebraicReal(x2 - 2, {1, 2}));
+  EXPECT_TRUE(AlgebraicReal(x2 - 2, {1, 2}) != AlgebraicReal(1));
+  EXPECT_TRUE(AlgebraicReal(x2 - 2, {1, 2}) != AlgebraicReal(x2 - 3, {1, 2}));
 }
 
 TEST(AlgebraicRealTest, OutputStreamWithRational)
