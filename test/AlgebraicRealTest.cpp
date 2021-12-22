@@ -278,3 +278,15 @@ TEST(AlgebraicRealTest, RealRoots)
   EXPECT_EQ(roots.at(0).next_interval(IntervalRational(-2, 0)).first(), -2);
   EXPECT_EQ(roots.at(0).next_interval(IntervalRational(-2, 0)).second(), -1);
 }
+
+TEST(AlgebraicRealTest, Sign)
+{
+  using namespace alias::monomial::rational::x;
+
+  EXPECT_EQ(AlgebraicReal(0).sign(), 0);
+  EXPECT_EQ(AlgebraicReal(2).sign(), 1);
+  EXPECT_EQ(AlgebraicReal(-3).sign(), -1);
+
+  EXPECT_EQ(AlgebraicReal(x2 - 2, {1, 2}).sign(), 1);
+  EXPECT_EQ(AlgebraicReal(x2 - 3, {-2, -1}).sign(), -1);
+}

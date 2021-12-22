@@ -554,3 +554,19 @@ std::vector<AlgebraicReal> AlgebraicReal::bisect_roots(const SturmSequence<Ratio
 
   return first_half_roots;
 }
+
+int AlgebraicReal::sign() const
+{
+  if (*this == 0)
+  {
+    return 0;
+  }
+  else if (*this > 0)
+  {
+    return 1;
+  }
+  else
+  {
+    return -1;
+  }
+}

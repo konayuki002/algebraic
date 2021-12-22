@@ -70,4 +70,6 @@ public:
   static std::vector<AlgebraicReal> real_roots(const UnivariatePolynomial<Rational> &p);
   static std::vector<AlgebraicReal> real_roots_between(const UnivariatePolynomial<Rational> &p, const Extended<Rational> &e1, const Extended<Rational> &e2);
   static std::vector<AlgebraicReal> bisect_roots(const SturmSequence<Rational> &sturm_sequence, const std::pair<Rational, Rational> interval, const std::pair<int, int> interval_sign_change);
+
+  int sign() const;
 };
