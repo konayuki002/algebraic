@@ -140,9 +140,7 @@ public:
 
   UnivariatePolynomial &operator/=(const UnivariatePolynomial &p) //Euclidean division by polynomial
   {
-    auto [quotient, reminder] = this->euclidean_division(p);
-
-    *this = quotient;
+    *this = euclidean_division(p).first;
 
     remove_higher_degree_zero();
 
@@ -151,9 +149,7 @@ public:
 
   UnivariatePolynomial &operator%=(const UnivariatePolynomial &p)
   {
-    auto [quotient, reminder] = this->euclidean_division(p);
-
-    *this = reminder;
+    *this = euclidean_division(p).second;
 
     remove_higher_degree_zero();
 
