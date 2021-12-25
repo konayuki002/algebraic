@@ -96,8 +96,8 @@ TEST(AlgebraicRealTest, Addition)
   auto sqrt_two = AlgebraicReal(x2 - 2, {1, 2});
 
   EXPECT_EQ(one + one, AlgebraicReal(2));
-  EXPECT_EQ(one + sqrt_two, AlgebraicReal(x2 - 2_x - 1, {2, 3}));
-  EXPECT_EQ(sqrt_two + one, AlgebraicReal(x2 - 2_x - 1, {2, 3}));
+  EXPECT_EQ(one + sqrt_two, AlgebraicReal(x2 - 2 * x - 1, {2, 3}));
+  EXPECT_EQ(sqrt_two + one, AlgebraicReal(x2 - 2 * x - 1, {2, 3}));
   EXPECT_EQ(sqrt_two + sqrt_two, AlgebraicReal(x2 - 8, {2, 3}));
   EXPECT_EQ(sqrt_two + (-sqrt_two), 0);
 
@@ -119,9 +119,9 @@ TEST(AlgebraicRealTest, Subtraction)
   auto sqrt_three = AlgebraicReal(x2 - 3, {1, 2});
 
   EXPECT_EQ(AlgebraicReal(2) - one, one);
-  EXPECT_EQ(one - sqrt_two, AlgebraicReal(x2 - 2_x - 1, {-1, 0}));
-  EXPECT_EQ(sqrt_two - one, AlgebraicReal(x2 + 2_x - 1, {0, 1}));
-  EXPECT_EQ(sqrt_three - sqrt_two, AlgebraicReal(2_x4 - 20_x2 + 2, {0, 1}));
+  EXPECT_EQ(one - sqrt_two, AlgebraicReal(x2 - 2 * x - 1, {-1, 0}));
+  EXPECT_EQ(sqrt_two - one, AlgebraicReal(x2 + 2 * x - 1, {0, 1}));
+  EXPECT_EQ(sqrt_three - sqrt_two, AlgebraicReal(2 * x4 - 20 * x2 + 2, {0, 1}));
   EXPECT_EQ(sqrt_three - sqrt_three, 0);
 }
 
@@ -148,9 +148,9 @@ TEST(AlgebraicRealTest, Division)
   auto sqrt_three = AlgebraicReal(x2 - 3, {1, 2});
 
   EXPECT_EQ(one / one, one);
-  EXPECT_EQ(one / sqrt_two, AlgebraicReal(2_x2 - 1, {0, 1}));
+  EXPECT_EQ(one / sqrt_two, AlgebraicReal(2 * x2 - 1, {0, 1}));
   EXPECT_EQ(sqrt_two / one, sqrt_two);
-  EXPECT_EQ(sqrt_three / sqrt_two, AlgebraicReal(2_x2 - 3, {1, 2}));
+  EXPECT_EQ(sqrt_three / sqrt_two, AlgebraicReal(2 * x2 - 3, {1, 2}));
 }
 
 TEST(AlgebraicRealTest, LessThan)
@@ -183,7 +183,7 @@ TEST(AlgebraicRealTest, Equality)
   using namespace alias::monomial::rational::x;
 
   EXPECT_TRUE(AlgebraicReal(1) == AlgebraicReal(1));
-  EXPECT_TRUE(AlgebraicReal(1) == AlgebraicReal(x2 - 1_up, {0, 2}));
+  EXPECT_TRUE(AlgebraicReal(1) == AlgebraicReal(x2 - 1, {0, 2}));
   EXPECT_TRUE(AlgebraicReal(x2 - 1, {0, 2}) == AlgebraicReal(1));
   EXPECT_TRUE(AlgebraicReal(x2 - 1, {0, 2}) == AlgebraicReal(x2 + x - 2, {0, 2}));
 }
