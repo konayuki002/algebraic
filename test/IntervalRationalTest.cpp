@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <AliasRational.h>
 #include <IntervalRational.h>
 #include <Rational.h>
 
@@ -48,14 +47,14 @@ TEST(IntervalRationalTest, MultiplicationAssignment)
 
 TEST(IntervalRationalTest, DivisionAssignment)
 {
-  using namespace alias::rational;
+  typedef Rational Q;
 
   auto ivr = IntervalRational(1, 2);
   ivr /= IntervalRational(1, 2);
-  EXPECT_TRUE(equal_pair(ivr, {1_r / 2, 2}));
+  EXPECT_TRUE(equal_pair(ivr, {Q(1, 2), 2}));
 
-  ivr /= 2_r / 3;
-  EXPECT_TRUE(equal_pair(ivr, {3_r / 4, 3}));
+  ivr /= Q(2, 3);
+  EXPECT_TRUE(equal_pair(ivr, {Q(3, 4), 3}));
 
   EXPECT_THROW(ivr /= IntervalRational(-1, 1), std::domain_error);
   EXPECT_THROW(ivr /= 0, std::domain_error);
@@ -81,11 +80,11 @@ TEST(IntervalRationalTest, Multiplication)
 
 TEST(IntervalRationalTest, Division)
 {
-  using namespace alias::rational;
+  typedef Rational Q;
 
-  EXPECT_TRUE(equal_pair(IntervalRational(1, 2) / IntervalRational(1, 2), {1_r / 2, 2}));
+  EXPECT_TRUE(equal_pair(IntervalRational(1, 2) / IntervalRational(1, 2), {Q(1, 2), 2}));
 
-  EXPECT_TRUE(equal_pair(IntervalRational(1, 2) / 2, {1_r / 2, 1}));
+  EXPECT_TRUE(equal_pair(IntervalRational(1, 2) / 2, {Q(1, 2), 1}));
 
   EXPECT_THROW(IntervalRational(1, 2) / IntervalRational(-1, 2), std::domain_error);
   EXPECT_THROW(IntervalRational(1, 2) / 0, std::domain_error);
@@ -174,11 +173,11 @@ TEST(IntervalRationalTest, LessThanOrEqualTo)
 
 TEST(IntervalRationalTest, OutputStream)
 {
-  using namespace alias::rational;
+  typedef Rational Q;
 
   std::ostringstream oss;
 
-  oss << IntervalRational(1_r / 2, 3_r / 2);
+  oss << IntervalRational(Q(1, 2), Q(3, 2));
 
   EXPECT_EQ(oss.str(), "[1/2, 3/2]");
 }

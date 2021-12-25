@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include <AliasExtended.h>
-#include <AliasRational.h>
 #include <UnivariatePolynomial.h>
 
 /*
@@ -54,19 +53,17 @@ TEST(UnivariatePolynomialTest, MultiplicationAssignment)
 
   EXPECT_EQ(p, UnivariatePolynomial<Rational>({4, 4, 1}));
 
-  using namespace alias::rational;
+  typedef Rational Q;
 
   UnivariatePolynomial<Rational> p_scalar{3, 1};
 
-  p_scalar *= 2_r / 3;
+  p_scalar *= Q(2, 3);
 
   EXPECT_EQ(p_scalar, UnivariatePolynomial<Rational>({2, {2, 3}}));
 }
 
 TEST(UnivariatePolynomialTest, DivisionAssignment)
 {
-  using namespace alias::rational;
-
   UnivariatePolynomial<Rational> p{3, 2, 1};
 
   p /= UnivariatePolynomial<Rational>{1, 1};
@@ -106,15 +103,13 @@ TEST(UnivariatePolynomialTest, OutputStream)
 
 TEST(UnivariatePolynomialTest, ValueAt)
 {
-  using namespace alias::rational;
+  typedef Rational Q;
 
-  EXPECT_EQ(UnivariatePolynomial<Rational>({4, 3, 1}).value_at({1, 3}), 46_r / 9);
+  EXPECT_EQ(UnivariatePolynomial<Rational>({4, 3, 1}).value_at({1, 3}), Q(46, 9));
 }
 
 TEST(UnivariatePolynomialTest, Composition)
 {
-  using namespace alias::rational;
-
   EXPECT_EQ(UnivariatePolynomial<Rational>({1, 3, 1}).composition(UnivariatePolynomial<Rational>({1, 2, 1})), UnivariatePolynomial<Rational>({5, 10, 9, 4, 1}));
 
   EXPECT_EQ(UnivariatePolynomial<Rational>({-2, 0, 1}).composition(UnivariatePolynomial<Rational>({0, -1})), UnivariatePolynomial<Rational>({-2, 0, 1}));
@@ -122,8 +117,6 @@ TEST(UnivariatePolynomialTest, Composition)
 
 TEST(UnivariatePolynomialTest, EuclideanDivision)
 {
-  using namespace alias::rational;
-
   EXPECT_THROW(UnivariatePolynomial<Rational>({1, 1}) /= 0, std::domain_error);
 
   auto [quotient, reminder] = UnivariatePolynomial<Rational>({-4, 3, 2}).euclidean_division({1, 1});

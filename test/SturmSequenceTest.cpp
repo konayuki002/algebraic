@@ -2,7 +2,6 @@
 
 #include <AliasExtended.h>
 #include <AliasMonomial.h>
-#include <AliasRational.h>
 #include <SturmSequence.h>
 
 /*
@@ -57,10 +56,10 @@ TEST(SturmSequenceTest, NextInterval)
 {
   using namespace alias::extended::rational;
   using namespace alias::monomial::rational::x;
-  using namespace alias::rational;
+  typedef Rational Q;
 
   SturmSequence sturm_sequence(x2 - 2);
 
   EXPECT_EQ(sturm_sequence.next_interval({1, 2}).first, 1);
-  EXPECT_EQ(sturm_sequence.next_interval({1, 2}).second, 3_r / 2);
+  EXPECT_EQ(sturm_sequence.next_interval({1, 2}).second, Q(3, 2));
 }

@@ -5,7 +5,6 @@
 #include <vector>
 
 #include <AliasExtended.h>
-#include <AliasRational.h>
 #include <Extended.h>
 #include <IntegerUtils.h>
 #include <Rational.h>
@@ -195,8 +194,6 @@ public:
   */
   K value_at(const K r) const
   {
-    using namespace alias::rational;
-
     return std::accumulate(a.rbegin(), a.rend(), K(), [r](K acc, K each_a)
                            { return acc * r + each_a; });
   }
