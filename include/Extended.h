@@ -58,13 +58,17 @@ public:
   Extended operator-() const
   {
     if (infinity == Infinity::Finite)
+    {
       return -a;
-
-    if (infinity == Infinity::PositiveInfinity)
+    }
+    else if (infinity == Infinity::PositiveInfinity)
+    {
       return Extended(Infinity::NegativeInfinity);
-
-    if (infinity == Infinity::NegativeInfinity)
+    }
+    else
+    {
       return Extended(Infinity::PositiveInfinity);
+    }
   }
 
   Extended &operator+=(const Extended &e)
@@ -195,15 +199,25 @@ public:
   Number clamp(const Number &l, const Number &u) const
   {
     if (infinity == Infinity::PositiveInfinity)
+    {
       return Number(u);
-    if (infinity == Infinity::NegativeInfinity)
+    }
+    else if (infinity == Infinity::NegativeInfinity)
+    {
       return Number(l);
-    if (a < l)
+    }
+    else if (a < l)
+    {
       return Number(l);
-    if (l <= a && a <= u)
+    }
+    else if (l <= a && a <= u)
+    {
       return Number(a);
-    if (l < a)
+    }
+    else
+    {
       return Number(u);
+    }
   }
 
   bool is_finite() const

@@ -4,7 +4,6 @@
 #include "AlgebraicRealTest.cpp"
 #include "AliasExtendedTest.cpp"
 #include "AliasMonomialTest.cpp"
-#include "AliasRationalTest.cpp"
 #include "ExtendedTest.cpp"
 #include "IntegerUtilsTest.cpp"
 #include "IntervalRationalTest.cpp"

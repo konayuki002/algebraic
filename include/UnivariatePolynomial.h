@@ -5,7 +5,6 @@
 #include <vector>
 
 #include <AliasExtended.h>
-#include <AliasRational.h>
 #include <Extended.h>
 #include <IntegerUtils.h>
 #include <Rational.h>
@@ -95,12 +94,12 @@ public:
   {
     std::vector<K> new_a(std::max(a.size(), p.coefficient().size()), 0);
 
-    for (int a_i = 0; a_i < a.size(); a_i++)
+    for (size_t a_i = 0; a_i < a.size(); a_i++)
     {
       new_a[a_i] = a[a_i];
     }
 
-    for (int p_a_i = 0; p_a_i < p.coefficient().size(); p_a_i++)
+    for (size_t p_a_i = 0; p_a_i < p.coefficient().size(); p_a_i++)
     {
       new_a[p_a_i] += p.coefficient()[p_a_i];
     }
@@ -123,9 +122,9 @@ public:
     }
 
     std::vector<K> new_a(this->degree() + p.degree() + 1, 0);
-    for (int a_i = 0; a_i < a.size(); a_i++)
+    for (size_t a_i = 0; a_i < a.size(); a_i++)
     {
-      for (int p_a_i = 0; p_a_i < p.coefficient().size(); p_a_i++)
+      for (size_t p_a_i = 0; p_a_i < p.coefficient().size(); p_a_i++)
       {
         new_a[a_i + p_a_i] += a[a_i] * p.coefficient()[p_a_i];
       }
@@ -140,9 +139,7 @@ public:
 
   UnivariatePolynomial &operator/=(const UnivariatePolynomial &p) //Euclidean division by polynomial
   {
-    auto [quotient, reminder] = this->euclidean_division(p);
-
-    *this = quotient;
+    *this = euclidean_division(p).first;
 
     remove_higher_degree_zero();
 
@@ -151,9 +148,7 @@ public:
 
   UnivariatePolynomial &operator%=(const UnivariatePolynomial &p)
   {
-    auto [quotient, reminder] = this->euclidean_division(p);
-
-    *this = reminder;
+    *this = euclidean_division(p).second;
 
     remove_higher_degree_zero();
 
@@ -165,7 +160,7 @@ public:
     if (p.degree() != q.degree())
       return false;
 
-    for (int i = 0; i < p.a.size(); i++)
+    for (size_t i = 0; i < p.a.size(); i++)
     {
       if (p.a.at(i) != q.a.at(i))
         return false;
@@ -178,7 +173,7 @@ public:
   {
     os << "[";
 
-    for (int a_i = 0; a_i < p.a.size(); a_i++)
+    for (size_t a_i = 0; a_i < p.a.size(); a_i++)
     {
       os << p.a.at(a_i);
 
@@ -199,8 +194,6 @@ public:
   */
   K value_at(const K r) const
   {
-    using namespace alias::rational;
-
     return std::accumulate(a.rbegin(), a.rend(), K(), [r](K acc, K each_a)
                            { return acc * r + each_a; });
   }
@@ -249,7 +242,7 @@ public:
   UnivariatePolynomial differential() const
   {
     auto new_a(a);
-    for (int a_i = 0; a_i < a.size(); a_i++)
+    for (size_t a_i = 0; a_i < a.size(); a_i++)
     {
       new_a[a_i] *= a_i;
     }

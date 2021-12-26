@@ -318,7 +318,7 @@ UnivariatePolynomial<UnivariatePolynomial<Rational>> AlgebraicReal::map_coeffici
 
   std::vector<RX> nested_coeff(defining_polynomial().coefficient().size());
 
-  for (int i = 0; i < defining_polynomial().coefficient().size(); i++)
+  for (size_t i = 0; i < defining_polynomial().coefficient().size(); i++)
   {
     nested_coeff.at(i) = RX(defining_polynomial().coefficient().at(i));
   }
@@ -505,7 +505,7 @@ IntervalRational AlgebraicReal::next_interval_with_sign(const IntervalRational &
   {
     return IntervalRational(middle, ivr.second());
   }
-  else if (sign_at_upper * defining_polynomial().sign_at(middle) > 0)
+  else
   {
     return IntervalRational(ivr.first(), middle);
   }
@@ -595,7 +595,7 @@ AlgebraicReal AlgebraicReal::pow(const boost::multiprecision::cpp_int index) con
 
   std::vector<AlgebraicReal> wrapped_mod_coefficient(mod.coefficient().size());
 
-  for (int i = 0; i < mod.coefficient().size(); i++)
+  for (size_t i = 0; i < mod.coefficient().size(); i++)
   {
     wrapped_mod_coefficient.at(i) = AlgebraicReal(mod.coefficient().at(i));
   }
@@ -627,7 +627,7 @@ AlgebraicReal AlgebraicReal::sqrt() const
     {
       throw std::domain_error("Negative number has no square root");
     }
-    if (r > 0)
+    else
     {
       using namespace alias::monomial::rational::x;
       using namespace alias::extended::rational;
@@ -741,7 +741,7 @@ AlgebraicReal AlgebraicReal::just_one_root(const std::vector<AlgebraicReal> root
   }
   else
   {
-    std::domain_error("None or multiple roots");
+    throw std::domain_error("None or multiple roots");
   }
 }
 
@@ -759,7 +759,7 @@ AlgebraicReal AlgebraicReal::value_of(const UnivariatePolynomial<Rational> p) co
 
     std::vector<AlgebraicReal> wrapped_mod_coefficient(mod.coefficient().size());
 
-    for (int i = 0; i < mod.coefficient().size(); i++)
+    for (size_t i = 0; i < mod.coefficient().size(); i++)
     {
       wrapped_mod_coefficient.at(i) = AlgebraicReal(mod.coefficient().at(i));
     }
